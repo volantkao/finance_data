@@ -1,5 +1,5 @@
 {
-    "last_updated": "2025-12-25 12:48:56",
+    "last_updated": "2025-12-25 12:59:16",
     "market_data": {
         "jp_10y": 2.05,
         "us_3m": 3.56,
@@ -7,6 +7,11 @@
         "sofr": 3.66,
         "iorb": 3.65,
         "sofr_date": "2025-12-23"
+    },
+    "risk_indicators": {
+        "high_yield_oas": 2.83,
+        "baa_spread": 1.74,
+        "financial_stress": -1.71
     },
     "z_score": {
         "value": 2.3,
