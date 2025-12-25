@@ -77,6 +77,7 @@ def get_yahoo_history(symbol, range_str="5y"):
         return []
 
 def get_jgb_10y_realtime():
+    # 嘗試抓取日債，失敗回傳 None，後面會處理
     try:
         url = "https://www.cnbc.com/quotes/JP10Y"
         resp = requests.get(url, headers=HEADERS, timeout=10)
@@ -85,19 +86,19 @@ def get_jgb_10y_realtime():
         if val: return float(val.text.strip().replace('%', ''))
     except: pass
     
-    # 備案
+    # 備案：從 FRED 抓最新一筆
     try:
         hist = get_fred_history("IRLTLT01JPM156N")
         if hist: return hist[-1]['value']
     except: pass
     
-    return 2.05
+    return 2.05 # 最後保底值
 
 # ===================================================================
 # 計算核心
 # ===================================================================
 
-def calculate_z_score():
+def calculate_z_score(jp_10y_now):
     print("\n--- Starting Z-Score Calculation ---")
     
     stock_data = get_yahoo_history("^W5000", "5y")
@@ -126,7 +127,6 @@ def calculate_z_score():
         df_m2.index = df_m2.index.to_period('M')
         df_jgb.index = df_jgb.index.to_period('M')
         
-        # [修正點] 這裡原本寫 rsuffix='_j'，改回 '_jgb' 以匹配下面的 value_jgb
         df = df_s_m.join(df_t_m, lsuffix='_s', rsuffix='_t') \
                    .join(df_m2, rsuffix='_m') \
                    .join(df_jgb, rsuffix='_jgb')
@@ -140,7 +140,6 @@ def calculate_z_score():
         df['ratio'] = (df['price_s'] / df['value']) / df['spread']
         
         # Calc Today
-        jp_10y_now = get_jgb_10y_realtime()
         latest_s = stock_data[-1]['price']
         latest_t = tnx_data[-1]['price']
         latest_m2 = m2_data[-1]['value']
@@ -166,14 +165,18 @@ def calculate_z_score():
     return None
 
 # ===================================================================
-# 主程式：產生精簡版 JSON (只含 Z-Score)
+# 主程式：產生精簡版 JSON (含 JP10Y)
 # ===================================================================
 
 def generate_app_data():
     print("🚀 Starting Monitor Lite (Clean Version)...")
     
-    # 計算 Z-Score
-    z_res = calculate_z_score()
+    # 1. 獲取即時日債 (App 抓不到，所以這裡幫它抓)
+    jp_10y_val = get_jgb_10y_realtime()
+    print(f"🇯🇵 JP 10Y Yield: {jp_10y_val}%")
+
+    # 2. 計算 Z-Score (傳入日債)
+    z_res = calculate_z_score(jp_10y_val)
     
     # 預設值
     z_score = 0.0
@@ -190,9 +193,10 @@ def generate_app_data():
     else:
         print("⚠️ Z-Score calculation failed. Outputting zeros.")
 
-    # [修正點] JSON 只保留 Z-Score 相關欄位，移除 xccy 和 carry
+    # 3. 產生 JSON (追加 jp_10y 欄位)
     data = {
         "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "jp_10y": round(jp_10y_val, 3) if jp_10y_val else 0.0, # <--- 這是給 App 用的新欄位
         "z_score": {
             "value": round(z_score, 2),
             "mean": round(mean_val, 4),
