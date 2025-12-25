@@ -2,7 +2,7 @@ name: Daily Finance Monitor Lite
 
 on:
   schedule:
-    - cron: '30 21 * * *' # 每天早上 05:30 (台灣時間)
+    - cron: '30 21 * * *'
   workflow_dispatch:
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
     - name: Run Monitor Lite
       env:
         FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-      run: python monitor_lite.py
+      run: python monitor_lite.py  # <--- 確認這裡要執行對的檔名
 
     - name: Commit and Push JSON
       run: |
