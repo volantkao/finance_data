@@ -16,7 +16,7 @@ HEADERS = {
 }
 
 # ===================================================================
-# 資料獲取模組 (通用)
+# 資料獲取模組
 # ===================================================================
 
 def get_fred_latest(series_id):
@@ -130,18 +130,26 @@ def calculate_z_score(jp_10y_now):
 # ===================================================================
 
 def generate_app_data():
-    print("🚀 Starting Monitor Lite (Full Pack Version)...")
+    print("🚀 Starting Monitor Lite (Full Pack + Risk Indicators)...")
     
-    # 1. 基礎數據
+    # 1. 基礎數據 (日本10年債)
     jp_10y_val = get_jgb_10y_realtime()
     
-    # 2. 額外 FRED 數據 (幫 App 預先抓好)
+    # 2. FRED 核心利率數據
     sofr, sofr_date = get_fred_latest("SOFR")
     iorb, iorb_date = get_fred_latest("IORB")
     us_3m, _ = get_fred_latest("DTB3")
     jp_3m, _ = get_fred_latest("IR3TIB01JPM156N")
     
-    # 3. 計算 Z-Score
+    # 3. [新增] 風險指標數據
+    # BAMLH0A0HYM2 = High Yield OAS
+    # BAA10Y = BAA Spread
+    # STLFSI3 = Financial Stress Index
+    hy_oas, _ = get_fred_latest("BAMLH0A0HYM2")
+    baa_spread, _ = get_fred_latest("BAA10Y")
+    fin_stress, _ = get_fred_latest("STLFSI3")
+
+    # 4. 計算 Z-Score
     z_res = calculate_z_score(jp_10y_val)
     z_score = 0; mean_val = 0; std_val = 0; today_r = 0; w5000 = 0; m2 = 0; status = "Data Error"
     
@@ -149,17 +157,28 @@ def generate_app_data():
         z_score, today_r, mean_val, std_val, w5000, m2 = z_res
         status = "Critical" if z_score > 2.0 else "Warning" if z_score > 1.0 else "Normal"
 
-    # 4. 打包 JSON (包含所有原料)
+    # 5. 打包 JSON (一次滿足 App 所有需求)
     data = {
         "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        
+        # 市場利率
         "market_data": {
             "jp_10y": round(jp_10y_val, 3) if jp_10y_val else 0.0,
-            "us_3m": round(us_3m, 3) if us_3m else 0.0,   # 來自 FRED DTB3
-            "jp_3m": round(jp_3m, 3) if jp_3m else 0.0,   # 來自 FRED IR3TIB...
-            "sofr": round(sofr, 2) if sofr else 0.0,      # 來自 FRED SOFR
-            "iorb": round(iorb, 2) if iorb else 0.0,      # 來自 FRED IORB
+            "us_3m": round(us_3m, 3) if us_3m else 0.0,
+            "jp_3m": round(jp_3m, 3) if jp_3m else 0.0,
+            "sofr": round(sofr, 2) if sofr else 0.0,
+            "iorb": round(iorb, 2) if iorb else 0.0,
             "sofr_date": sofr_date if sofr_date else ""
         },
+        
+        # 風險指標 (新增)
+        "risk_indicators": {
+            "high_yield_oas": round(hy_oas, 2) if hy_oas else 0.0,
+            "baa_spread": round(baa_spread, 2) if baa_spread else 0.0,
+            "financial_stress": round(fin_stress, 2) if fin_stress else 0.0
+        },
+
+        # 脆弱性 Z-Score
         "z_score": {
             "value": round(z_score, 2),
             "mean": round(mean_val, 4),
@@ -180,7 +199,7 @@ def generate_app_data():
     with open("vip_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
     
-    print("✅ vip_data.json generated with FULL FRED DATA.")
+    print("✅ vip_data.json generated with FULL PACK (Rates + Risk + Z-Score).")
 
 if __name__ == "__main__":
     generate_app_data()
