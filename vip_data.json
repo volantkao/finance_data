@@ -1,0 +1,23 @@
+{
+    "last_updated": "2025-12-25 16:58:44",
+    "z_score": {
+        "value": 2.29,
+        "mean": 1.0728,
+        "std": 0.1795,
+        "status": "Critical",
+        "history_debug": [
+            "S:69136 | M2:22322",
+            "Spr:2.09% | R:1.4840"
+        ]
+    },
+    "xccy_basis": {
+        "value": -24.22,
+        "lag_minutes": 802,
+        "is_stale": true
+    },
+    "carry_trade": {
+        "ratio": 0.26,
+        "us_10y": 4.14,
+        "jp_10y": 2.05
+    }
+}
