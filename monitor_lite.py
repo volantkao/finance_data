@@ -11,7 +11,6 @@ from bs4 import BeautifulSoup
 # ===================================================================
 FRED_API_KEY = os.environ.get("FRED_API_KEY")
 
-# 加強版 Header，偽裝成瀏覽器，避免 Yahoo 阻擋
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -78,7 +77,6 @@ def get_yahoo_history(symbol, range_str="5y"):
         return []
 
 def get_jgb_10y_realtime():
-    # 嘗試抓取日債，失敗回傳 None，後面會處理
     try:
         url = "https://www.cnbc.com/quotes/JP10Y"
         resp = requests.get(url, headers=HEADERS, timeout=10)
@@ -87,13 +85,13 @@ def get_jgb_10y_realtime():
         if val: return float(val.text.strip().replace('%', ''))
     except: pass
     
-    # 備案：從 FRED 抓最新一筆
+    # 備案
     try:
         hist = get_fred_history("IRLTLT01JPM156N")
         if hist: return hist[-1]['value']
     except: pass
     
-    return 2.05 # 最後保底值
+    return 2.05
 
 # ===================================================================
 # 計算核心
@@ -102,19 +100,16 @@ def get_jgb_10y_realtime():
 def calculate_z_score():
     print("\n--- Starting Z-Score Calculation ---")
     
-    # 1. 下載數據
     stock_data = get_yahoo_history("^W5000", "5y")
     tnx_data = get_yahoo_history("^TNX", "5y")
     m2_data = get_fred_history("M2SL")
     jgb_data = get_fred_history("IRLTLT01JPM156N")
     
-    # 除錯檢查：只要有一個空的，就無法計算
     if not stock_data or not tnx_data or not m2_data:
-        print("❌ Critical Data Missing! Aborting Z-Score calculation.")
+        print("❌ Critical Data Missing! Aborting.")
         return None
 
     try:
-        # 2. 轉換 DataFrame
         df_stock = pd.DataFrame(stock_data).set_index("date")
         df_tnx = pd.DataFrame(tnx_data).set_index("date")
         df_m2 = pd.DataFrame(m2_data).set_index("date")
@@ -123,7 +118,7 @@ def calculate_z_score():
         for df in [df_stock, df_tnx, df_m2, df_jgb]:
             df.index = pd.to_datetime(df.index)
 
-        # 3. 月資料對齊
+        # Resample
         df_s_m = df_stock.resample('ME').last()
         df_t_m = df_tnx.resample('ME').last()
         df_s_m.index = df_s_m.index.to_period('M')
@@ -131,16 +126,20 @@ def calculate_z_score():
         df_m2.index = df_m2.index.to_period('M')
         df_jgb.index = df_jgb.index.to_period('M')
         
-        df = df_s_m.join(df_t_m, lsuffix='_s', rsuffix='_t').join(df_m2, rsuffix='_m').join(df_jgb, rsuffix='_j')
+        # [修正點] 這裡原本寫 rsuffix='_j'，改回 '_jgb' 以匹配下面的 value_jgb
+        df = df_s_m.join(df_t_m, lsuffix='_s', rsuffix='_t') \
+                   .join(df_m2, rsuffix='_m') \
+                   .join(df_jgb, rsuffix='_jgb')
+                   
         df['value'] = df['value'].ffill()       # M2
         df['value_jgb'] = df['value_jgb'].ffill() # JGB
         df = df.dropna()
         
-        # 4. 計算歷史 Ratio
+        # Calc History
         df['spread'] = (df['price_t'] - df['value_jgb']).apply(lambda x: x if x > 0.1 else 0.1)
         df['ratio'] = (df['price_s'] / df['value']) / df['spread']
         
-        # 5. 計算今日即時數值
+        # Calc Today
         jp_10y_now = get_jgb_10y_realtime()
         latest_s = stock_data[-1]['price']
         latest_t = tnx_data[-1]['price']
@@ -150,7 +149,7 @@ def calculate_z_score():
         if real_spread < 0.1: real_spread = 0.1
         today_r = (latest_s / latest_m2) / real_spread
         
-        # 6. Z-Score (過去 12 個月)
+        # Z-Score (n=12)
         if len(df) >= 12:
             win = df['ratio'].tail(12)
             mean = win.mean()
@@ -167,13 +166,13 @@ def calculate_z_score():
     return None
 
 # ===================================================================
-# 主程式：產生精簡版 JSON
+# 主程式：產生精簡版 JSON (只含 Z-Score)
 # ===================================================================
 
 def generate_app_data():
     print("🚀 Starting Monitor Lite (Clean Version)...")
     
-    # 只計算 Z-Score
+    # 計算 Z-Score
     z_res = calculate_z_score()
     
     # 預設值
@@ -191,7 +190,7 @@ def generate_app_data():
     else:
         print("⚠️ Z-Score calculation failed. Outputting zeros.")
 
-    # 產生您指定的 JSON 格式 (移除了 xccy 和 carry)
+    # [修正點] JSON 只保留 Z-Score 相關欄位，移除 xccy 和 carry
     data = {
         "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "z_score": {
