@@ -32,7 +32,7 @@ jobs:
         FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         # 如果您的程式有用到 Email，也要在這裡注入
         # SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-      run: python monitor_advanced.py
+      run: python monitor_lite.py
 
     - name: Commit and Push JSON
       # 這一步會把生成的 json 檔推回 GitHub，這樣 App 就能讀到了
