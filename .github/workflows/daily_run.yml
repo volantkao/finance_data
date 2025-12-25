@@ -2,7 +2,7 @@ name: Daily Finance Monitor Lite
 
 on:
   schedule:
-    - cron: '30 21 * * *'
+    - cron: '30 9,21 * * *'
   workflow_dispatch:
 
 jobs:
