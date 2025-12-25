@@ -72,6 +72,43 @@ def get_jgb_10y_realtime():
     val, _ = get_fred_latest("IRLTLT01JPM156N")
     return val if val else 2.05
 
+def get_srf_usage():
+    """
+    [新增] 從紐約聯儲抓取 SRF (Standing Repo Facility) 使用量
+    """
+    try:
+        # 抓取過去 5 天的數據，避免假日沒資料
+        today = datetime.now().strftime("%Y-%m-%d")
+        start_date = (datetime.now() - timedelta(days=5)).strftime("%Y-%m-%d")
+        url = "https://markets.newyorkfed.org/api/rp/results/search.json"
+        params = {"startDate": start_date, "endDate": today, "format": "json"}
+        
+        # 這裡不需 API Key，但需要偽裝 User-Agent
+        response = requests.get(url, headers=HEADERS, params=params, timeout=15)
+        data = response.json()
+        
+        ops = []
+        if "repo" in data and "operations" in data["repo"]: ops = data["repo"]["operations"]
+        elif "repoOperations" in data:
+            temp = data["repoOperations"]
+            if isinstance(temp, dict) and "operations" in temp: ops = temp["operations"]
+            elif isinstance(temp, list): ops = temp
+            
+        if not ops: return 0.0, ""
+        
+        # 篩選 Repo 操作 (SRF 屬於 Repo)
+        repo_ops = [op for op in ops if op.get("operationType", "") == "Repo"]
+        if not repo_ops: return 0.0, ""
+        
+        # 取最新的一筆
+        latest_op = max(repo_ops, key=lambda x: x.get("operationDate", "0000-00-00"))
+        raw_amt = latest_op.get("totalAmtAccepted", 0)
+        
+        if isinstance(raw_amt, str): raw_amt = float(raw_amt.replace(",", ""))
+        
+        return float(raw_amt), latest_op.get("operationDate")
+    except: return 0.0, ""
+
 # ===================================================================
 # Z-Score 計算核心
 # ===================================================================
@@ -130,24 +167,25 @@ def calculate_z_score(jp_10y_now):
 # ===================================================================
 
 def generate_app_data():
-    print("🚀 Starting Monitor Lite (Full Pack + Risk Indicators)...")
+    print("🚀 Starting Monitor Lite (Full Pack + SRF)...")
     
-    # 1. 基礎數據 (日本10年債)
+    # 1. 基礎數據
     jp_10y_val = get_jgb_10y_realtime()
     
-    # 2. FRED 核心利率數據
+    # 2. FRED 核心利率
     sofr, sofr_date = get_fred_latest("SOFR")
     iorb, iorb_date = get_fred_latest("IORB")
     us_3m, _ = get_fred_latest("DTB3")
     jp_3m, _ = get_fred_latest("IR3TIB01JPM156N")
     
-    # 3. [新增] 風險指標數據
-    # BAMLH0A0HYM2 = High Yield OAS
-    # BAA10Y = BAA Spread
-    # STLFSI3 = Financial Stress Index
+    # 3. 風險指標 (含 SRF)
     hy_oas, _ = get_fred_latest("BAMLH0A0HYM2")
     baa_spread, _ = get_fred_latest("BAA10Y")
     fin_stress, _ = get_fred_latest("STLFSI3")
+    
+    # [新增] 抓取 SRF 使用量
+    srf_amt, srf_dt = get_srf_usage()
+    srf_billions = srf_amt / 1000000000  # 轉換為十億美元 (Billions)
 
     # 4. 計算 Z-Score
     z_res = calculate_z_score(jp_10y_val)
@@ -157,11 +195,10 @@ def generate_app_data():
         z_score, today_r, mean_val, std_val, w5000, m2 = z_res
         status = "Critical" if z_score > 2.0 else "Warning" if z_score > 1.0 else "Normal"
 
-    # 5. 打包 JSON (一次滿足 App 所有需求)
+    # 5. 打包 JSON
     data = {
         "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         
-        # 市場利率
         "market_data": {
             "jp_10y": round(jp_10y_val, 3) if jp_10y_val else 0.0,
             "us_3m": round(us_3m, 3) if us_3m else 0.0,
@@ -171,14 +208,16 @@ def generate_app_data():
             "sofr_date": sofr_date if sofr_date else ""
         },
         
-        # 風險指標 (新增)
         "risk_indicators": {
             "high_yield_oas": round(hy_oas, 2) if hy_oas else 0.0,
             "baa_spread": round(baa_spread, 2) if baa_spread else 0.0,
-            "financial_stress": round(fin_stress, 2) if fin_stress else 0.0
+            "financial_stress": round(fin_stress, 2) if fin_stress else 0.0,
+            
+            # [新增] SRF 數據欄位
+            "srf_usage": round(srf_billions, 2), # 單位：Billions
+            "srf_date": srf_dt if srf_dt else ""
         },
 
-        # 脆弱性 Z-Score
         "z_score": {
             "value": round(z_score, 2),
             "mean": round(mean_val, 4),
@@ -199,7 +238,7 @@ def generate_app_data():
     with open("vip_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
     
-    print("✅ vip_data.json generated with FULL PACK (Rates + Risk + Z-Score).")
+    print("✅ vip_data.json generated with SRF Data.")
 
 if __name__ == "__main__":
     generate_app_data()
