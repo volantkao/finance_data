@@ -1,23 +1,13 @@
 {
-    "last_updated": "2025-12-25 10:04:25",
+    "last_updated": "2025-12-25 10:13:42",
     "z_score": {
-        "value": 0,
-        "mean": 0,
-        "std": 0,
-        "status": "Normal",
+        "value": 0.0,
+        "mean": 0.0,
+        "std": 0.0,
+        "status": "Data Error",
         "history_debug": [
             "S:0 | M2:0",
-            ""
+            "Data Missing"
         ]
-    },
-    "xccy_basis": {
-        "value": -24.22,
-        "lag_minutes": 802,
-        "is_stale": true
-    },
-    "carry_trade": {
-        "ratio": 0.26,
-        "us_10y": 4.14,
-        "jp_10y": 2.05
     }
 }
