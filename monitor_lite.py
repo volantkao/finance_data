@@ -1,0 +1,36 @@
+name: Daily Finance Monitor Lite
+
+on:
+  schedule:
+    - cron: '30 21 * * *' # 每天早上 05:30 (台灣時間)
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests pandas numpy beautifulsoup4
+
+    - name: Run Monitor Lite
+      env:
+        FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+      run: python monitor_lite.py
+
+    - name: Commit and Push JSON
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+        git add vip_data.json
+        git commit -m "Update App Data [skip ci]" || exit 0
+        git push
