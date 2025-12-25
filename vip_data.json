@@ -1,13 +1,13 @@
 {
-    "last_updated": "2025-12-25 10:13:42",
+    "last_updated": "2025-12-25 10:17:51",
     "z_score": {
-        "value": 0.0,
-        "mean": 0.0,
-        "std": 0.0,
-        "status": "Data Error",
+        "value": 2.3,
+        "mean": 1.0728,
+        "std": 0.1795,
+        "status": "Critical",
         "history_debug": [
-            "S:0 | M2:0",
-            "Data Missing"
+            "S:69136 | M2:22322",
+            "R:1.4847 (Mean:1.07)"
         ]
     }
 }
