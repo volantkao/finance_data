@@ -1,13 +1,13 @@
 {
-    "last_updated": "2025-12-25 16:58:44",
+    "last_updated": "2025-12-25 10:04:25",
     "z_score": {
-        "value": 2.29,
-        "mean": 1.0728,
-        "std": 0.1795,
-        "status": "Critical",
+        "value": 0,
+        "mean": 0,
+        "std": 0,
+        "status": "Normal",
         "history_debug": [
-            "S:69136 | M2:22322",
-            "Spr:2.09% | R:1.4840"
+            "S:0 | M2:0",
+            ""
         ]
     },
     "xccy_basis": {
