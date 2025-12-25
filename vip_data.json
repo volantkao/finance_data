@@ -1,11 +1,23 @@
 {
-    "last_updated": "2025-12-25 11:00:13",
-    "jp_10y": 2.05,
+    "last_updated": "2025-12-25 12:48:56",
+    "market_data": {
+        "jp_10y": 2.05,
+        "us_3m": 3.56,
+        "jp_3m": 0.81,
+        "sofr": 3.66,
+        "iorb": 3.65,
+        "sofr_date": "2025-12-23"
+    },
     "z_score": {
         "value": 2.3,
         "mean": 1.0728,
         "std": 0.1795,
         "status": "Critical",
+        "details": {
+            "w5000": 69136.0,
+            "m2": 22322.4,
+            "ratio": 1.4847
+        },
         "history_debug": [
             "S:69136 | M2:22322",
             "R:1.4847 (Mean:1.07)"
