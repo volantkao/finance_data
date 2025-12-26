@@ -193,10 +193,10 @@ def get_vol_stress_params():
         return params
     except: return None
 
-def generate_spread_history_for_app(days=150):
+def generate_spread_history_for_app(current_jp_val, days=150):
     """
-    [新增] 為 App 準備最近 N 天的美日利差歷史數據 (日線)
-    App 拿到這個 List 後，只要自己抓個股歷史股價，相除即可算出 Z-Score
+    [精準校正版] 產生美日利差歷史
+    解決 FRED 資料延遲問題，強制將 '今天' 的日債數值更新為即時報價。
     """
     print(f"\n--- Generating Spread History ({days} days) ---")
     try:
@@ -204,26 +204,32 @@ def generate_spread_history_for_app(days=150):
         us_data = get_yahoo_history("^TNX", "1y")
         if not us_data: return []
         
-        # 2. 抓 JP 10Y (FRED Monthly -> Resample to Daily)
-        # 因為 App 抓不到日債，我們用 FRED 數據填充
-        jp_data = get_fred_history("IRLTLT01JPM156N", 400)
-        
         df_us = pd.DataFrame(us_data).set_index("date")
         df_us.index = pd.to_datetime(df_us.index)
+        
+        # 2. 抓 JP 10Y (FRED Monthly) 並進行 [即時校正]
+        jp_data = get_fred_history("IRLTLT01JPM156N", 400)
         
         if jp_data:
             df_jp = pd.DataFrame(jp_data).set_index("date")
             df_jp.index = pd.to_datetime(df_jp.index)
-            # 月資料轉日資料 (Forward Fill)
-            df_jp = df_jp.resample('D').ffill()
+            
+            # [關鍵修正]：如果 FRED 資料舊，我們手動加入「今天」的即時日債數據
+            today = pd.Timestamp.now().normalize()
+            if current_jp_val is not None:
+                # 無論如何，強制覆蓋/新增今天的值
+                df_jp.loc[today] = {'value': current_jp_val}
+            
+            # 月資料轉日資料 (使用 Interpolate 插值，讓曲線平滑過渡到今天的真值)
+            df_jp = df_jp.resample('D').interpolate(method='linear')
         else:
-            # Fallback: 如果抓不到，假設 1.0% (避免壞掉)
+            # Fallback
             df_jp = pd.DataFrame(index=df_us.index)
-            df_jp['value'] = 1.0
+            df_jp['value'] = current_jp_val if current_jp_val else 1.0
 
         # 3. 合併計算利差
         df = df_us.join(df_jp, rsuffix='_jp')
-        df['value'] = df['value'].ffill() # 填補 JP 空值
+        df['value'] = df['value'].ffill() # 填補 JP 空隙
         df = df.dropna()
         
         # Spread = US - JP
@@ -239,7 +245,7 @@ def generate_spread_history_for_app(days=150):
                 "spread": round(row['spread'], 4)
             })
             
-        print(f"✅ Generated {len(result_list)} spread points.")
+        print(f"✅ Generated {len(result_list)} spread points. (Last: {result_list[-1]['spread']}%)")
         return result_list
         
     except Exception as e:
@@ -251,10 +257,10 @@ def generate_spread_history_for_app(days=150):
 # ===================================================================
 
 def generate_app_data():
-    print("🚀 Starting Monitor Lite (Full Pack + Spread History)...")
+    print("🚀 Starting Monitor Lite (Full Pack + Calibrated Spread)...")
     
-    # 1. 基礎數據
-    jp_10y_val = get_jgb_10y_realtime()
+    # 1. 基礎數據 (即時)
+    jp_10y_val = get_jgb_10y_realtime() # 這就是 2.043%
     sofr, sofr_date = get_fred_latest("SOFR")
     iorb, iorb_date = get_fred_latest("IORB")
     us_3m, _ = get_fred_latest("DTB3")
@@ -278,8 +284,9 @@ def generate_app_data():
 
     # 4. 計算參數
     vol_params = get_vol_stress_params()
-    # [新增] 產生 150 天利差歷史供 App 使用 (足夠算 120MA)
-    spread_history = generate_spread_history_for_app(150)
+    
+    # [修正] 傳入即時的 jp_10y_val 進行歷史校正
+    spread_history = generate_spread_history_for_app(jp_10y_val, 150)
 
     # 5. 打包 JSON
     data = {
@@ -319,14 +326,12 @@ def generate_app_data():
         },
 
         "client_side_params": {
-            # 1. 泡沫壓力計 (App Live Calc)
             "market_vuln": {
                 "m2_supply": vuln_params.get("m2", 0),
                 "jgb_10y": vuln_params.get("jgb_10y", 1.5),
                 "hist_mean": vuln_params.get("mean", 0),
                 "hist_std": vuln_params.get("std", 1)
             },
-            # 2. 恐慌偵測器 (App Live Calc)
             "vol_stress": {
                 "hv_mean": vol_params.get("hv_mean", 0) if vol_params else 0,
                 "hv_std": vol_params.get("hv_std", 1) if vol_params else 1,
@@ -334,12 +339,7 @@ def generate_app_data():
                 "slope_std": vol_params.get("slope_std", 1) if vol_params else 1,
                 "yesterday_hv": vol_params.get("yesterday_hv", 0) if vol_params else 0
             },
-            # 3. [新增] 120天美日利差歷史 (for Free User 股價評分)
-            # App 邏輯: 
-            #   1. 用戶查 "TSLA" -> App 抓 TSLA 150天收盤價
-            #   2. App 對齊這份 spread_history (by date)
-            #   3. 計算 Ratio = Stock_Price / Spread (每天算)
-            #   4. 算出這串 Ratio 的 Z-Score (顯示給用戶)
+            # 校正後的 150 天利差歷史
             "spread_history_150d": spread_history
         }
     }
@@ -347,7 +347,7 @@ def generate_app_data():
     with open("vip_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
     
-    print("✅ vip_data.json generated with Spread History.")
+    print("✅ vip_data.json generated with Calibrated Spread History.")
 
 if __name__ == "__main__":
     generate_app_data()
