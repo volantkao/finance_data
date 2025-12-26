@@ -30,11 +30,11 @@ def get_fred_latest(series_id):
         return float(obs['value']), obs['date']
     except: return None, None
 
-def get_fred_history(series_id):
+def get_fred_history(series_id, days=1825):
     """抓取 FRED 歷史數據 (序列)"""
     if not FRED_API_KEY: return []
     url = "https://api.stlouisfed.org/fred/series/observations"
-    start_date = (datetime.now() - timedelta(days=1825)).strftime("%Y-%m-%d")
+    start_date = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
     params = {"series_id": series_id, "api_key": FRED_API_KEY, "file_type": "json", "observation_start": start_date}
     try:
         r = requests.get(url, params=params, timeout=15).json()
@@ -81,7 +81,7 @@ def get_srf_usage():
         url = "https://markets.newyorkfed.org/api/rp/results/search.json"
         params = {"startDate": start_date, "endDate": today, "format": "json"}
         
-        response = requests.get(url, headers=HEADERS, params=params, timeout=15)
+        response = requests.get(url, headers=headers, params=params, timeout=15)
         data = response.json()
         
         ops = []
@@ -153,7 +153,7 @@ def calculate_z_score(jp_10y_now):
             std = win.std()
             z = (today_r - mean) / std if std != 0 else 0
             
-            # [新增] 回傳 App 需要的靜態參數
+            # [App 原料]
             app_params = {
                 "m2": latest_m2,
                 "jgb_10y": jp_10y_now,
@@ -166,13 +166,9 @@ def calculate_z_score(jp_10y_now):
     return None
 
 def get_vol_stress_params():
-    """
-    [新增] 生產 Vol Stress 所需的統計參數 (HV Mean, Std, Slope Mean, Std)
-    讓 App 只要抓 JPY=X 價格就能即時算出 Vol Stress Z-Score
-    """
+    """生產 Vol Stress 所需的統計參數 (HV Mean, Std)"""
     print("\n--- Generating Vol Stress Params ---")
     try:
-        # 抓 1 年數據來算統計母體
         hist = get_yahoo_history("JPY=X", "1y")
         if not hist: return None
         
@@ -180,34 +176,82 @@ def get_vol_stress_params():
         df['date'] = pd.to_datetime(df['date'])
         df = df.set_index('date').sort_index()
         
-        # 1. 計算 HV (10天)
         df['ret'] = df['price'].pct_change()
         df['hv'] = df['ret'].rolling(window=10).std() * np.sqrt(252) * 100
-        
-        # 2. 計算 Slope (Diff)
         df['slope'] = df['hv'].diff()
-        
         df = df.dropna()
         
         if len(df) < 20: return None
         
-        # 3. 提取統計參數 (這些盤中不會變)
         params = {
             "hv_mean": round(df['hv'].mean(), 4),
             "hv_std": round(df['hv'].std(), 4),
             "slope_mean": round(df['slope'].mean(), 4),
             "slope_std": round(df['slope'].std(), 4),
-            "yesterday_hv": round(df['hv'].iloc[-1], 4) # 供 App 計算盤中 Slope 用
+            "yesterday_hv": round(df['hv'].iloc[-1], 4)
         }
         return params
     except: return None
+
+def generate_spread_history_for_app(days=150):
+    """
+    [新增] 為 App 準備最近 N 天的美日利差歷史數據 (日線)
+    App 拿到這個 List 後，只要自己抓個股歷史股價，相除即可算出 Z-Score
+    """
+    print(f"\n--- Generating Spread History ({days} days) ---")
+    try:
+        # 1. 抓 US 10Y (Yahoo ^TNX, Daily)
+        us_data = get_yahoo_history("^TNX", "1y")
+        if not us_data: return []
+        
+        # 2. 抓 JP 10Y (FRED Monthly -> Resample to Daily)
+        # 因為 App 抓不到日債，我們用 FRED 數據填充
+        jp_data = get_fred_history("IRLTLT01JPM156N", 400)
+        
+        df_us = pd.DataFrame(us_data).set_index("date")
+        df_us.index = pd.to_datetime(df_us.index)
+        
+        if jp_data:
+            df_jp = pd.DataFrame(jp_data).set_index("date")
+            df_jp.index = pd.to_datetime(df_jp.index)
+            # 月資料轉日資料 (Forward Fill)
+            df_jp = df_jp.resample('D').ffill()
+        else:
+            # Fallback: 如果抓不到，假設 1.0% (避免壞掉)
+            df_jp = pd.DataFrame(index=df_us.index)
+            df_jp['value'] = 1.0
+
+        # 3. 合併計算利差
+        df = df_us.join(df_jp, rsuffix='_jp')
+        df['value'] = df['value'].ffill() # 填補 JP 空值
+        df = df.dropna()
+        
+        # Spread = US - JP
+        df['spread'] = df['price'] - df['value']
+        df['spread'] = df['spread'].apply(lambda x: x if x > 0.1 else 0.1) # 防呆
+        
+        # 4. 取最近 N 天並轉為 List
+        recent = df.tail(days)
+        result_list = []
+        for dt, row in recent.iterrows():
+            result_list.append({
+                "date": dt.strftime('%Y-%m-%d'),
+                "spread": round(row['spread'], 4)
+            })
+            
+        print(f"✅ Generated {len(result_list)} spread points.")
+        return result_list
+        
+    except Exception as e:
+        print(f"❌ Error generating spread history: {e}")
+        return []
 
 # ===================================================================
 # 主程式：產生 全功能 JSON
 # ===================================================================
 
 def generate_app_data():
-    print("🚀 Starting Monitor Lite (Full Pack + App Raw Params)...")
+    print("🚀 Starting Monitor Lite (Full Pack + Spread History)...")
     
     # 1. 基礎數據
     jp_10y_val = get_jgb_10y_realtime()
@@ -223,7 +267,7 @@ def generate_app_data():
     srf_amt, srf_dt = get_srf_usage()
     srf_billions = srf_amt / 1000000000 
 
-    # 3. 計算 Z-Score (並獲取 App 原料)
+    # 3. 計算 Z-Score (Server Snapshot)
     z_res = calculate_z_score(jp_10y_val)
     z_score = 0; mean_val = 0; std_val = 0; today_r = 0; w5000 = 0; m2 = 0; status = "Data Error"
     vuln_params = {}
@@ -232,8 +276,10 @@ def generate_app_data():
         z_score, today_r, mean_val, std_val, w5000, m2, vuln_params = z_res
         status = "Critical" if z_score > 2.0 else "Warning" if z_score > 1.0 else "Normal"
 
-    # 4. [新增] 計算 Vol Stress 原料
+    # 4. 計算參數
     vol_params = get_vol_stress_params()
+    # [新增] 產生 150 天利差歷史供 App 使用 (足夠算 120MA)
+    spread_history = generate_spread_history_for_app(150)
 
     # 5. 打包 JSON
     data = {
@@ -272,41 +318,36 @@ def generate_app_data():
             ]
         },
 
-        # [新增] Client-Side Calculation Ingredients
         "client_side_params": {
-            # 用於計算即時 Market Vulnerability Z-Score
-            # App 邏輯: 
-            # 1. 抓 ^W5000 現價(S), ^TNX 現價(T)
-            # 2. Ratio = (S / m2) / (T - jgb_10y)
-            # 3. Z = (Ratio - mean) / std
+            # 1. 泡沫壓力計 (App Live Calc)
             "market_vuln": {
                 "m2_supply": vuln_params.get("m2", 0),
                 "jgb_10y": vuln_params.get("jgb_10y", 1.5),
                 "hist_mean": vuln_params.get("mean", 0),
                 "hist_std": vuln_params.get("std", 1)
             },
-            # 用於計算即時 Vol Stress
-            # App 邏輯:
-            # 1. 抓 JPY=X 過去 15 天日線
-            # 2. 替換最新價格 -> 算 10日 HV (Current)
-            # 3. Slope = Current_HV - yesterday_hv
-            # 4. Z_Level = (Current_HV - hv_mean) / hv_std
-            # 5. Z_Slope = (Slope - slope_mean) / slope_std
-            # 6. Stress = Z_Level + Z_Slope
+            # 2. 恐慌偵測器 (App Live Calc)
             "vol_stress": {
                 "hv_mean": vol_params.get("hv_mean", 0) if vol_params else 0,
                 "hv_std": vol_params.get("hv_std", 1) if vol_params else 1,
                 "slope_mean": vol_params.get("slope_mean", 0) if vol_params else 0,
                 "slope_std": vol_params.get("slope_std", 1) if vol_params else 1,
                 "yesterday_hv": vol_params.get("yesterday_hv", 0) if vol_params else 0
-            }
+            },
+            # 3. [新增] 120天美日利差歷史 (for Free User 股價評分)
+            # App 邏輯: 
+            #   1. 用戶查 "TSLA" -> App 抓 TSLA 150天收盤價
+            #   2. App 對齊這份 spread_history (by date)
+            #   3. 計算 Ratio = Stock_Price / Spread (每天算)
+            #   4. 算出這串 Ratio 的 Z-Score (顯示給用戶)
+            "spread_history_150d": spread_history
         }
     }
 
     with open("vip_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
     
-    print("✅ vip_data.json generated with App Raw Params.")
+    print("✅ vip_data.json generated with Spread History.")
 
 if __name__ == "__main__":
     generate_app_data()
