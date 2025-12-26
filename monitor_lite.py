@@ -49,8 +49,9 @@ def get_yahoo_history(symbol, range_str="5y"):
     url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1d&range={range_str}"
     try:
         r = requests.get(url, headers=HEADERS, timeout=15).json()
-        closes = r['chart']['result'][0]['indicators']['quote'][0]['close']
-        timestamps = r['chart']['result'][0]['timestamp']
+        result = r['chart']['result'][0]
+        closes = result['indicators']['quote'][0]['close']
+        timestamps = result['timestamp']
         clean = []
         for i in range(len(closes)):
             if closes[i] is not None:
@@ -73,17 +74,13 @@ def get_jgb_10y_realtime():
     return val if val else 2.05
 
 def get_srf_usage():
-    """
-    [新增] 從紐約聯儲抓取 SRF (Standing Repo Facility) 使用量
-    """
+    """從紐約聯儲抓取 SRF (Standing Repo Facility) 使用量"""
     try:
-        # 抓取過去 5 天的數據，避免假日沒資料
         today = datetime.now().strftime("%Y-%m-%d")
         start_date = (datetime.now() - timedelta(days=5)).strftime("%Y-%m-%d")
         url = "https://markets.newyorkfed.org/api/rp/results/search.json"
         params = {"startDate": start_date, "endDate": today, "format": "json"}
         
-        # 這裡不需 API Key，但需要偽裝 User-Agent
         response = requests.get(url, headers=HEADERS, params=params, timeout=15)
         data = response.json()
         
@@ -95,26 +92,22 @@ def get_srf_usage():
             elif isinstance(temp, list): ops = temp
             
         if not ops: return 0.0, ""
-        
-        # 篩選 Repo 操作 (SRF 屬於 Repo)
         repo_ops = [op for op in ops if op.get("operationType", "") == "Repo"]
         if not repo_ops: return 0.0, ""
         
-        # 取最新的一筆
         latest_op = max(repo_ops, key=lambda x: x.get("operationDate", "0000-00-00"))
         raw_amt = latest_op.get("totalAmtAccepted", 0)
-        
         if isinstance(raw_amt, str): raw_amt = float(raw_amt.replace(",", ""))
         
         return float(raw_amt), latest_op.get("operationDate")
     except: return 0.0, ""
 
 # ===================================================================
-# Z-Score 計算核心
+# 計算核心 (含原料生產)
 # ===================================================================
 
 def calculate_z_score(jp_10y_now):
-    print("\n--- Starting Z-Score Calculation ---")
+    print("\n--- Calculating Vuln Z-Score & Params ---")
     stock_data = get_yahoo_history("^W5000", "5y")
     tnx_data = get_yahoo_history("^TNX", "5y")
     m2_data = get_fred_history("M2SL")
@@ -145,6 +138,7 @@ def calculate_z_score(jp_10y_now):
         df['spread'] = (df['price_t'] - df['value_jgb']).apply(lambda x: x if x > 0.1 else 0.1)
         df['ratio'] = (df['price_s'] / df['value']) / df['spread']
         
+        # Server-side calculation (Snapshot)
         latest_s = stock_data[-1]['price']
         latest_t = tnx_data[-1]['price']
         latest_m2 = m2_data[-1]['value']
@@ -158,42 +152,88 @@ def calculate_z_score(jp_10y_now):
             mean = win.mean()
             std = win.std()
             z = (today_r - mean) / std if std != 0 else 0
-            return z, today_r, mean, std, latest_s, latest_m2
+            
+            # [新增] 回傳 App 需要的靜態參數
+            app_params = {
+                "m2": latest_m2,
+                "jgb_10y": jp_10y_now,
+                "mean": mean,
+                "std": std
+            }
+            return z, today_r, mean, std, latest_s, latest_m2, app_params
+            
     except: return None
     return None
+
+def get_vol_stress_params():
+    """
+    [新增] 生產 Vol Stress 所需的統計參數 (HV Mean, Std, Slope Mean, Std)
+    讓 App 只要抓 JPY=X 價格就能即時算出 Vol Stress Z-Score
+    """
+    print("\n--- Generating Vol Stress Params ---")
+    try:
+        # 抓 1 年數據來算統計母體
+        hist = get_yahoo_history("JPY=X", "1y")
+        if not hist: return None
+        
+        df = pd.DataFrame(hist)
+        df['date'] = pd.to_datetime(df['date'])
+        df = df.set_index('date').sort_index()
+        
+        # 1. 計算 HV (10天)
+        df['ret'] = df['price'].pct_change()
+        df['hv'] = df['ret'].rolling(window=10).std() * np.sqrt(252) * 100
+        
+        # 2. 計算 Slope (Diff)
+        df['slope'] = df['hv'].diff()
+        
+        df = df.dropna()
+        
+        if len(df) < 20: return None
+        
+        # 3. 提取統計參數 (這些盤中不會變)
+        params = {
+            "hv_mean": round(df['hv'].mean(), 4),
+            "hv_std": round(df['hv'].std(), 4),
+            "slope_mean": round(df['slope'].mean(), 4),
+            "slope_std": round(df['slope'].std(), 4),
+            "yesterday_hv": round(df['hv'].iloc[-1], 4) # 供 App 計算盤中 Slope 用
+        }
+        return params
+    except: return None
 
 # ===================================================================
 # 主程式：產生 全功能 JSON
 # ===================================================================
 
 def generate_app_data():
-    print("🚀 Starting Monitor Lite (Full Pack + SRF)...")
+    print("🚀 Starting Monitor Lite (Full Pack + App Raw Params)...")
     
     # 1. 基礎數據
     jp_10y_val = get_jgb_10y_realtime()
-    
-    # 2. FRED 核心利率
     sofr, sofr_date = get_fred_latest("SOFR")
     iorb, iorb_date = get_fred_latest("IORB")
     us_3m, _ = get_fred_latest("DTB3")
     jp_3m, _ = get_fred_latest("IR3TIB01JPM156N")
     
-    # 3. 風險指標 (含 SRF)
+    # 2. 風險指標
     hy_oas, _ = get_fred_latest("BAMLH0A0HYM2")
     baa_spread, _ = get_fred_latest("BAA10Y")
     fin_stress, _ = get_fred_latest("STLFSI3")
-    
-    # [新增] 抓取 SRF 使用量
     srf_amt, srf_dt = get_srf_usage()
-    srf_billions = srf_amt / 1000000000  # 轉換為十億美元 (Billions)
+    srf_billions = srf_amt / 1000000000 
 
-    # 4. 計算 Z-Score
+    # 3. 計算 Z-Score (並獲取 App 原料)
     z_res = calculate_z_score(jp_10y_val)
     z_score = 0; mean_val = 0; std_val = 0; today_r = 0; w5000 = 0; m2 = 0; status = "Data Error"
+    vuln_params = {}
     
     if z_res:
-        z_score, today_r, mean_val, std_val, w5000, m2 = z_res
+        z_score, today_r, mean_val, std_val, w5000, m2, vuln_params = z_res
         status = "Critical" if z_score > 2.0 else "Warning" if z_score > 1.0 else "Normal"
+
+    # 4. [新增] 計算 Vol Stress 原料
+    vol_params = get_vol_stress_params()
 
     # 5. 打包 JSON
     data = {
@@ -212,9 +252,7 @@ def generate_app_data():
             "high_yield_oas": round(hy_oas, 2) if hy_oas else 0.0,
             "baa_spread": round(baa_spread, 2) if baa_spread else 0.0,
             "financial_stress": round(fin_stress, 2) if fin_stress else 0.0,
-            
-            # [新增] SRF 數據欄位
-            "srf_usage": round(srf_billions, 2), # 單位：Billions
+            "srf_usage": round(srf_billions, 2),
             "srf_date": srf_dt if srf_dt else ""
         },
 
@@ -232,13 +270,43 @@ def generate_app_data():
                 f"S:{w5000:.0f} | M2:{m2:.0f}",
                 f"R:{today_r:.4f} (Mean:{mean_val:.2f})" if z_res else "Data Missing"
             ]
+        },
+
+        # [新增] Client-Side Calculation Ingredients
+        "client_side_params": {
+            # 用於計算即時 Market Vulnerability Z-Score
+            # App 邏輯: 
+            # 1. 抓 ^W5000 現價(S), ^TNX 現價(T)
+            # 2. Ratio = (S / m2) / (T - jgb_10y)
+            # 3. Z = (Ratio - mean) / std
+            "market_vuln": {
+                "m2_supply": vuln_params.get("m2", 0),
+                "jgb_10y": vuln_params.get("jgb_10y", 1.5),
+                "hist_mean": vuln_params.get("mean", 0),
+                "hist_std": vuln_params.get("std", 1)
+            },
+            # 用於計算即時 Vol Stress
+            # App 邏輯:
+            # 1. 抓 JPY=X 過去 15 天日線
+            # 2. 替換最新價格 -> 算 10日 HV (Current)
+            # 3. Slope = Current_HV - yesterday_hv
+            # 4. Z_Level = (Current_HV - hv_mean) / hv_std
+            # 5. Z_Slope = (Slope - slope_mean) / slope_std
+            # 6. Stress = Z_Level + Z_Slope
+            "vol_stress": {
+                "hv_mean": vol_params.get("hv_mean", 0) if vol_params else 0,
+                "hv_std": vol_params.get("hv_std", 1) if vol_params else 1,
+                "slope_mean": vol_params.get("slope_mean", 0) if vol_params else 0,
+                "slope_std": vol_params.get("slope_std", 1) if vol_params else 1,
+                "yesterday_hv": vol_params.get("yesterday_hv", 0) if vol_params else 0
+            }
         }
     }
 
     with open("vip_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
     
-    print("✅ vip_data.json generated with SRF Data.")
+    print("✅ vip_data.json generated with App Raw Params.")
 
 if __name__ == "__main__":
     generate_app_data()
