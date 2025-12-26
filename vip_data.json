@@ -1,5 +1,5 @@
 {
-    "last_updated": "2025-12-26 18:11:59",
+    "last_updated": "2025-12-26 21:39:42",
     "market_data": {
         "jp_10y": 2.041,
         "us_3m": 3.56,
@@ -9,40 +9,40 @@
         "sofr_date": "2025-12-24"
     },
     "risk_indicators": {
-        "high_yield_oas": 2.83,
+        "high_yield_oas": 2.84,
         "baa_spread": 1.74,
         "financial_stress": -0.34,
         "srf_usage": 17.25,
         "srf_date": "2025-12-26"
     },
     "z_score": {
-        "value": 2.25,
-        "mean": 1.0725,
-        "std": 0.1791,
+        "value": 2.26,
+        "mean": 1.0728,
+        "std": 0.1795,
         "status": "Critical",
         "details": {
             "w5000": 69136.0,
             "m2": 22322.4,
-            "ratio": 1.4748
+            "ratio": 1.4784
         },
         "history_debug": [
             "S:69136 | M2:22322",
-            "R:1.4748 (Mean:1.07)"
+            "R:1.4784 (Mean:1.07)"
         ]
     },
     "client_side_params": {
         "market_vuln": {
             "m2_supply": 22322.4,
             "jgb_10y": 2.041,
-            "hist_mean": 1.072539257941868,
-            "hist_std": 0.1791329338438676
+            "hist_mean": 1.072776235118752,
+            "hist_std": 0.1794999984880351
         },
         "vol_stress": {
             "hv_mean": 9.463,
             "hv_std": 3.3415,
-            "slope_mean": 0.017,
+            "slope_mean": 0.0169,
             "slope_std": 1.2409,
-            "yesterday_hv": 9.0351
+            "yesterday_hv": 9.027
         },
         "spread_history_150d": [
             {
@@ -643,7 +643,7 @@
             },
             {
                 "date": "2025-12-26",
-                "spread": 2.1
+                "spread": 2.095
             }
         ]
     }
