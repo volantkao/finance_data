@@ -3,8 +3,12 @@ import json
 import os
 import pandas as pd
 import numpy as np
+import urllib3
 from datetime import datetime, timedelta, date
 from bs4 import BeautifulSoup
+
+# 忽略 SSL 警告 (針對 NY Fed API)
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # ===================================================================
 # 設定與參數
@@ -74,14 +78,17 @@ def get_jgb_10y_realtime():
     return val if val else 2.05
 
 def get_srf_usage():
-    """從紐約聯儲抓取 SRF (Standing Repo Facility) 使用量"""
+    """
+    [修復版] 從紐約聯儲抓取 SRF (Standing Repo Facility) 使用量
+    修正點：使用 HEADERS, verify=False, 增強容錯
+    """
     try:
         today = datetime.now().strftime("%Y-%m-%d")
-        start_date = (datetime.now() - timedelta(days=5)).strftime("%Y-%m-%d")
+        start_date = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
         url = "https://markets.newyorkfed.org/api/rp/results/search.json"
         params = {"startDate": start_date, "endDate": today, "format": "json"}
         
-        response = requests.get(url, headers=headers, params=params, timeout=15)
+        response = requests.get(url, headers=HEADERS, params=params, timeout=15, verify=False)
         data = response.json()
         
         ops = []
@@ -92,6 +99,7 @@ def get_srf_usage():
             elif isinstance(temp, list): ops = temp
             
         if not ops: return 0.0, ""
+        
         repo_ops = [op for op in ops if op.get("operationType", "") == "Repo"]
         if not repo_ops: return 0.0, ""
         
@@ -100,7 +108,9 @@ def get_srf_usage():
         if isinstance(raw_amt, str): raw_amt = float(raw_amt.replace(",", ""))
         
         return float(raw_amt), latest_op.get("operationDate")
-    except: return 0.0, ""
+    except Exception as e:
+        print(f"Error getting SRF: {e}")
+        return 0.0, ""
 
 # ===================================================================
 # 計算核心 (含原料生產)
@@ -166,7 +176,7 @@ def calculate_z_score(jp_10y_now):
     return None
 
 def get_vol_stress_params():
-    """生產 Vol Stress 所需的統計參數 (HV Mean, Std)"""
+    """生產 Vol Stress 所需的統計參數"""
     print("\n--- Generating Vol Stress Params ---")
     try:
         hist = get_yahoo_history("JPY=X", "1y")
@@ -196,47 +206,43 @@ def get_vol_stress_params():
 def generate_spread_history_for_app(current_jp_val, days=150):
     """
     [精準校正版] 產生美日利差歷史
-    解決 FRED 資料延遲問題，強制將 '今天' 的日債數值更新為即時報價。
+    強制將 '今天' 的日債數值更新為即時報價，解決 FRED 延遲問題。
     """
     print(f"\n--- Generating Spread History ({days} days) ---")
     try:
-        # 1. 抓 US 10Y (Yahoo ^TNX, Daily)
+        # 1. 抓 US 10Y
         us_data = get_yahoo_history("^TNX", "1y")
         if not us_data: return []
         
         df_us = pd.DataFrame(us_data).set_index("date")
         df_us.index = pd.to_datetime(df_us.index)
         
-        # 2. 抓 JP 10Y (FRED Monthly) 並進行 [即時校正]
+        # 2. 抓 JP 10Y (FRED)
         jp_data = get_fred_history("IRLTLT01JPM156N", 400)
         
         if jp_data:
             df_jp = pd.DataFrame(jp_data).set_index("date")
             df_jp.index = pd.to_datetime(df_jp.index)
             
-            # [關鍵修正]：如果 FRED 資料舊，我們手動加入「今天」的即時日債數據
+            # [校正] 強制寫入今天的值
             today = pd.Timestamp.now().normalize()
             if current_jp_val is not None:
-                # 無論如何，強制覆蓋/新增今天的值
                 df_jp.loc[today] = {'value': current_jp_val}
             
-            # 月資料轉日資料 (使用 Interpolate 插值，讓曲線平滑過渡到今天的真值)
+            # 插值
             df_jp = df_jp.resample('D').interpolate(method='linear')
         else:
-            # Fallback
             df_jp = pd.DataFrame(index=df_us.index)
             df_jp['value'] = current_jp_val if current_jp_val else 1.0
 
-        # 3. 合併計算利差
+        # 3. 合併 & 計算 Spread
         df = df_us.join(df_jp, rsuffix='_jp')
-        df['value'] = df['value'].ffill() # 填補 JP 空隙
+        df['value'] = df['value'].ffill()
         df = df.dropna()
         
-        # Spread = US - JP
         df['spread'] = df['price'] - df['value']
-        df['spread'] = df['spread'].apply(lambda x: x if x > 0.1 else 0.1) # 防呆
+        df['spread'] = df['spread'].apply(lambda x: x if x > 0.1 else 0.1)
         
-        # 4. 取最近 N 天並轉為 List
         recent = df.tail(days)
         result_list = []
         for dt, row in recent.iterrows():
@@ -245,7 +251,7 @@ def generate_spread_history_for_app(current_jp_val, days=150):
                 "spread": round(row['spread'], 4)
             })
             
-        print(f"✅ Generated {len(result_list)} spread points. (Last: {result_list[-1]['spread']}%)")
+        print(f"✅ Generated {len(result_list)} spread points.")
         return result_list
         
     except Exception as e:
@@ -257,23 +263,25 @@ def generate_spread_history_for_app(current_jp_val, days=150):
 # ===================================================================
 
 def generate_app_data():
-    print("🚀 Starting Monitor Lite (Full Pack + Calibrated Spread)...")
+    print("🚀 Starting Monitor Lite (Full Pack + Calibrated)...")
     
-    # 1. 基礎數據 (即時)
-    jp_10y_val = get_jgb_10y_realtime() # 這就是 2.043%
+    # 1. 基礎數據
+    jp_10y_val = get_jgb_10y_realtime()
     sofr, sofr_date = get_fred_latest("SOFR")
     iorb, iorb_date = get_fred_latest("IORB")
     us_3m, _ = get_fred_latest("DTB3")
     jp_3m, _ = get_fred_latest("IR3TIB01JPM156N")
     
-    # 2. 風險指標
+    # 2. 風險指標 (全面更新為 STLFSI4)
     hy_oas, _ = get_fred_latest("BAMLH0A0HYM2")
     baa_spread, _ = get_fred_latest("BAA10Y")
-    fin_stress, _ = get_fred_latest("STLFSI3")
+    fin_stress, _ = get_fred_latest("STLFSI4") # [確認] 使用 V4
+    
+    # [關鍵修正] SRF 抓取
     srf_amt, srf_dt = get_srf_usage()
     srf_billions = srf_amt / 1000000000 
 
-    # 3. 計算 Z-Score (Server Snapshot)
+    # 3. 計算 Z-Score
     z_res = calculate_z_score(jp_10y_val)
     z_score = 0; mean_val = 0; std_val = 0; today_r = 0; w5000 = 0; m2 = 0; status = "Data Error"
     vuln_params = {}
@@ -282,10 +290,8 @@ def generate_app_data():
         z_score, today_r, mean_val, std_val, w5000, m2, vuln_params = z_res
         status = "Critical" if z_score > 2.0 else "Warning" if z_score > 1.0 else "Normal"
 
-    # 4. 計算參數
+    # 4. 計算參數 & 校正利差
     vol_params = get_vol_stress_params()
-    
-    # [修正] 傳入即時的 jp_10y_val 進行歷史校正
     spread_history = generate_spread_history_for_app(jp_10y_val, 150)
 
     # 5. 打包 JSON
@@ -339,7 +345,6 @@ def generate_app_data():
                 "slope_std": vol_params.get("slope_std", 1) if vol_params else 1,
                 "yesterday_hv": vol_params.get("yesterday_hv", 0) if vol_params else 0
             },
-            # 校正後的 150 天利差歷史
             "spread_history_150d": spread_history
         }
     }
@@ -347,7 +352,7 @@ def generate_app_data():
     with open("vip_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
     
-    print("✅ vip_data.json generated with Calibrated Spread History.")
+    print("✅ vip_data.json generated successfully.")
 
 if __name__ == "__main__":
     generate_app_data()
