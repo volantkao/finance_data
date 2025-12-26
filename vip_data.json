@@ -1,12 +1,12 @@
 {
-    "last_updated": "2025-12-26 09:44:13",
+    "last_updated": "2025-12-26 17:33:24",
     "market_data": {
         "jp_10y": 2.04,
         "us_3m": 3.56,
         "jp_3m": 0.81,
         "sofr": 3.66,
         "iorb": 3.65,
-        "sofr_date": "2025-12-23"
+        "sofr_date": "2025-12-24"
     },
     "risk_indicators": {
         "high_yield_oas": 2.83,
@@ -16,39 +16,35 @@
         "srf_date": ""
     },
     "z_score": {
-        "value": 2.26,
-        "mean": 1.0728,
-        "std": 0.1795,
+        "value": 2.24,
+        "mean": 1.0724,
+        "std": 0.179,
         "status": "Critical",
         "details": {
             "w5000": 69136.0,
             "m2": 22322.4,
-            "ratio": 1.4777
+            "ratio": 1.4727
         },
         "history_debug": [
             "S:69136 | M2:22322",
-            "R:1.4777 (Mean:1.07)"
+            "R:1.4727 (Mean:1.07)"
         ]
     },
     "client_side_params": {
         "market_vuln": {
             "m2_supply": 22322.4,
             "jgb_10y": 2.04,
-            "hist_mean": 1.072776235118752,
-            "hist_std": 0.1794999984880351
+            "hist_mean": 1.0724447283409901,
+            "hist_std": 0.17898735313481018
         },
         "vol_stress": {
-            "hv_mean": 9.4629,
-            "hv_std": 3.3415,
-            "slope_mean": 0.0168,
-            "slope_std": 1.241,
-            "yesterday_hv": 8.9938
+            "hv_mean": 9.4633,
+            "hv_std": 3.3414,
+            "slope_mean": 0.0172,
+            "slope_std": 1.2408,
+            "yesterday_hv": 9.089
         },
         "spread_history_150d": [
-            {
-                "date": "2025-05-22",
-                "spread": 3.1072
-            },
             {
                 "date": "2025-05-23",
                 "spread": 3.0658
@@ -644,6 +640,10 @@
             {
                 "date": "2025-12-24",
                 "spread": 2.1045
+            },
+            {
+                "date": "2025-12-26",
+                "spread": 2.103
             }
         ]
     }
