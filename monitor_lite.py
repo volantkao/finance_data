@@ -55,12 +55,16 @@ def get_yahoo_history(symbol, range_str="5y"):
         r = requests.get(url, headers=HEADERS, timeout=15).json()
         result = r['chart']['result'][0]
         closes = result['indicators']['quote'][0]['close']
+        # 嘗試獲取成交量 (for Amihud)
+        volumes = result['indicators']['quote'][0].get('volume', [])
         timestamps = result['timestamp']
+        
         clean = []
         for i in range(len(closes)):
             if closes[i] is not None:
                 dt = datetime.fromtimestamp(timestamps[i]).strftime('%Y-%m-%d')
-                clean.append({'date': dt, 'price': float(closes[i])})
+                vol = volumes[i] if volumes and i < len(volumes) and volumes[i] is not None else 0
+                clean.append({'date': dt, 'price': float(closes[i]), 'volume': float(vol)})
         return clean
     except: return []
 
@@ -78,10 +82,6 @@ def get_jgb_10y_realtime():
     return val if val else 2.05
 
 def get_srf_usage():
-    """
-    [修復版] 從紐約聯儲抓取 SRF (Standing Repo Facility) 使用量
-    修正點：使用 HEADERS, verify=False, 增強容錯
-    """
     try:
         today = datetime.now().strftime("%Y-%m-%d")
         start_date = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
@@ -113,19 +113,106 @@ def get_srf_usage():
         return 0.0, ""
 
 # ===================================================================
-# 計算核心 (含原料生產)
+# 計算核心 (LVII Components)
 # ===================================================================
 
-def calculate_z_score(jp_10y_now):
-    print("\n--- Calculating Vuln Z-Score & Params ---")
-    stock_data = get_yahoo_history("^W5000", "5y")
-    tnx_data = get_yahoo_history("^TNX", "5y")
-    m2_data = get_fred_history("M2SL")
-    jgb_data = get_fred_history("IRLTLT01JPM156N")
-    
-    if not stock_data or not tnx_data or not m2_data: return None
+def calculate_zscore(series):
+    if len(series) < 2: return 0
+    return (series.iloc[-1] - series.mean()) / series.std()
 
+def calculate_slope(prices):
+    if not prices or len(prices) < 2: return 0.0
+    n = len(prices); x = list(range(n)); y = prices
+    sum_x = sum(x); sum_y = sum(y); sum_xy = sum(i * j for i, j in zip(x, y)); sum_xx = sum(i * i for i in x)
+    den = (n * sum_xx - sum_x * sum_x)
+    if den == 0: return 0.0
+    slope = (n * sum_xy - sum_x * sum_y) / den
+    return slope
+
+def calculate_lvii_components():
+    """
+    計算 LVII 的四大構面 (Server 只做數據處理，不涉及權重與判斷)
+    """
+    print("\n--- Calculating Gray Rhino Ingredients ---")
     try:
+        raw_sp500 = get_yahoo_history("SPY", "3y")
+        raw_vix = get_yahoo_history("^VIX", "3y")
+        raw_us10 = get_yahoo_history("^TNX", "3y")
+        raw_jp10 = get_fred_history("IRLTLT01JPM156N", 1095)
+        raw_stress = get_fred_history("STLFSI4", 1095) # V4
+        
+        if not (raw_sp500 and raw_vix and raw_us10 and raw_jp10 and raw_stress):
+            return None, None
+
+        sp500 = pd.DataFrame(raw_sp500).set_index("date")
+        vix = pd.DataFrame(raw_vix).set_index("date")
+        us10 = pd.DataFrame(raw_us10).set_index("date")
+        jp10 = pd.DataFrame(raw_jp10).set_index("date")
+        stress = pd.DataFrame(raw_stress).set_index("date")
+        
+        for df in [sp500, vix, us10, jp10, stress]: df.index = pd.to_datetime(df.index)
+        
+        df = sp500.rename(columns={'price': 'price', 'volume': 'volume'})
+        df = df.join(vix['price'], rsuffix='_vix')
+        df = df.join(us10['price'], rsuffix='_us')
+        
+        jp10 = jp10.resample('D').ffill(); df = df.join(jp10['value'].rename('value_jp'))
+        stress = stress.resample('D').ffill(); df = df.join(stress['value'].rename('value_stress'))
+        
+        df = df.ffill().dropna()
+        if len(df) < 252: return None, None
+        
+        # 1. PVD (Price-Vol Disconnect)
+        df['price_to_high'] = df['price'] / df['price'].rolling(252).max()
+        df['rv'] = df['price'].pct_change().rolling(20).std() * np.sqrt(252) * 100
+        pvd = calculate_zscore(df['price_to_high'].tail(756)) - calculate_zscore(df['rv'].tail(756))
+        
+        # 2. VPD (Vol Pricing Distortion)
+        df['vol_spread'] = df['price_vix'] - df['rv']
+        vpd = -1 * calculate_zscore(df['vol_spread'].tail(756))
+        
+        # 3. CSD (Carry-Stress Divergence)
+        df['yield_spread'] = df['price_us'] - df['value_jp']
+        csd = calculate_zscore(df['yield_spread'].tail(756)) + calculate_zscore(df['value_stress'].tail(756))
+        
+        # 4. LF (Liquidity Fragility)
+        df['ret_abs'] = df['price'].pct_change().abs()
+        df['amihud'] = df['ret_abs'] / (df['price'] * df['volume']) * 1e9
+        df['amihud'] = df['amihud'].replace([np.inf, -np.inf], np.nan).fillna(0)
+        lf = calculate_zscore(df['amihud'].tail(756))
+        
+        # 5. TTD Slope (For S4 detection)
+        # 用 VIX 作為 Vol Stress 的簡化替代 (Lite版不跑複雜CTA模型)
+        df['vix_slope'] = df['price_vix'].rolling(10).mean().diff()
+        # 這裡我們計算一個簡單的 Stress Slope 供 App 參考
+        # 簡單定義：最近 10 天 VIX 的變化斜率
+        ttd_slope_proxy = calculate_slope(df['vix_slope'].tail(10).tolist())
+
+        components = {
+            "pvd": round(pvd, 2),
+            "vpd": round(vpd, 2),
+            "csd": round(csd, 2),
+            "lf": round(lf, 2),
+            "ttd_slope": round(ttd_slope_proxy, 4)
+        }
+        
+        return components
+        
+    except Exception as e:
+        print(f"LVII Error: {e}")
+        return None
+
+def calculate_z_score(jp_10y_now):
+    # (保留原有的 Z-Score 計算邏輯)
+    print("\n--- Calculating Vuln Z-Score ---")
+    try:
+        stock_data = get_yahoo_history("^W5000", "5y")
+        tnx_data = get_yahoo_history("^TNX", "5y")
+        m2_data = get_fred_history("M2SL")
+        jgb_data = get_fred_history("IRLTLT01JPM156N")
+        
+        if not stock_data or not tnx_data or not m2_data: return None
+
         df_stock = pd.DataFrame(stock_data).set_index("date")
         df_tnx = pd.DataFrame(tnx_data).set_index("date")
         df_m2 = pd.DataFrame(m2_data).set_index("date")
@@ -148,7 +235,6 @@ def calculate_z_score(jp_10y_now):
         df['spread'] = (df['price_t'] - df['value_jgb']).apply(lambda x: x if x > 0.1 else 0.1)
         df['ratio'] = (df['price_s'] / df['value']) / df['spread']
         
-        # Server-side calculation (Snapshot)
         latest_s = stock_data[-1]['price']
         latest_t = tnx_data[-1]['price']
         latest_m2 = m2_data[-1]['value']
@@ -163,36 +249,24 @@ def calculate_z_score(jp_10y_now):
             std = win.std()
             z = (today_r - mean) / std if std != 0 else 0
             
-            # [App 原料]
-            app_params = {
-                "m2": latest_m2,
-                "jgb_10y": jp_10y_now,
-                "mean": mean,
-                "std": std
-            }
+            app_params = {"m2": latest_m2, "jgb_10y": jp_10y_now, "mean": mean, "std": std}
             return z, today_r, mean, std, latest_s, latest_m2, app_params
             
     except: return None
     return None
 
 def get_vol_stress_params():
-    """生產 Vol Stress 所需的統計參數"""
-    print("\n--- Generating Vol Stress Params ---")
     try:
         hist = get_yahoo_history("JPY=X", "1y")
         if not hist: return None
-        
         df = pd.DataFrame(hist)
         df['date'] = pd.to_datetime(df['date'])
         df = df.set_index('date').sort_index()
-        
         df['ret'] = df['price'].pct_change()
         df['hv'] = df['ret'].rolling(window=10).std() * np.sqrt(252) * 100
         df['slope'] = df['hv'].diff()
         df = df.dropna()
-        
         if len(df) < 20: return None
-        
         params = {
             "hv_mean": round(df['hv'].mean(), 4),
             "hv_std": round(df['hv'].std(), 4),
@@ -204,97 +278,70 @@ def get_vol_stress_params():
     except: return None
 
 def generate_spread_history_for_app(current_jp_val, days=150):
-    """
-    [精準校正版] 產生美日利差歷史
-    強制將 '今天' 的日債數值更新為即時報價，解決 FRED 延遲問題。
-    """
-    print(f"\n--- Generating Spread History ({days} days) ---")
     try:
-        # 1. 抓 US 10Y
         us_data = get_yahoo_history("^TNX", "1y")
         if not us_data: return []
-        
         df_us = pd.DataFrame(us_data).set_index("date")
         df_us.index = pd.to_datetime(df_us.index)
-        
-        # 2. 抓 JP 10Y (FRED)
         jp_data = get_fred_history("IRLTLT01JPM156N", 400)
         
         if jp_data:
             df_jp = pd.DataFrame(jp_data).set_index("date")
             df_jp.index = pd.to_datetime(df_jp.index)
-            
-            # [校正] 強制寫入今天的值
             today = pd.Timestamp.now().normalize()
             if current_jp_val is not None:
                 df_jp.loc[today] = {'value': current_jp_val}
-            
-            # 插值
             df_jp = df_jp.resample('D').interpolate(method='linear')
         else:
             df_jp = pd.DataFrame(index=df_us.index)
             df_jp['value'] = current_jp_val if current_jp_val else 1.0
 
-        # 3. 合併 & 計算 Spread
         df = df_us.join(df_jp, rsuffix='_jp')
         df['value'] = df['value'].ffill()
         df = df.dropna()
-        
         df['spread'] = df['price'] - df['value']
         df['spread'] = df['spread'].apply(lambda x: x if x > 0.1 else 0.1)
         
         recent = df.tail(days)
         result_list = []
         for dt, row in recent.iterrows():
-            result_list.append({
-                "date": dt.strftime('%Y-%m-%d'),
-                "spread": round(row['spread'], 4)
-            })
-            
-        print(f"✅ Generated {len(result_list)} spread points.")
+            result_list.append({"date": dt.strftime('%Y-%m-%d'), "spread": round(row['spread'], 4)})
         return result_list
-        
-    except Exception as e:
-        print(f"❌ Error generating spread history: {e}")
-        return []
+    except: return []
 
 # ===================================================================
-# 主程式：產生 全功能 JSON
+# 主程式
 # ===================================================================
 
 def generate_app_data():
-    print("🚀 Starting Monitor Lite (Full Pack + Calibrated)...")
+    print("🚀 Starting Monitor Lite (Full Pack + Gray Rhino Ingredients)...")
     
-    # 1. 基礎數據
     jp_10y_val = get_jgb_10y_realtime()
     sofr, sofr_date = get_fred_latest("SOFR")
     iorb, iorb_date = get_fred_latest("IORB")
     us_3m, _ = get_fred_latest("DTB3")
     jp_3m, _ = get_fred_latest("IR3TIB01JPM156N")
     
-    # 2. 風險指標 (全面更新為 STLFSI4)
     hy_oas, _ = get_fred_latest("BAMLH0A0HYM2")
     baa_spread, _ = get_fred_latest("BAA10Y")
-    fin_stress, _ = get_fred_latest("STLFSI4") # [確認] 使用 V4
+    fin_stress, _ = get_fred_latest("STLFSI4") # V4
     
-    # [關鍵修正] SRF 抓取
     srf_amt, srf_dt = get_srf_usage()
     srf_billions = srf_amt / 1000000000 
 
-    # 3. 計算 Z-Score
     z_res = calculate_z_score(jp_10y_val)
     z_score = 0; mean_val = 0; std_val = 0; today_r = 0; w5000 = 0; m2 = 0; status = "Data Error"
     vuln_params = {}
-    
     if z_res:
         z_score, today_r, mean_val, std_val, w5000, m2, vuln_params = z_res
         status = "Critical" if z_score > 2.0 else "Warning" if z_score > 1.0 else "Normal"
 
-    # 4. 計算參數 & 校正利差
     vol_params = get_vol_stress_params()
     spread_history = generate_spread_history_for_app(jp_10y_val, 150)
+    
+    # [新增] 產生灰犀牛原料
+    gray_rhino_comps = calculate_lvii_components()
 
-    # 5. 打包 JSON
     data = {
         "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         
@@ -345,14 +392,19 @@ def generate_app_data():
                 "slope_std": vol_params.get("slope_std", 1) if vol_params else 1,
                 "yesterday_hv": vol_params.get("yesterday_hv", 0) if vol_params else 0
             },
-            "spread_history_150d": spread_history
+            "spread_history_150d": spread_history,
+            
+            # [新增] 只有原料，沒有邏輯
+            "gray_rhino_ingredients": gray_rhino_comps if gray_rhino_comps else {
+                "pvd": 0, "vpd": 0, "csd": 0, "lf": 0, "ttd_slope": 0
+            }
         }
     }
 
     with open("vip_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
     
-    print("✅ vip_data.json generated successfully.")
+    print("✅ vip_data.json generated.")
 
 if __name__ == "__main__":
     generate_app_data()
