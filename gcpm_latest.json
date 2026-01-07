@@ -1,0 +1,56 @@
+{
+  "update_time": "2026-01-07 02:19",
+  "data_date": "2026-01-07",
+  "gcp_score": -0.6,
+  "pci_score": 1.24,
+  "details": [
+    {
+      "code": "P_CNH",
+      "name": "中國/人民幣",
+      "value": -1.24,
+      "status": "loose"
+    },
+    {
+      "code": "P_USD",
+      "name": "美元池壓力",
+      "value": -0.86,
+      "status": "neutral"
+    },
+    {
+      "code": "P_EM",
+      "name": "新興市場",
+      "value": -0.79,
+      "status": "neutral"
+    },
+    {
+      "code": "P_JPY",
+      "name": "日圓套息",
+      "value": -0.61,
+      "status": "neutral"
+    },
+    {
+      "code": "P_AUD",
+      "name": "澳幣/原物料",
+      "value": -0.4,
+      "status": "neutral"
+    },
+    {
+      "code": "P_KRW",
+      "name": "韓元/風險",
+      "value": -0.31,
+      "status": "neutral"
+    },
+    {
+      "code": "P_EUR",
+      "name": "歐元區",
+      "value": 0.24,
+      "status": "neutral"
+    },
+    {
+      "code": "P_TWD",
+      "name": "台幣/地緣",
+      "value": 0.02,
+      "status": "neutral"
+    }
+  ]
+}
