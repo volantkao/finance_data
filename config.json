@@ -1,0 +1,12 @@
+{
+    "FRED_API_KEY": "",
+    "EMAIL_SETTINGS": {
+        "SENDER_EMAIL": "",
+        "SMTP_PASSWORD": "",
+        "SMTP_SERVER": "",
+        "SMTP_PORT": 587,
+        "ALERT_EMAIL": ""
+    },
+    "MONITOR_ITEMS": {},
+    "CALCULATED_METRICS": []
+}
