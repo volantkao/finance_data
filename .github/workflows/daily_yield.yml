@@ -1,0 +1,42 @@
+name: Daily JP10Y Recorder
+
+on:
+  schedule:
+    - cron: '0 22 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install requests pandas beautifulsoup4
+
+      # --- 這次我們用 ls 來確認檔案到底在哪 ---
+      - name: Check file existence
+        run: |
+          ls -la
+
+      - name: Run recorder script
+        # 改回最單純的寫法，跟 monitor_lite 一樣
+        run: python jp_yield_recorder.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          # 改回最單純的寫法
+          git add jp10y_history.csv
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update JP10Y data" && git push)
