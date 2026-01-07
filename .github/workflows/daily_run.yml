@@ -1,0 +1,45 @@
+name: Daily Finance Monitor
+
+# 設定觸發時機
+on:
+  schedule:
+    # 每天 UTC 時間 21:30 執行 (大約是台灣時間早上 05:30，美股收盤後)
+    - cron: '30 9,21 * * *'
+  # 允許手動點按鈕觸發 (方便測試)
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run Monitor Script
+      env:
+        # 這裡會從 GitHub Secrets 讀取您的 Key，注入到環境變數中
+        FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        # 如果您的程式有用到 Email，也要在這裡注入
+        # SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+      run: python monitor_lite.py
+
+    - name: Commit and Push JSON
+      # 這一步會把生成的 json 檔推回 GitHub，這樣 App 就能讀到了
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+        git add vip_data.json
+        # 如果有變動才 commit，沒變動就不做動作
+        git commit -m "Update vip_data.json [skip ci]" || exit 0
+        git push
