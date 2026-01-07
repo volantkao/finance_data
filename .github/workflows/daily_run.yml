@@ -41,5 +41,5 @@ jobs:
         git config --global user.email "action@github.com"
         git add vip_data.json
         # 如果有變動才 commit，沒變動就不做動作
-        git commit -m "Update vip_data.json [skip ci]" || exit 0
+        git commit -m "Update vip_data.json" || exit 0
         git push
