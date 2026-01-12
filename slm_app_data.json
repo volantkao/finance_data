@@ -1,0 +1,70 @@
+{
+  "date": "2026-01-12",
+  "market_status": {
+    "retail_z": -1.73,
+    "short_margin_z": 0.35,
+    "short_margin_ratio_percent": 3.99
+  },
+  "yuna_insight": {
+    "mood": "happy",
+    "title": "🥬 超跌撿便宜",
+    "desc": "市場好安靜，大家都停損在阿呆谷了。雖然還沒軋空，但現在買進很安全喔。"
+  },
+  "sectors": [
+    {
+      "code": "KING_TSMC",
+      "name": "台積電",
+      "pressure_score": -1.49
+    },
+    {
+      "code": "TW_HIGH",
+      "name": "千金指標",
+      "pressure_score": -0.77
+    },
+    {
+      "code": "KING_MTK",
+      "name": "聯發科",
+      "pressure_score": -0.41
+    },
+    {
+      "code": "KING_FOX",
+      "name": "鴻海",
+      "pressure_score": -0.0
+    },
+    {
+      "code": "TW_FIN",
+      "name": "金融",
+      "pressure_score": 0.19
+    },
+    {
+      "code": "TW_POWER",
+      "name": "重電綠能",
+      "pressure_score": 0.26
+    },
+    {
+      "code": "TW_SHIP",
+      "name": "航運",
+      "pressure_score": 0.33
+    },
+    {
+      "code": "TW_BIO",
+      "name": "生技",
+      "pressure_score": 0.5
+    },
+    {
+      "code": "TW_AI",
+      "name": "AI 伺服器",
+      "pressure_score": 0.54
+    },
+    {
+      "code": "TW_MAT",
+      "name": "傳產",
+      "pressure_score": 1.47
+    },
+    {
+      "code": "TW_IC",
+      "name": "IC 設計",
+      "pressure_score": 1.97
+    }
+  ]
+}
