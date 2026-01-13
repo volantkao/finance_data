@@ -1,7 +1,7 @@
 {
-    "last_updated": "2026-01-12 21:44:23",
+    "last_updated": "2026-01-13 09:50:54",
     "market_data": {
-        "jp_10y": 2.098,
+        "jp_10y": 2.166,
         "us_3m": 3.52,
         "jp_3m": 0.81,
         "sofr": 3.64,
@@ -10,39 +10,39 @@
     },
     "risk_indicators": {
         "high_yield_oas": 2.74,
-        "baa_spread": 1.73,
+        "baa_spread": 1.7,
         "financial_stress": -0.57,
         "srf_usage": 0.0,
         "srf_date": "2026-01-12"
     },
     "z_score": {
-        "value": 2.22,
-        "mean": 1.1083,
-        "std": 0.1733,
+        "value": 2.52,
+        "mean": 1.1085,
+        "std": 0.1735,
         "status": "Critical",
         "details": {
-            "w5000": 69651.0,
+            "w5000": 69761.0,
             "m2": 22322.4,
-            "ratio": 1.4936
+            "ratio": 1.5463
         },
         "history_debug": [
-            "S:69651 | M2:22322",
-            "R:1.4936 (Mean:1.11)"
+            "S:69761 | M2:22322",
+            "R:1.5463 (Mean:1.11)"
         ]
     },
     "client_side_params": {
         "market_vuln": {
             "m2_supply": 22322.4,
-            "jgb_10y": 2.098,
-            "hist_mean": 1.108307624704118,
-            "hist_std": 0.17332791922369037
+            "jgb_10y": 2.166,
+            "hist_mean": 1.1084803764365623,
+            "hist_std": 0.17354802113743845
         },
         "vol_stress": {
-            "hv_mean": 9.4508,
-            "hv_std": 3.3703,
-            "slope_mean": -0.0176,
-            "slope_std": 1.262,
-            "yesterday_hv": 4.7791
+            "hv_mean": 9.433,
+            "hv_std": 3.375,
+            "slope_mean": -0.0165,
+            "slope_std": 1.2596,
+            "yesterday_hv": 5.0524
         },
         "spread_history_150d": [
             {
@@ -455,202 +455,202 @@
             },
             {
                 "date": "2025-11-03",
-                "spread": 2.2929
+                "spread": 2.2911
             },
             {
                 "date": "2025-11-04",
-                "spread": 2.2718
+                "spread": 2.2692
             },
             {
                 "date": "2025-11-05",
-                "spread": 2.3357
+                "spread": 2.3322
             },
             {
                 "date": "2025-11-06",
-                "spread": 2.2677
+                "spread": 2.2633
             },
             {
                 "date": "2025-11-07",
-                "spread": 2.2636
+                "spread": 2.2583
             },
             {
                 "date": "2025-11-10",
-                "spread": 2.2684
+                "spread": 2.2605
             },
             {
                 "date": "2025-11-11",
-                "spread": 2.2743
+                "spread": 2.2655
             },
             {
                 "date": "2025-11-12",
-                "spread": 2.2152
+                "spread": 2.2056
             },
             {
                 "date": "2025-11-13",
-                "spread": 2.2582
+                "spread": 2.2477
             },
             {
                 "date": "2025-11-14",
-                "spread": 2.2901
+                "spread": 2.2787
             },
             {
                 "date": "2025-11-17",
-                "spread": 2.2629
+                "spread": 2.2489
             },
             {
                 "date": "2025-11-18",
-                "spread": 2.2488
+                "spread": 2.2339
             },
             {
                 "date": "2025-11-19",
-                "spread": 2.2547
+                "spread": 2.239
             },
             {
                 "date": "2025-11-20",
-                "spread": 2.2237
+                "spread": 2.207
             },
             {
                 "date": "2025-11-21",
-                "spread": 2.1766
+                "spread": 2.1591
             },
             {
                 "date": "2025-11-24",
-                "spread": 2.1394
+                "spread": 2.1193
             },
             {
                 "date": "2025-11-25",
-                "spread": 2.0993
+                "spread": 2.0783
             },
             {
                 "date": "2025-11-26",
-                "spread": 2.0913
+                "spread": 2.0694
             },
             {
                 "date": "2025-11-28",
-                "spread": 2.1021
+                "spread": 2.0785
             },
             {
                 "date": "2025-12-01",
-                "spread": 2.1689
+                "spread": 2.1426
             },
             {
                 "date": "2025-12-02",
-                "spread": 2.1548
+                "spread": 2.1277
             },
             {
                 "date": "2025-12-03",
-                "spread": 2.1218
+                "spread": 2.0938
             },
             {
                 "date": "2025-12-04",
-                "spread": 2.1687
+                "spread": 2.1398
             },
             {
                 "date": "2025-12-05",
-                "spread": 2.1956
+                "spread": 2.1659
             },
             {
                 "date": "2025-12-08",
-                "spread": 2.2164
+                "spread": 2.184
             },
             {
                 "date": "2025-12-09",
-                "spread": 2.2264
+                "spread": 2.1931
             },
             {
                 "date": "2025-12-10",
-                "spread": 2.2003
+                "spread": 2.1661
             },
             {
                 "date": "2025-12-11",
-                "spread": 2.1732
+                "spread": 2.1382
             },
             {
                 "date": "2025-12-12",
-                "spread": 2.2222
+                "spread": 2.1862
             },
             {
                 "date": "2025-12-15",
-                "spread": 2.1979
+                "spread": 2.1594
             },
             {
                 "date": "2025-12-16",
-                "spread": 2.1609
+                "spread": 2.1215
             },
             {
                 "date": "2025-12-17",
-                "spread": 2.1588
+                "spread": 2.1185
             },
             {
                 "date": "2025-12-18",
-                "spread": 2.1197
+                "spread": 2.0786
             },
             {
                 "date": "2025-12-19",
-                "spread": 2.1507
+                "spread": 2.1086
             },
             {
                 "date": "2025-12-22",
-                "spread": 2.1565
+                "spread": 2.1118
             },
             {
                 "date": "2025-12-23",
-                "spread": 2.1524
+                "spread": 2.1068
             },
             {
                 "date": "2025-12-24",
-                "spread": 2.1153
+                "spread": 2.0689
             },
             {
                 "date": "2025-12-26",
-                "spread": 2.1072
+                "spread": 2.059
             },
             {
                 "date": "2025-12-29",
-                "spread": 2.075
+                "spread": 2.0242
             },
             {
                 "date": "2025-12-30",
-                "spread": 2.0849
+                "spread": 2.0332
             },
             {
                 "date": "2025-12-31",
-                "spread": 2.1138
+                "spread": 2.0613
             },
             {
                 "date": "2026-01-02",
-                "spread": 2.1297
+                "spread": 2.0754
             },
             {
                 "date": "2026-01-05",
-                "spread": 2.0955
+                "spread": 2.0386
             },
             {
                 "date": "2026-01-06",
-                "spread": 2.1054
+                "spread": 2.0476
             },
             {
                 "date": "2026-01-07",
-                "spread": 2.0603
+                "spread": 2.0017
             },
             {
                 "date": "2026-01-08",
-                "spread": 2.1013
+                "spread": 2.0417
             },
             {
                 "date": "2026-01-09",
-                "spread": 2.0852
+                "spread": 2.0248
             },
             {
                 "date": "2026-01-12",
-                "spread": 2.089
+                "spread": 2.0259
             }
         ],
         "gray_rhino_ingredients": {
             "pvd": 1.28,
             "vpd": -0.47,
             "csd": -1.57,
-            "lf": -0.97,
+            "lf": -0.98,
             "ttd_slope": 0.0484
         },
         "stlfsi_z_params": {
@@ -659,9 +659,9 @@
             "std": 0.1257
         },
         "move_z_params": {
-            "current": 61.55,
-            "mean": 70.42,
-            "std": 6.91
+            "current": 62.9,
+            "mean": 70.14,
+            "std": 6.86
         }
     }
 }
