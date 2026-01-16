@@ -1,0 +1,65 @@
+{
+    "meta": {
+        "generated_at": "2026-01-16 17:37:31",
+        "data_source": "Yahoo Finance",
+        "model": "Gray Rhino Illusion Index (Price/Vol/Yield)"
+    },
+    "events": [
+        {
+            "event_id": "20230614",
+            "start_date": "2023-06-14",
+            "peak_score": 1.0423726497720516,
+            "peak_date": "2023-06-22",
+            "peak_level": "S3",
+            "end_date": "2023-07-06",
+            "risk_realized_period": {
+                "look_ahead_days": 90,
+                "max_drawdown_pct": -4.13,
+                "final_return_pct": -3.35,
+                "is_falling_knife": false
+            }
+        },
+        {
+            "event_id": "20230721",
+            "start_date": "2023-07-21",
+            "peak_score": 1.0182639319694027,
+            "peak_date": "2023-07-25",
+            "peak_level": "S3",
+            "end_date": "2023-07-27",
+            "risk_realized_period": {
+                "look_ahead_days": 90,
+                "max_drawdown_pct": -7.73,
+                "final_return_pct": -7.73,
+                "is_falling_knife": true
+            }
+        },
+        {
+            "event_id": "20240821",
+            "start_date": "2024-08-21",
+            "peak_score": 1.2894701733487757,
+            "peak_date": "2024-08-27",
+            "peak_level": "S3",
+            "end_date": "2024-09-04",
+            "risk_realized_period": {
+                "look_ahead_days": 90,
+                "max_drawdown_pct": -2.02,
+                "final_return_pct": 9.6,
+                "is_falling_knife": false
+            }
+        },
+        {
+            "event_id": "20250501",
+            "start_date": "2025-05-01",
+            "peak_score": 1.1084947215082792,
+            "peak_date": "2025-05-05",
+            "peak_level": "S3",
+            "end_date": "2025-05-08",
+            "risk_realized_period": {
+                "look_ahead_days": 90,
+                "max_drawdown_pct": -0.07,
+                "final_return_pct": 12.03,
+                "is_falling_knife": false
+            }
+        }
+    ]
+}
