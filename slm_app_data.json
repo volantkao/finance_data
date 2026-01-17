@@ -1,9 +1,9 @@
 {
   "date": "2026-01-16",
   "market_status": {
-    "retail_z": -0.26,
-    "short_margin_z": -0.08,
-    "short_margin_ratio_percent": 4.2
+    "retail_z": -0.16,
+    "short_margin_z": -0.35,
+    "short_margin_ratio_percent": 3.96
   },
   "yuna_insight": {
     "mood": "chill",
