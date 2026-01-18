@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "generated_at": "2026-01-18 15:42:23",
+        "start_date": "2025-01-02",
+        "end_date": "2026-01-16"
+    },
+    "stats": {
+        "total_trading_days": 261,
+        "panic_signal_days": 43,
+        "panic_frequency": 0.1648,
+        "last_panic_signal": "2025-11-18"
+    },
+    "recent_data": {
+        "dates": [
+            "2026-01-12",
+            "2026-01-13",
+            "2026-01-14",
+            "2026-01-15",
+            "2026-01-16"
+        ],
+        "ratios": [
+            0.79,
+            0.783,
+            0.787,
+            0.778,
+            0.762
+        ],
+        "signals": [
+            false,
+            false,
+            false,
+            false,
+            false
+        ]
+    }
+}
