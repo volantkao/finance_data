@@ -1,14 +1,14 @@
 {
     "meta": {
-        "generated_at": "2026-01-20 15:19:22",
+        "generated_at": "2026-01-20 16:20:01",
         "start_date": "2025-01-02",
         "end_date": "2026-01-20"
     },
     "stats": {
         "total_trading_days": 262,
-        "panic_signal_days": 44,
-        "panic_frequency": 0.1679,
-        "last_panic_signal": "2026-01-20"
+        "panic_signal_days": 43,
+        "panic_frequency": 0.1641,
+        "last_panic_signal": "2025-11-18"
     },
     "recent_data": {
         "dates": [
@@ -23,14 +23,14 @@
             0.787,
             0.778,
             0.762,
-            1.026
+            0.978
         ],
         "signals": [
             false,
             false,
             false,
             false,
-            true
+            false
         ]
     }
 }
