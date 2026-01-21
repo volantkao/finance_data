@@ -1,14 +1,14 @@
 {
     "meta": {
-        "update_time": "2026-01-20 01:18:25",
-        "data_date": "2026-01-19"
+        "update_time": "2026-01-21 01:21:06",
+        "data_date": "2026-01-20"
     },
     "dashboard": {
-        "liquidity_score": 74.7,
-        "net_spread": 9.4,
-        "recovery_speed": 1.73,
+        "liquidity_score": 74.2,
+        "net_spread": 10.7,
+        "recovery_speed": 1.22,
         "light": "YELLOW",
-        "dxy_current": 99.39
+        "dxy_current": 98.54
     },
     "insight": {
         "title": "結構脆弱 (Structural Weakness)",
@@ -105,6 +105,6 @@
         "2026-01-14": 74.61264210414421,
         "2026-01-15": 75.16050593792063,
         "2026-01-16": 74.8223997623534,
-        "2026-01-19": 74.67900876669967
+        "2026-01-20": 74.1668495216868
     }
 }
