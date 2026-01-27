@@ -1,69 +1,69 @@
 {
-  "update_time": "2026-01-26 21:22",
-  "data_date": "2026-01-26",
-  "gcp_score": -0.19,
-  "pci_score": 1.98,
-  "pci_z_score": 0.05,
-  "spy_price": 686.78,
+  "update_time": "2026-01-27 21:16",
+  "data_date": "2026-01-27",
+  "gcp_score": -0.03,
+  "pci_score": 2.52,
+  "pci_z_score": 1.0,
+  "spy_price": 690.37,
   "details": [
-    {
-      "code": "P_METAL",
-      "name": "貴金屬/黃金",
-      "value": -1.63,
-      "status": "loose"
-    },
     {
       "code": "P_EUR",
       "name": "歐元區",
-      "value": 1.2,
+      "value": 2.19,
       "status": "tight"
+    },
+    {
+      "code": "P_METAL",
+      "name": "貴金屬/黃金",
+      "value": -1.77,
+      "status": "loose"
     },
     {
       "code": "P_USD",
       "name": "美元池壓力",
-      "value": -0.58,
-      "status": "neutral"
-    },
-    {
-      "code": "P_JPY",
-      "name": "日圓套息",
-      "value": -0.58,
+      "value": -0.75,
       "status": "neutral"
     },
     {
       "code": "P_EM",
       "name": "新興市場",
-      "value": -0.44,
-      "status": "neutral"
-    },
-    {
-      "code": "P_CRYPTO",
-      "name": "加密貨幣",
-      "value": 0.36,
+      "value": -0.55,
       "status": "neutral"
     },
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": 0.31,
+      "value": 0.47,
+      "status": "neutral"
+    },
+    {
+      "code": "P_CRYPTO",
+      "name": "加密貨幣",
+      "value": 0.32,
+      "status": "neutral"
+    },
+    {
+      "code": "P_JPY",
+      "name": "日圓套息",
+      "value": 0.2,
       "status": "neutral"
     },
     {
       "code": "P_TWD",
       "name": "台幣/地緣",
-      "value": 0.27,
-      "status": "neutral"
-    },
-    {
-      "code": "P_CNH",
-      "name": "中國/人民幣",
-      "value": -0.18,
+      "value": 0.14,
       "status": "neutral"
     },
     {
       "code": "P_KRW",
       "name": "韓元/風險",
-      "value": 0.09,
+      "value": -0.14,
+      "status": "neutral"
+    },
+    {
+      "code": "P_CNH",
+      "name": "中國/人民幣",
+      "value": -0.12,
       "status": "neutral"
     }
   ]
