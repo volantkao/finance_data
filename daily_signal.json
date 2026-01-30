@@ -1,0 +1,10 @@
+{
+    "update_time": "2026-01-30 13:06",
+    "core": {
+        "name": "fd 大小30-30.xml",
+        "signal": 0,
+        "trigger": "趨勢穩固"
+    },
+    "satellite_top5": [],
+    "action_alert": "⚠️ 建議避險 (衛星全翻空)"
+}
