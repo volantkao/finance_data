@@ -1,5 +1,5 @@
 {
-    "update_time": "2026-01-30 13:19",
+    "update_time": "2026-01-30 13:26",
     "core": {
         "name": "fd 大小30-30.xml",
         "signal": 0,
@@ -19,19 +19,19 @@
             "trigger": "趨勢穩固"
         },
         {
-            "name": "cci(42)大小150-100.xml",
+            "name": "c創20日新高低.xml",
             "signal": 0,
             "ret_3y": "0.00%",
             "trigger": "趨勢穩固"
         },
         {
-            "name": "kd815創5日新高低.xml",
+            "name": "v20日最低量.xml",
             "signal": 0,
             "ret_3y": "0.00%",
             "trigger": "趨勢穩固"
         },
         {
-            "name": "cci(42) cr 50.xml",
+            "name": "v1 地量後倍量a.xml",
             "signal": 0,
             "ret_3y": "0.00%",
             "trigger": "趨勢穩固"
