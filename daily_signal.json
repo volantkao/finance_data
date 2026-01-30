@@ -1,10 +1,41 @@
 {
-    "update_time": "2026-01-30 13:06",
+    "update_time": "2026-01-30 13:19",
     "core": {
         "name": "fd 大小30-30.xml",
         "signal": 0,
         "trigger": "趨勢穩固"
     },
-    "satellite_top5": [],
-    "action_alert": "⚠️ 建議避險 (衛星全翻空)"
+    "satellite_top5": [
+        {
+            "name": "ma5均線不破.xml",
+            "signal": 0,
+            "ret_3y": "0.00%",
+            "trigger": "趨勢穩固"
+        },
+        {
+            "name": "mtm 45大小0.xml",
+            "signal": 0,
+            "ret_3y": "0.00%",
+            "trigger": "趨勢穩固"
+        },
+        {
+            "name": "cci(42)大小150-100.xml",
+            "signal": 0,
+            "ret_3y": "0.00%",
+            "trigger": "趨勢穩固"
+        },
+        {
+            "name": "kd815創5日新高低.xml",
+            "signal": 0,
+            "ret_3y": "0.00%",
+            "trigger": "趨勢穩固"
+        },
+        {
+            "name": "cci(42) cr 50.xml",
+            "signal": 0,
+            "ret_3y": "0.00%",
+            "trigger": "趨勢穩固"
+        }
+    ],
+    "is_hedging": true
 }
