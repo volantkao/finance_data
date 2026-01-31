@@ -1,41 +1,4 @@
 {
-    "update_time": "2026-01-31 02:29",
-    "benchmark": "0050.TW (Adj Close)",
-    "top5_strategies": [
-        {
-            "name": "fd 大小30-30.xml",
-            "latest_signal": 1,
-            "suggested_status": "持有",
-            "cumulative_return": "615.84%",
-            "sharpe_ratio": "1.24"
-        },
-        {
-            "name": "fd cr 30-30.xml",
-            "latest_signal": 1,
-            "suggested_status": "持有",
-            "cumulative_return": "598.69%",
-            "sharpe_ratio": "1.24"
-        },
-        {
-            "name": "近期20日漲跌 cr 1成.xml",
-            "latest_signal": 1,
-            "suggested_status": "持有",
-            "cumulative_return": "505.52%",
-            "sharpe_ratio": "1.17"
-        },
-        {
-            "name": "vr10 tr.xml",
-            "latest_signal": 0,
-            "suggested_status": "空手",
-            "cumulative_return": "313.19%",
-            "sharpe_ratio": "1.16"
-        },
-        {
-            "name": "RJ.xml",
-            "latest_signal": 1,
-            "suggested_status": "持有",
-            "cumulative_return": "467.38%",
-            "sharpe_ratio": "1.15"
-        }
-    ]
+    "update_time": "2026-01-31 10:52",
+    "signals": {}
 }
