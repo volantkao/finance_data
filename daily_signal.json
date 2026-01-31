@@ -1,5 +1,5 @@
 {
-    "update_time": "2026-01-31 11:16",
+    "update_time": "2026-01-31 11:37",
     "signals": {
         "0050.TW": {
             "market_status": "多單持有",
@@ -59,7 +59,7 @@
             "top5_strategies": [
                 {
                     "strategy_name": "*",
-                    "cumulative_return_3y": "90.94%",
+                    "cumulative_return_3y": "95.08%",
                     "current_signal": 1,
                     "status": "HOLD",
                     "trigger_price_note": "SELL if Close < 133.65 (or >)"
