@@ -1,4 +1,70 @@
 {
-    "update_time": "2026-01-31 10:58",
-    "signals": {}
+    "update_time": "2026-01-31 11:16",
+    "signals": {
+        "0050.TW": {
+            "market_status": "多單持有",
+            "signal_strength": "1/5",
+            "top5_strategies": [
+                {
+                    "strategy_name": "*",
+                    "cumulative_return_3y": "120.87%",
+                    "current_signal": 1,
+                    "status": "HOLD",
+                    "trigger_price_note": "SELL if Close < 65.34 (or >)"
+                }
+            ]
+        },
+        "SPY": {
+            "market_status": "多單持有",
+            "signal_strength": "1/5",
+            "top5_strategies": [
+                {
+                    "strategy_name": "*",
+                    "cumulative_return_3y": "32.51%",
+                    "current_signal": 1,
+                    "status": "HOLD",
+                    "trigger_price_note": "SELL if Close < 622.77 (or >)"
+                }
+            ]
+        },
+        "GLD": {
+            "market_status": "多單持有",
+            "signal_strength": "1/5",
+            "top5_strategies": [
+                {
+                    "strategy_name": "*",
+                    "cumulative_return_3y": "83.53%",
+                    "current_signal": 1,
+                    "status": "HOLD",
+                    "trigger_price_note": "SELL if Close < 400.46 (or >)"
+                }
+            ]
+        },
+        "SLV": {
+            "market_status": "全數看空",
+            "signal_strength": "0/5",
+            "top5_strategies": [
+                {
+                    "strategy_name": "*",
+                    "cumulative_return_3y": "139.26%",
+                    "current_signal": 0,
+                    "status": "EMPTY",
+                    "trigger_price_note": "Steady (無變動)"
+                }
+            ]
+        },
+        "1215.TW": {
+            "market_status": "多單持有",
+            "signal_strength": "1/5",
+            "top5_strategies": [
+                {
+                    "strategy_name": "*",
+                    "cumulative_return_3y": "90.94%",
+                    "current_signal": 1,
+                    "status": "HOLD",
+                    "trigger_price_note": "SELL if Close < 133.65 (or >)"
+                }
+            ]
+        }
+    }
 }
