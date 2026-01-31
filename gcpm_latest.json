@@ -1,7 +1,7 @@
 {
-  "update_time": "2026-01-30 21:25",
+  "update_time": "2026-01-31 21:19",
   "data_date": "2026-01-30",
-  "gcp_score": 0.4,
+  "gcp_score": 0.43,
   "pci_score": 3.26,
   "pci_z_score": 2.39,
   "spy_price": 693.93,
@@ -21,31 +21,31 @@
     {
       "code": "P_METAL",
       "name": "貴金屬/黃金",
-      "value": -1.52,
+      "value": -1.47,
       "status": "loose"
     },
     {
       "code": "P_USD",
       "name": "美元池壓力",
-      "value": -0.99,
-      "status": "neutral"
-    },
-    {
-      "code": "P_KRW",
-      "name": "韓元/風險",
-      "value": -0.72,
-      "status": "neutral"
-    },
-    {
-      "code": "P_AUD",
-      "name": "澳幣/原物料",
-      "value": 0.65,
+      "value": -1.0,
       "status": "neutral"
     },
     {
       "code": "P_CRYPTO",
       "name": "加密貨幣",
-      "value": 0.59,
+      "value": 0.87,
+      "status": "neutral"
+    },
+    {
+      "code": "P_KRW",
+      "name": "韓元/風險",
+      "value": -0.76,
+      "status": "neutral"
+    },
+    {
+      "code": "P_AUD",
+      "name": "澳幣/原物料",
+      "value": 0.68,
       "status": "neutral"
     },
     {
@@ -57,7 +57,7 @@
     {
       "code": "P_TWD",
       "name": "台幣/地緣",
-      "value": -0.14,
+      "value": -0.18,
       "status": "neutral"
     },
     {
