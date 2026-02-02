@@ -1,5 +1,5 @@
 {
-    "update_time": "2026-02-01 17:53",
+    "update_time": "2026-02-02 08:06",
     "signals": {
         "0050.TW": {
             "market_status": "多單持有",
@@ -16,8 +16,8 @@
                 },
                 {
                     "strategy_name": "c 大小ma10",
-                    "cumulative_return_3y": "156.79%",
-                    "sharpe_ratio": "2.38",
+                    "cumulative_return_3y": "156.21%",
+                    "sharpe_ratio": "2.37",
                     "current_signal": 1,
                     "status": "HOLD",
                     "trigger_price_note": "SELL if Close < 65.34 (or >)"
@@ -86,7 +86,7 @@
                     "trigger_price_note": "SELL if Close < 622.77 (or >)"
                 },
                 {
-                    "strategy_name": "cci(42)大小0 a",
+                    "strategy_name": "kd81-5 cr 50",
                     "cumulative_return_3y": "69.37%",
                     "sharpe_ratio": "1.59",
                     "current_signal": 1,
@@ -200,7 +200,7 @@
                     "sharpe_ratio": "1.70",
                     "current_signal": 0,
                     "status": "EMPTY",
-                    "trigger_price_note": "Steady"
+                    "trigger_price_note": "BUY if Close > 164.03"
                 },
                 {
                     "strategy_name": "macd cr ema",
@@ -208,11 +208,11 @@
                     "sharpe_ratio": "1.70",
                     "current_signal": 0,
                     "status": "EMPTY",
-                    "trigger_price_note": "Steady"
+                    "trigger_price_note": "BUY if Close > 164.03"
                 },
                 {
                     "strategy_name": "c大於ma60",
-                    "cumulative_return_3y": "115.81%",
+                    "cumulative_return_3y": "115.84%",
                     "sharpe_ratio": "1.46",
                     "current_signal": 1,
                     "status": "HOLD",
@@ -220,7 +220,7 @@
                 },
                 {
                     "strategy_name": "cci(42) cr -100-100",
-                    "cumulative_return_3y": "101.83%",
+                    "cumulative_return_3y": "101.86%",
                     "sharpe_ratio": "1.31",
                     "current_signal": 1,
                     "status": "HOLD",
@@ -228,11 +228,11 @@
                 },
                 {
                     "strategy_name": "vma60 創50日新高低",
-                    "cumulative_return_3y": "100.44%",
-                    "sharpe_ratio": "1.29",
+                    "cumulative_return_3y": "101.77%",
+                    "sharpe_ratio": "1.30",
                     "current_signal": 1,
                     "status": "HOLD",
-                    "trigger_price_note": "Steady"
+                    "trigger_price_note": "SELL if Close < 135.45 (or >)"
                 }
             ]
         }
