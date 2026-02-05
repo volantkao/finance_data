@@ -1,69 +1,69 @@
 {
-  "update_time": "2026-02-04 21:31",
-  "data_date": "2026-02-04",
-  "gcp_score": 0.67,
-  "pci_score": 2.94,
-  "pci_z_score": 1.57,
-  "spy_price": 691.43,
+  "update_time": "2026-02-05 21:26",
+  "data_date": "2026-02-05",
+  "gcp_score": 0.73,
+  "pci_score": 3.04,
+  "pci_z_score": 1.64,
+  "spy_price": 688.11,
   "details": [
-    {
-      "code": "P_EUR",
-      "name": "歐元區",
-      "value": 2.66,
-      "status": "tight"
-    },
     {
       "code": "P_CRYPTO",
       "name": "加密貨幣",
-      "value": 2.4,
+      "value": 2.97,
+      "status": "tight"
+    },
+    {
+      "code": "P_EUR",
+      "name": "歐元區",
+      "value": 2.35,
       "status": "tight"
     },
     {
       "code": "P_JPY",
       "name": "日圓套息",
-      "value": 2.1,
+      "value": 1.84,
       "status": "tight"
     },
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": 0.54,
-      "status": "neutral"
-    },
-    {
-      "code": "P_KRW",
-      "name": "韓元/風險",
-      "value": -0.45,
-      "status": "neutral"
-    },
-    {
-      "code": "P_USD",
-      "name": "美元池壓力",
-      "value": -0.45,
+      "value": 0.58,
       "status": "neutral"
     },
     {
       "code": "P_TWD",
       "name": "台幣/地緣",
-      "value": 0.24,
-      "status": "neutral"
-    },
-    {
-      "code": "P_CNH",
-      "name": "中國/人民幣",
-      "value": -0.15,
-      "status": "neutral"
-    },
-    {
-      "code": "P_EM",
-      "name": "新興市場",
-      "value": 0.12,
+      "value": 0.41,
       "status": "neutral"
     },
     {
       "code": "P_METAL",
       "name": "貴金屬/黃金",
-      "value": -0.09,
+      "value": 0.39,
+      "status": "neutral"
+    },
+    {
+      "code": "P_USD",
+      "name": "美元池壓力",
+      "value": -0.27,
+      "status": "neutral"
+    },
+    {
+      "code": "P_CNH",
+      "name": "中國/人民幣",
+      "value": -0.22,
+      "status": "neutral"
+    },
+    {
+      "code": "P_KRW",
+      "name": "韓元/風險",
+      "value": -0.21,
+      "status": "neutral"
+    },
+    {
+      "code": "P_EM",
+      "name": "新興市場",
+      "value": 0.13,
       "status": "neutral"
     }
   ]
