@@ -2,7 +2,7 @@ name: Daily VIXEQ Scraper
 
 on:
   schedule:
-    # 設定每天美股收盤後執行 (例如 UTC 22:00，即台灣時間早上 06:00)
+    # 設定每天美股收盤後執行 (UTC 22:00 = 台灣時間 06:00)
     - cron: '0 22 * * 1-5' 
   workflow_dispatch: # 允許手動點擊按鈕執行
 
@@ -24,9 +24,10 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
+        # 直接安裝，不需要 requirements.txt
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install selenium pandas webdriver-manager openpyxl
 
       - name: Run Scraper
         run: python VIXEQ_scraper.py
@@ -42,5 +43,5 @@ jobs:
             git commit -m "📈 Auto-update VIXEQ data: $(date +'%Y-%m-%d')"
             git push
           else
-            print("No changes to commit")
+            echo "No changes to commit"
           fi
