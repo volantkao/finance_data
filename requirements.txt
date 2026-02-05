@@ -1,4 +1,8 @@
 requests
 pandas
 numpy
+
 beautifulsoup4
+
+selenium
+webdriver-manager
