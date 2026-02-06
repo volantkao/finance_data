@@ -21,7 +21,7 @@ SYMBOLS = {
 }
 
 # ==========================================
-# 🕵️‍♂️ Barchart 萬用爬蟲 (雲端修正版)
+# 🕵️‍♂️ Barchart 萬用爬蟲 (格式修復版)
 # ==========================================
 def fetch_barchart_data(symbol, label):
     url = f"https://www.barchart.com/stocks/quotes/{symbol}/performance"
@@ -29,24 +29,23 @@ def fetch_barchart_data(symbol, label):
     
     chrome_options = Options()
     
-    # === 關鍵修正：雲端環境適配 ===
-    # 1. 必備：無頭模式 (因為 GitHub Actions 沒有螢幕)
-    chrome_options.add_argument("--headless=new") 
-    
-    # 2. 必備：Linux/Docker 環境防崩潰參數
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--window-size=1920,1080") # 假裝有個大螢幕，避免 RWD 隱藏元素
-    
-    # 3. 偽裝：這是為了騙過 Barchart 的反爬蟲
+    # 根據環境判斷是否使用 Headless
+    # 如果是在 GitHub Actions (CI=true) 或者 Linux 環境，強制使用 Headless
+    is_ci = os.environ.get('CI') == 'true'
+    if is_ci:
+        chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+    else:
+        # 在 PC 上執行時，保持視窗開啟以觀察狀況 (也可以設為 headless)
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+
     chrome_options.add_argument("--disable-blink-features=AutomationControlled") 
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    chrome_options.add_experimental_option('useAutomationExtension', False)
     
     try:
-        # 在 GitHub Actions 上，ChromeDriverManager 會自動下載正確的 Linux版 ChromeDriver
         service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=chrome_options)
     except Exception as e:
@@ -55,41 +54,47 @@ def fetch_barchart_data(symbol, label):
     
     try:
         driver.get(url)
-        print("   👀 等待頁面載入 (10秒)...")
-        time.sleep(10) # 雲端網路有時較慢，多等一下
+        print("   👀 等待頁面載入 (8秒)...")
+        time.sleep(8) 
         
-        # 雲端環境嘗試捲動 (雖然是 headless，但送 JS 指令還是有效)
+        # 嘗試捲動
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight / 3);")
         time.sleep(2)
         
         page_text = driver.find_element("tag name", "body").text
         
-        # Regex 解析
-        pattern = re.compile(r'(\d{2}/\d{2}/\d{2})\s+([\d,.]+)\s+([\d,.]+)\s+([\d,.]+)\s+([\d,.]+)')
+        # Regex: 抓取日期 + 數值
+        # 支援 mm/dd/yy (02/05/26) 和 yyyy-mm-dd (2026-02-05)
+        pattern = re.compile(r'(\d{2,4}[-/]\d{2}[-/]\d{2,4})\s+([\d,.]+)\s+([\d,.]+)\s+([\d,.]+)\s+([\d,.]+)')
         matches = pattern.findall(page_text)
         
         data = []
         for match in matches:
             try:
-                date_dt = datetime.strptime(match[0], "%m/%d/%y")
-                date_str = date_dt.strftime("%Y-%m-%d")
+                date_raw = match[0]
+                # 這裡不再手動轉換日期格式，直接存原始字串
+                # 讓後面的 pd.to_datetime 自己去猜
+                
+                # 第5個欄位是 Last (收盤值)
                 last_val = float(match[4].replace(',', ''))
-                data.append({'Date': date_str, label: last_val})
+                
+                data.append({'Date': date_raw, label: last_val})
             except: continue
             
         if len(data) >= 1:
             df = pd.DataFrame(data).drop_duplicates(subset=['Date'])
-            df['Date'] = pd.to_datetime(df['Date'], format='%m/%d/%y') # 格式化日期
+            
+            # 【關鍵修正】: 移除 format 參數，讓 Pandas 自動推斷日期格式
+            # 這能同時相容 "02/05/26" 和 "2026-02-05"
+            df['Date'] = pd.to_datetime(df['Date'])
+            
             df.set_index('Date', inplace=True)
             df.sort_index(inplace=True)
-            df.index = pd.to_datetime(df.index)
             
             print(f"   ✅ 成功抓取 {len(df)} 筆。最新: {df.index[-1].date()} = {df[label].iloc[-1]}")
             return df
         else:
             print("   ❌ 抓取失敗 (Regex 未匹配到數據)")
-            # Debug: 如果失敗，印出部分內容看看是不是被擋了
-            print(f"   [Debug] 頁面開頭: {page_text[:200].replace(chr(10), ' ')}")
             return None
 
     except Exception as e:
@@ -101,7 +106,7 @@ def fetch_barchart_data(symbol, label):
         except: pass
 
 # ==========================================
-# 💾 資料庫更新 (無變動)
+# 💾 資料庫更新
 # ==========================================
 def update_database(new_data_dict):
     print(f"\n💾 正在更新歷史資料庫: {HISTORY_FILE} ...")
@@ -128,16 +133,21 @@ def update_database(new_data_dict):
         print("   ❌ 沒有新數據可供更新。")
         return
 
+    # 確保索引型態一致
     daily_snapshot.index = pd.to_datetime(daily_snapshot.index)
+    
     print(f"   📥 本次抓取範圍: {daily_snapshot.index.min().date()} ~ {daily_snapshot.index.max().date()}")
 
     if history_df.empty:
         history_df = daily_snapshot
     else:
+        # 使用 combine_first 更新舊資料 (新資料優先)
         history_df = daily_snapshot.combine_first(history_df)
 
     history_df.sort_index(inplace=True)
-    history_df.to_csv(HISTORY_FILE)
+    
+    # 存檔格式：YYYY-MM-DD
+    history_df.to_csv(HISTORY_FILE, date_format='%Y-%m-%d')
     print(f"   ✅ 更新完成！目前資料庫共有 {len(history_df)} 筆交易日數據。")
     print("   📊 最新 3 筆數據預覽:")
     print(history_df.tail(3))
@@ -146,14 +156,14 @@ def update_database(new_data_dict):
 # 🚀 主程式
 # ==========================================
 if __name__ == "__main__":
-    print("🚀 啟動每日廣度數據收割機 (GitHub Actions 版)...")
+    print("🚀 啟動每日廣度數據收割機 (格式修復版)...")
     
     collected_data = {}
     
     for label, symbol in SYMBOLS.items():
         df = fetch_barchart_data(symbol, label)
         collected_data[label] = df
-        time.sleep(5) # 雲端稍微多休息一點
+        time.sleep(3) 
         
     update_database(collected_data)
     
