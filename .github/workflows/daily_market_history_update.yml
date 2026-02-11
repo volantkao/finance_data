@@ -19,7 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install yfinance pandas requests
+          pip install yfinance pandas requests numpy
 
       - name: Run collector script
         run: python market_data_collector.py
@@ -35,3 +35,4 @@ jobs:
           git commit -m "Update market data: $(date)" || exit 0
 
           git push
+
