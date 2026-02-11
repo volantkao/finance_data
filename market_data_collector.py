@@ -3,6 +3,7 @@ import pandas as pd
 import requests
 from io import StringIO
 import os
+from datetime import datetime
 
 def get_gex_history():
     """
@@ -35,18 +36,33 @@ def get_futures_basis_history(period="1y"):
     df['date'] = pd.to_datetime(df['date'])
     return df[['date', 'basis']]
 
+from cot_scoring import get_sp500_cot_data, calculate_scores
+
 def main():
     print("正在抓取 GEX 歷史數據...")
     gex_df = get_gex_history()
     
     print("正在抓取期貨基差數據...")
     basis_df = get_futures_basis_history()
+
+    print("正在抓取並計算 COT 擁擠度得分...")
+    try:
+        current_year = datetime.now().year
+        cot_df = get_sp500_cot_data(years=list(range(current_year-3, current_year+1)))
+        cot_scored = calculate_scores(cot_df)
+        cot_final = cot_scored[['date', 'score']].rename(columns={'score': 'cot_crowding_score'})
+    except Exception as e:
+        print(f"COT 抓取失敗: {e}")
+        cot_final = None
     
+    # 合併所有數據
     if gex_df is not None:
-        # 合併數據
-        merged_df = pd.merge(gex_df, basis_df, on='date', how='outer').sort_values('date')
+        merged_df = pd.merge(gex_df, basis_df, on='date', how='outer')
+        if cot_final is not None:
+            merged_df = pd.merge(merged_df, cot_final, on='date', how='outer')
         
-        # 儲存到本地 CSV
+        merged_df = merged_df.sort_values('date')
+        
         output_file = "market_history.csv"
         merged_df.to_csv(output_file, index=False)
         print(f"數據已儲存至 {output_file}")
