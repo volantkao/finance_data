@@ -2,7 +2,7 @@ name: Daily Market Data Update
 
 on:
   schedule:
-    - cron: '30 22 * * *' # 每天 UTC 22:30 (美股收盤後) 執行
+    - cron: '0 22 * * *' # 每天 UTC 22:00 (美股收盤後) 執行
   workflow_dispatch: # 允許手動執行
 
 jobs:
@@ -19,20 +19,15 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install yfinance pandas requests numpy
+          pip install yfinance pandas requests cot_reports numpy
 
       - name: Run collector script
         run: python market_data_collector.py
-      - name: Run cot_scoring
-        run: cot_scoring.py
 
       - name: Commit and push if changed
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add market_history.csv
-          git add cot_crowding_scores.csv.csv
           git commit -m "Update market data: $(date)" || exit 0
-
           git push
-
