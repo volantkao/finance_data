@@ -50,7 +50,7 @@ def fetch_and_update_commodity(commodity_name: str, config: dict, api_client: CF
         else:
             logger.info("無現有數據，將抓取最近 52 週的數據")
             # 抓取最近一年的數據
-            start_date_obj = datetime.now() - timedelta(days=365)
+            start_date_obj = datetime.now() - timedelta(days=1850)
             start_date = start_date_obj.strftime('%Y-%m-%d')
         
         # 從 API 獲取數據
