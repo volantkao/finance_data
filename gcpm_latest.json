@@ -1,15 +1,15 @@
 {
-  "update_time": "2026-02-13 21:32",
+  "update_time": "2026-02-14 21:21",
   "data_date": "2026-02-13",
   "gcp_score": 0.57,
-  "pci_score": 2.68,
-  "pci_z_score": 0.82,
+  "pci_score": 2.67,
+  "pci_z_score": 0.81,
   "spy_price": 688.21,
   "details": [
     {
       "code": "P_CRYPTO",
       "name": "加密貨幣",
-      "value": 2.68,
+      "value": 2.67,
       "status": "tight"
     },
     {
@@ -21,7 +21,7 @@
     {
       "code": "P_JPY",
       "name": "日圓套息",
-      "value": 1.62,
+      "value": 1.61,
       "status": "tight"
     },
     {
@@ -33,13 +33,13 @@
     {
       "code": "P_CNH",
       "name": "中國/人民幣",
-      "value": -0.51,
+      "value": -0.52,
       "status": "neutral"
     },
     {
       "code": "P_KRW",
       "name": "韓元/風險",
-      "value": 0.5,
+      "value": 0.52,
       "status": "neutral"
     },
     {
