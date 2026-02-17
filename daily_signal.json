@@ -1,5 +1,5 @@
 {
-    "update_time": "2026-02-16 08:08",
+    "update_time": "2026-02-17 08:26",
     "signals": {
         "0050.TW": {
             "market_status": "多單持有",
@@ -39,7 +39,7 @@
                     "trigger_price_note": "SELL if Close < 69.48 (or >)"
                 },
                 {
-                    "strategy_name": "fd 大小30-30",
+                    "strategy_name": "fd cr 30-30",
                     "cumulative_return_3y": "212.77%",
                     "sharpe_ratio": "2.08",
                     "current_signal": 1,
