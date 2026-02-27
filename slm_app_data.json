@@ -1,9 +1,9 @@
 {
   "date": "2026-02-26",
   "market_status": {
-    "retail_z": -2.95,
-    "short_margin_z": -1.62,
-    "short_margin_ratio_percent": 3.41
+    "retail_z": -2.85,
+    "short_margin_z": -1.64,
+    "short_margin_ratio_percent": 3.38
   },
   "yuna_insight": {
     "mood": "happy",
@@ -42,6 +42,12 @@
       "pressure_delta_5d": 0.36
     },
     {
+      "code": "TW_POWER",
+      "name": "重電綠能",
+      "pressure_score": 0.68,
+      "pressure_delta_5d": -0.26
+    },
+    {
       "code": "TW_SHIP",
       "name": "航運",
       "pressure_score": 0.94,
@@ -64,12 +70,6 @@
       "name": "AI 伺服器",
       "pressure_score": 1.31,
       "pressure_delta_5d": 0.15
-    },
-    {
-      "code": "TW_POWER",
-      "name": "重電綠能",
-      "pressure_score": 1.32,
-      "pressure_delta_5d": -0.22
     },
     {
       "code": "TW_BIO",
