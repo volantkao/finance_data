@@ -2,8 +2,8 @@ name: Daily Oil Data Update
 
 on:
   schedule:
-    # 每天 UTC 時間 22:50 執行 (台灣時間早上 06:50)
-    - cron: '50 22 * * *'
+    # 每天 UTC 時間 22:55 執行 (台灣時間早上 06:50)
+    - cron: '55 22 * * *'
   workflow_dispatch: # 允許手動觸發
 
 jobs:
