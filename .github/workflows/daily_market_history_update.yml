@@ -2,7 +2,7 @@ name: Daily Market Data Update
 
 on:
   schedule:
-    - cron: '0 22 * * *' # 每天 UTC 22:00 (美股收盤後) 執行
+    - cron: '02 22 * * *' # 每天 UTC 22:02 (美股收盤後) 執行
   workflow_dispatch: # 允許手動執行
 
 jobs:
@@ -31,3 +31,4 @@ jobs:
           git add market_history.csv
           git commit -m "Update market data: $(date)" || exit 0
           git push
+
