@@ -2,7 +2,7 @@ name: Daily JP10Y Recorder
 
 on:
   schedule:
-    - cron: '0 22 * * *'
+    - cron: '08 22 * * *'
   workflow_dispatch:
 
 jobs:
@@ -40,3 +40,4 @@ jobs:
           # 改回最單純的寫法
           git add jp10y_history.csv
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update JP10Y data" && git push)
+
