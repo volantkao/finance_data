@@ -2,8 +2,8 @@ name: Daily Oil Data Update
 
 on:
   schedule:
-    # 每天 UTC 時間 23:00 執行 (台北時間 07:00)
-    - cron: '0 23 * * *'
+    # 每天 UTC 時間 23:02 執行 (台北時間 07:00)
+    - cron: '02 23 * * *'
   workflow_dispatch: # 允許手動觸發
 
 jobs:
@@ -31,4 +31,5 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add wti_monitor_data.csv
+
           git diff --quiet && git diff --staged --quiet || (git commit -m "Daily update: $(date +'%Y-%m-%d')" && git push)
