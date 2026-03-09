@@ -1,5 +1,5 @@
 {
-    "update_time": "2026-03-07 11:00",
+    "update_time": "2026-03-09 08:06",
     "signals": {
         "0050.TW": {
             "market_status": "多單持有",
@@ -8,7 +8,7 @@
             "top5_strategies": [
                 {
                     "strategy_name": "irs 14 tr cr",
-                    "cumulative_return_3y": "143.24%",
+                    "cumulative_return_3y": "142.97%",
                     "sharpe_ratio": "2.33",
                     "current_signal": 0,
                     "status": "EMPTY",
