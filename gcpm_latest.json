@@ -1,5 +1,5 @@
 {
-  "update_time": "2026-03-14 21:24",
+  "update_time": "2026-03-15 21:25",
   "data_date": "2026-03-13",
   "gcp_score": 0.28,
   "pci_score": 2.74,
@@ -15,7 +15,7 @@
     {
       "code": "P_KRW",
       "name": "韓元/風險",
-      "value": 2.1,
+      "value": 2.13,
       "status": "tight"
     },
     {
@@ -27,7 +27,7 @@
     {
       "code": "P_JPY",
       "name": "日圓套息",
-      "value": -0.95,
+      "value": -0.94,
       "status": "neutral"
     },
     {
@@ -45,13 +45,13 @@
     {
       "code": "P_USD",
       "name": "美元池壓力",
-      "value": 0.78,
+      "value": 0.77,
       "status": "neutral"
     },
     {
       "code": "P_CRYPTO",
       "name": "加密貨幣",
-      "value": 0.67,
+      "value": 0.66,
       "status": "neutral"
     },
     {
@@ -63,7 +63,7 @@
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": 0.39,
+      "value": 0.4,
       "status": "neutral"
     }
   ]
