@@ -1,10 +1,10 @@
 {
-  "update_time": "2026-03-20 21:28",
+  "update_time": "2026-03-21 21:22",
   "data_date": "2026-03-20",
   "gcp_score": 0.42,
   "pci_score": 2.55,
   "pci_z_score": 0.56,
-  "spy_price": 661.92,
+  "spy_price": 660.47,
   "details": [
     {
       "code": "P_TWD",
@@ -25,16 +25,16 @@
       "status": "tight"
     },
     {
-      "code": "P_AUD",
-      "name": "澳幣/原物料",
-      "value": 1.29,
-      "status": "tight"
-    },
-    {
       "code": "P_JPY",
       "name": "日圓套息",
       "value": -1.29,
       "status": "loose"
+    },
+    {
+      "code": "P_AUD",
+      "name": "澳幣/原物料",
+      "value": 1.25,
+      "status": "tight"
     },
     {
       "code": "P_USD",
@@ -63,7 +63,7 @@
     {
       "code": "P_METAL",
       "name": "貴金屬/黃金",
-      "value": 0.23,
+      "value": 0.2,
       "status": "neutral"
     }
   ]
