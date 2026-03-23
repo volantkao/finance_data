@@ -1,69 +1,69 @@
 {
-  "update_time": "2026-03-22 21:24",
-  "data_date": "2026-03-20",
-  "gcp_score": 0.42,
-  "pci_score": 2.55,
-  "pci_z_score": 0.56,
-  "spy_price": 660.47,
+  "update_time": "2026-03-23 21:34",
+  "data_date": "2026-03-23",
+  "gcp_score": 0.48,
+  "pci_score": 2.38,
+  "pci_z_score": 0.32,
+  "spy_price": 658.11,
   "details": [
     {
-      "code": "P_TWD",
-      "name": "台幣/地緣",
-      "value": 2.41,
+      "code": "P_EM",
+      "name": "新興市場",
+      "value": 2.15,
       "status": "tight"
     },
     {
       "code": "P_KRW",
       "name": "韓元/風險",
-      "value": 2.36,
+      "value": 2.13,
       "status": "tight"
     },
     {
-      "code": "P_EM",
-      "name": "新興市場",
-      "value": 2.12,
+      "code": "P_TWD",
+      "name": "台幣/地緣",
+      "value": 2.07,
+      "status": "tight"
+    },
+    {
+      "code": "P_AUD",
+      "name": "澳幣/原物料",
+      "value": 1.5,
       "status": "tight"
     },
     {
       "code": "P_JPY",
       "name": "日圓套息",
-      "value": -1.29,
+      "value": -1.05,
       "status": "loose"
-    },
-    {
-      "code": "P_AUD",
-      "name": "澳幣/原物料",
-      "value": 1.24,
-      "status": "tight"
     },
     {
       "code": "P_USD",
       "name": "美元池壓力",
-      "value": 0.81,
-      "status": "neutral"
-    },
-    {
-      "code": "P_EUR",
-      "name": "歐元區",
-      "value": -0.58,
-      "status": "neutral"
-    },
-    {
-      "code": "P_CNH",
-      "name": "中國/人民幣",
-      "value": -0.47,
+      "value": 0.75,
       "status": "neutral"
     },
     {
       "code": "P_CRYPTO",
       "name": "加密貨幣",
-      "value": 0.45,
+      "value": 0.48,
       "status": "neutral"
     },
     {
       "code": "P_METAL",
       "name": "貴金屬/黃金",
-      "value": 0.2,
+      "value": 0.43,
+      "status": "neutral"
+    },
+    {
+      "code": "P_CNH",
+      "name": "中國/人民幣",
+      "value": -0.38,
+      "status": "neutral"
+    },
+    {
+      "code": "P_EUR",
+      "name": "歐元區",
+      "value": -0.27,
       "status": "neutral"
     }
   ]
