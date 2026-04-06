@@ -1,5 +1,5 @@
 {
-    "update_time": "2026-04-03 08:30",
+    "update_time": "2026-04-06 08:55",
     "signals": {
         "0050.TW": {
             "market_status": "全數看空",
@@ -8,8 +8,8 @@
             "top5_strategies": [
                 {
                     "strategy_name": "irs 14 tr cr",
-                    "cumulative_return_3y": "134.05%",
-                    "sharpe_ratio": "2.32",
+                    "cumulative_return_3y": "134.64%",
+                    "sharpe_ratio": "2.33",
                     "current_signal": 0,
                     "status": "EMPTY",
                     "trigger_price_note": "Steady"
@@ -78,7 +78,7 @@
                     "trigger_price_note": "Steady"
                 },
                 {
-                    "strategy_name": "kd81-5大小50",
+                    "strategy_name": "kd81-5 cr 50",
                     "cumulative_return_3y": "70.92%",
                     "sharpe_ratio": "1.64",
                     "current_signal": 0,
@@ -86,7 +86,7 @@
                     "trigger_price_note": "Steady"
                 },
                 {
-                    "strategy_name": "kd81-5 cr 50",
+                    "strategy_name": "kd81-5大小50",
                     "cumulative_return_3y": "70.92%",
                     "sharpe_ratio": "1.64",
                     "current_signal": 0,
