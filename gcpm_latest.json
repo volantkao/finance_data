@@ -1,57 +1,57 @@
 {
-  "update_time": "2026-04-07 21:40",
-  "data_date": "2026-04-07",
-  "gcp_score": 0.44,
-  "pci_score": 1.42,
-  "pci_z_score": -1.24,
-  "spy_price": 657.01,
+  "update_time": "2026-04-08 21:39",
+  "data_date": "2026-04-08",
+  "gcp_score": 0.33,
+  "pci_score": 1.33,
+  "pci_z_score": -1.37,
+  "spy_price": 661.16,
   "details": [
     {
       "code": "P_KRW",
       "name": "韓元/風險",
-      "value": 1.42,
-      "status": "tight"
-    },
-    {
-      "code": "P_TWD",
-      "name": "台幣/地緣",
-      "value": 1.29,
+      "value": 1.31,
       "status": "tight"
     },
     {
       "code": "P_EM",
       "name": "新興市場",
-      "value": 1.24,
+      "value": 1.15,
+      "status": "tight"
+    },
+    {
+      "code": "P_TWD",
+      "name": "台幣/地緣",
+      "value": 1.08,
       "status": "tight"
     },
     {
       "code": "P_USD",
       "name": "美元池壓力",
-      "value": 1.07,
-      "status": "tight"
+      "value": 0.79,
+      "status": "neutral"
     },
     {
       "code": "P_JPY",
       "name": "日圓套息",
-      "value": -0.76,
+      "value": -0.77,
       "status": "neutral"
     },
     {
       "code": "P_METAL",
       "name": "貴金屬/黃金",
-      "value": 0.56,
+      "value": 0.6,
       "status": "neutral"
     },
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": 0.36,
+      "value": 0.33,
       "status": "neutral"
     },
     {
-      "code": "P_CRYPTO",
-      "name": "加密貨幣",
-      "value": 0.14,
+      "code": "P_CNH",
+      "name": "中國/人民幣",
+      "value": -0.13,
       "status": "neutral"
     },
     {
@@ -61,9 +61,9 @@
       "status": "neutral"
     },
     {
-      "code": "P_CNH",
-      "name": "中國/人民幣",
-      "value": -0.01,
+      "code": "P_CRYPTO",
+      "name": "加密貨幣",
+      "value": 0.03,
       "status": "neutral"
     }
   ]
