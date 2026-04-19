@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-04-19 10:08:42",
+    "last_updated": "2026-04-19 22:00:37",
     "market_data": {
         "jp_10y": 2.417,
         "us_3m": 3.62,
@@ -10,7 +10,7 @@
     },
     "risk_indicators": {
         "high_yield_oas": 2.86,
-        "baa_spread": 1.71,
+        "baa_spread": 0.0,
         "financial_stress": -0.65,
         "srf_usage": 0.0,
         "srf_date": "2026-04-17"
@@ -38,11 +38,11 @@
             "hist_std": 0.25343569102552915
         },
         "vol_stress": {
-            "hv_mean": 8.7673,
-            "hv_std": 2.9624,
-            "slope_mean": -0.0375,
+            "hv_mean": 8.7661,
+            "hv_std": 2.964,
+            "slope_mean": -0.0387,
             "slope_std": 1.2513,
-            "yesterday_hv": 5.0031
+            "yesterday_hv": 4.7038
         },
         "spread_history_150d": [
             {
@@ -646,17 +646,11 @@
                 "spread": 1.8319
             }
         ],
-        "gray_rhino_ingredients": {
-            "pvd": -0.08,
-            "vpd": 0.96,
-            "csd": -1.97,
-            "lf": 0.54,
-            "ttd_slope": -0.0645
-        },
+        "gray_rhino_ingredients": {},
         "stlfsi_z_params": {
-            "current": -0.6475,
-            "mean": -0.4015,
-            "std": 0.1461
+            "current": 0,
+            "mean": 0,
+            "std": 1
         },
         "move_z_params": {
             "current": 65.7,
