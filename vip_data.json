@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-04-25 10:11:39",
+    "last_updated": "2026-04-25 22:02:00",
     "market_data": {
         "jp_10y": 2.435,
         "us_3m": 3.6,
@@ -646,13 +646,7 @@
                 "spread": 1.8766
             }
         ],
-        "gray_rhino_ingredients": {
-            "pvd": 0.3,
-            "vpd": 0.26,
-            "csd": -2.32,
-            "lf": 0.55,
-            "ttd_slope": 0.1297
-        },
+        "gray_rhino_ingredients": {},
         "stlfsi_z_params": {
             "current": -0.7584,
             "mean": -0.4042,
