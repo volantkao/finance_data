@@ -1,8 +1,8 @@
 {
-  "update_time": "2026-04-24 21:44",
+  "update_time": "2026-04-25 21:34",
   "data_date": "2026-04-24",
   "gcp_score": -0.61,
-  "pci_score": 1.53,
+  "pci_score": 1.52,
   "pci_z_score": -0.73,
   "spy_price": 709.28,
   "details": [
@@ -33,7 +33,7 @@
     {
       "code": "P_TWD",
       "name": "台幣/地緣",
-      "value": -0.26,
+      "value": -0.25,
       "status": "neutral"
     },
     {
@@ -57,7 +57,7 @@
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": 0.03,
+      "value": 0.04,
       "status": "neutral"
     },
     {
