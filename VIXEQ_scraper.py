@@ -13,19 +13,19 @@ import sys
 # 設定檔案名稱 (請確保您的歷史檔案名稱與此一致，或在此修改)
 FILENAME = "vixeq-history.csv"
 
+import re # 新增正則表達式模組，加在最上方的 import 區塊
+
 def get_vixeq_selenium():
     print("🚀 啟動 Chrome 瀏覽器...")
     chrome_options = Options()
-    chrome_options.add_argument("--headless=new") # 新版無頭模式
+    chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--window-size=1920,1080")
-    # 反爬蟲設置
     chrome_options.add_argument("--disable-blink-features=AutomationControlled")
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
     
-    # 自動安裝與管理 ChromeDriver
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
     
@@ -35,19 +35,29 @@ def get_vixeq_selenium():
         print(f"🔗 前往: {url}")
         driver.get(url)
         
-        # 等待價格元素加載 (Class 名稱可能會變，這是 Google Finance 的風險)
-        # 您原本提供的 class 是 ".YMlKec.fxKbKc"
+        # 🌟 核心戰術改變：不抓易變的 CSS 元素，直接等網頁標題加載
         wait = WebDriverWait(driver, 15)
-        element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".YMlKec.fxKbKc")))
+        wait.until(EC.title_contains("VIXEQ")) 
         
-        price_text = element.text.replace(',', '')
-        price = float(price_text)
-        print(f"✅ 成功抓取價格: {price}")
-        driver.quit()
-        return price
+        title = driver.title
+        print(f"📄 讀取到網頁標題: {title}")
+        
+        # 🌟 用正則表達式從 "VIXEQ 43.09 (▲ 1.13%)..." 萃取數字
+        match = re.search(r'VIXEQ\s+([\d,\.]+)', title)
+        
+        if match:
+            price_text = match.group(1).replace(',', '')
+            price = float(price_text)
+            print(f"✅ 成功從標題解析出價格: {price}")
+            driver.quit()
+            return price
+        else:
+            print("❌ 無法從標題中找到價格格式！")
+            driver.quit()
+            return None
+            
     except Exception as e:
         print(f"❌ Selenium 抓取失敗: {e}")
-        # 如果失敗，嘗試印出網頁源碼的前幾行或是標題，方便除錯
         try:
             print(f"網頁標題: {driver.title}")
         except: pass
