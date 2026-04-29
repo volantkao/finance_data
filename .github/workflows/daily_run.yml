@@ -35,9 +35,7 @@ jobs:
       run: |
         echo "Run 1: run monitor_lite.py..."
         python monitor_lite.py
-                
-        echo "Run 2: gex_calculator..."
-        python gex_calculator.py SPY
+
 
     - name: Commit and Push JSON
       # 這一步會把生成的 json 檔推回 GitHub，這樣 App 就能讀到了
