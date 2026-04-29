@@ -1,0 +1,41 @@
+name: Daily GEX Calculator
+
+on:
+  schedule:
+    # 每天美東時間下午 5:00 (UTC 21:00) 執行，此時收盤數據較完整
+    - cron: '0 21 * * 1-5'
+  workflow_dispatch: # 允許手動觸發
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install yfinance pandas numpy scipy
+
+    - name: Run GEX Calculator
+      run: |
+        python gex_calculator.py SPY
+        # 如果您想跑多個標的，可以多加幾行，例如：
+        # python gex_calculator.py QQQ
+
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add *.csv
+        git commit -m "Update daily GEX data [skip ci]" || echo "No changes to commit"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
