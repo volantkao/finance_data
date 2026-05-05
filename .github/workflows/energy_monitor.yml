@@ -23,7 +23,7 @@ jobs:
         pip install requests pandas
 
     - name: Run monitor script
-      run: python monitor_energy.py
+      run: python monitor_energy_final.py
 
     - name: Commit and push changes
       run: |
