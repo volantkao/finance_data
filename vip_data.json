@@ -1,54 +1,50 @@
 {
-    "last_updated": "2026-05-06 11:25:28",
+    "last_updated": "2026-05-06 22:24:57",
     "market_data": {
         "jp_10y": 2.509,
         "us_3m": 3.61,
-        "jp_3m": 0.0,
-        "sofr": 0.0,
+        "jp_3m": 1.27,
+        "sofr": 3.62,
         "iorb": 3.65,
-        "sofr_date": ""
+        "sofr_date": "2026-05-05"
     },
     "risk_indicators": {
-        "high_yield_oas": 2.78,
-        "baa_spread": 0.0,
-        "financial_stress": -0.68,
+        "high_yield_oas": 2.77,
+        "baa_spread": 1.65,
+        "financial_stress": -0.67,
         "srf_usage": 0.0,
-        "srf_date": "2026-05-05"
+        "srf_date": "2026-05-06"
     },
     "z_score": {
-        "value": 1.48,
-        "mean": 1.3489,
-        "std": 0.2216,
+        "value": 1.68,
+        "mean": 1.3527,
+        "std": 0.2257,
         "status": "Warning",
         "details": {
             "w5000": 72579.0,
             "m2": 22686.0,
-            "ratio": 1.6777
+            "ratio": 1.7322
         },
         "history_debug": [
             "S:72579 | M2:22686",
-            "R:1.6777 (Mean:1.35)"
+            "R:1.7322 (Mean:1.35)"
         ]
     },
     "client_side_params": {
         "market_vuln": {
             "m2_supply": 22686.0,
             "jgb_10y": 2.509,
-            "hist_mean": 1.3488870836405689,
-            "hist_std": 0.22162657938444794
+            "hist_mean": 1.3527279615978756,
+            "hist_std": 0.2256926216472355
         },
         "vol_stress": {
-            "hv_mean": 8.3817,
-            "hv_std": 2.8369,
-            "slope_mean": -0.0105,
-            "slope_std": 1.3298,
-            "yesterday_hv": 11.2452
+            "hv_mean": 8.3931,
+            "hv_std": 2.837,
+            "slope_mean": -0.0094,
+            "slope_std": 1.3275,
+            "yesterday_hv": 11.5197
         },
         "spread_history_150d": [
-            {
-                "date": "2025-09-30",
-                "spread": 2.4933
-            },
             {
                 "date": "2025-10-01",
                 "spread": 2.451
@@ -644,24 +640,28 @@
             {
                 "date": "2026-05-05",
                 "spread": 1.9095
+            },
+            {
+                "date": "2026-05-06",
+                "spread": 1.847
             }
         ],
         "gray_rhino_ingredients": {
-            "pvd": 0.87,
-            "vpd": -0.24,
-            "csd": -1.71,
-            "lf": 1.01,
-            "ttd_slope": -0.0008
+            "pvd": 1.15,
+            "vpd": -0.59,
+            "csd": -1.79,
+            "lf": 1.43,
+            "ttd_slope": -0.0135
         },
         "stlfsi_z_params": {
-            "current": -0.6782,
-            "mean": -0.4275,
-            "std": 0.1839
+            "current": -0.6702,
+            "mean": -0.4526,
+            "std": 0.2006
         },
         "move_z_params": {
-            "current": 76.78,
-            "mean": 77.63,
-            "std": 13.27
+            "current": 70.63,
+            "mean": 77.76,
+            "std": 13.16
         }
     }
 }
