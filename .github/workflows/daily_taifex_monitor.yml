@@ -1,4 +1,4 @@
-name: Daily Market Monitor
+name: Daily taifex Market Monitor
 
 on:
   schedule:
