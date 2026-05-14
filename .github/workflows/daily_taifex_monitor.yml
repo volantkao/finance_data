@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pandas beautifulsoup4 requests lxml html5lib
+          pip install pandas requests lxml html5lib odfpy beautifulsoup4
 
       - name: Run monitor script
         run: python taifex_monitor.py
