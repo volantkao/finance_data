@@ -4,6 +4,7 @@ import datetime
 import os
 import json
 import re
+import sys
 from io import StringIO, BytesIO
 from bs4 import BeautifulSoup
 
@@ -14,13 +15,15 @@ def get_tx_futures():
     """抓取台指期近月收盤價與 OI"""
     url = "https://openapi.taifex.com.tw/v1/DailyMarketReportFut"
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=15)
         data = response.json()
         df = pd.DataFrame(data)
         tx_df = df[df['Contract'] == 'TX'].copy()
         tx_df = tx_df[tx_df['ContractMonth(Week)'].str.len() == 6]
         tx_df = tx_df.sort_values('ContractMonth(Week)')
-        if tx_df.empty: return {'tx_price': None, 'tx_oi': None}
+        if tx_df.empty: 
+            print("TX Futures data is empty.")
+            return {'tx_price': None, 'tx_oi': None}
         latest_month = tx_df.iloc[0]
         return {
             'tx_price': float(latest_month['Last']) if latest_month['Last'] else None,
@@ -34,7 +37,7 @@ def get_margin_balance():
     """抓取大盤融資餘額"""
     url = "https://openapi.twse.com.tw/v1/exchangeReport/MI_MARGN"
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=15)
         data = response.json()
         df = pd.DataFrame(data)
         def clean_val(val):
@@ -54,35 +57,34 @@ def get_anc_ratio():
         resp = requests.get(list_url, timeout=15)
         soup = BeautifulSoup(resp.text, 'html.parser')
         ods_url = None
-        # 尋找包含「專營期貨商簡明財務資料表」的連結
         for a in soup.find_all('a', href=True):
             if '專營期貨商簡明財務資料表' in a.get_text() and '.ods' in a['href']:
                 href = a['href']
                 if href.startswith('http'):
                     ods_url = href
                 else:
-                    # 處理相對路徑
-                    if href.startswith('/'):
-                        ods_url = "https://www.taifex.com.tw" + href
-                    else:
-                        ods_url = "https://www.taifex.com.tw/cht/8/" + href
+                    ods_url = "https://www.taifex.com.tw" + (href if href.startswith('/') else "/cht/8/" + href)
                 break
         
         if not ods_url:
-            # 備用方案：若 BeautifulSoup 沒抓到，嘗試用正則表達式
             match = re.search(r'href="([^"]*專營期貨商簡明財務資料表[^"]*\.ods)"', resp.text)
             if match:
                 href = match.group(1)
                 ods_url = href if href.startswith('http') else "https://www.taifex.com.tw" + (href if href.startswith('/') else "/cht/8/" + href)
 
         if not ods_url:
-            print("Could not find ODS URL.")
+            print("Could not find ODS URL for ANC Ratio.")
             return None
             
-        print(f"Downloading ODS: {ods_url}")
+        print(f"Downloading ODS from: {ods_url}")
         ods_resp = requests.get(ods_url, timeout=20)
-        df = pd.read_excel(BytesIO(ods_resp.content), engine='odf', header=None)
-        
+        # 確保安裝了 odfpy
+        try:
+            df = pd.read_excel(BytesIO(ods_resp.content), engine='odf', header=None)
+        except ImportError:
+            print("Error: 'odfpy' library is required to read ODS files. Please install it using 'pip install odfpy'.")
+            return None
+            
         header_row_idx = None
         for idx, row in df.iterrows():
             if '期貨商名稱' in row.values:
@@ -106,18 +108,21 @@ def get_anc_ratio():
                     try:
                         asset_val = float(str(a).replace(',', ''))
                         anc_val = float(str(anc).replace('%', '').replace(',', ''))
-                        # 若 anc_val < 1 (如 0.40)，則 * 100 轉為百分比 (40.0)
-                        if anc_val < 5: # 正常 ANC 都在 100% 以上，若小於 5 應該是小數點表示
-                            anc_val = anc_val * 100
+                        if anc_val < 5: anc_val = anc_val * 100
                         data.append({'Broker': b, 'Asset': asset_val, 'ANC': anc_val})
                     except: continue
                 
                 res_df = pd.DataFrame(data)
+                if res_df.empty:
+                    print("ANC data parsing resulted in empty DataFrame.")
+                    return None
                 top_4 = res_df.sort_values(by='Asset', ascending=False).head(4)
-                print(f"Top 4: {top_4['Broker'].tolist()}")
+                print(f"Top 4 Brokers for ANC: {top_4['Broker'].tolist()}")
                 return round(top_4['ANC'].mean(), 2)
+            else:
+                print(f"Could not find rows: Asset={asset_row_idx}, ANC={anc_row_idx}")
     except Exception as e:
-        print(f"Error fetching ANC: {e}")
+        print(f"Error fetching ANC Ratio: {e}")
     return None
 
 def get_cp_rate():
@@ -148,7 +153,7 @@ def main():
     tz_offset = datetime.timezone(datetime.timedelta(hours=8))
     now = datetime.datetime.now(tz_offset)
     today = now.strftime('%Y-%m-%d')
-    print(f"Starting monitor at {now.strftime('%Y-%m-%d %H:%M:%S')} (Taipei Time)")
+    print(f"--- Market Monitor Started: {now.strftime('%Y-%m-%d %H:%M:%S')} (Taipei) ---")
     
     tx_data = get_tx_futures()
     margin_balance = get_margin_balance()
@@ -163,21 +168,25 @@ def main():
         'ANC_Ratio_Avg_Top4': anc_ratio,
         'CP_Rate': cp_rate
     }
-    print(f"Fetched data: {new_data}")
+    print(f"Final Data: {new_data}")
     
     df_new = pd.DataFrame([new_data])
     if os.path.exists(CSV_FILE):
         try:
             df_old = pd.read_csv(CSV_FILE)
-            # 確保欄位一致
             for col in df_new.columns:
                 if col not in df_old.columns: df_old[col] = None
             df_old = df_old[df_old['Date'] != today]
             df_final = pd.concat([df_old[df_new.columns], df_new], ignore_index=True)
-        except: df_final = df_new
-    else: df_final = df_new
+        except Exception as e:
+            print(f"CSV Update Error: {e}")
+            df_final = df_new
+    else:
+        df_final = df_new
+        
     df_final.to_csv(CSV_FILE, index=False)
-    print(f"Data saved to {CSV_FILE}")
+    print(f"Successfully saved to {CSV_FILE}")
+    print("--- Monitor Finished ---")
 
 if __name__ == "__main__":
     main()
