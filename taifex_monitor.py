@@ -51,7 +51,7 @@ def get_margin_balance():
         return None
 
 def get_anc_ratio():
-    """從期交所 ODS 檔解析資產前四大期貨商的 ANC 比率平均值"""
+    """從期交所 ODS 檔解析：全市場 ANC 最低值、與前四大期貨商 ANC 最低值"""
     list_url = "https://www.taifex.com.tw/cht/8/fcmFinancial"
     try:
         resp = requests.get(list_url, timeout=15)
@@ -116,9 +116,19 @@ def get_anc_ratio():
                 if res_df.empty:
                     print("ANC data parsing resulted in empty DataFrame.")
                     return None
+                
+                # 取得資產前四大
                 top_4 = res_df.sort_values(by='Asset', ascending=False).head(4)
                 print(f"Top 4 Brokers for ANC: {top_4['Broker'].tolist()}")
-                return round(top_4['ANC'].mean(), 2)
+                
+                # 🌟 分別計算全市場最低，與前四大最低
+                min_anc_all = round(res_df['ANC'].min(), 2)
+                min_anc_top4 = round(top_4['ANC'].min(), 2)
+                
+                return {
+                    'ANC_Ratio_Min': min_anc_all,
+                    'ANC_Ratio_Min_Top4': min_anc_top4
+                }
             else:
                 print(f"Could not find rows: Asset={asset_row_idx}, ANC={anc_row_idx}")
     except Exception as e:
@@ -158,14 +168,21 @@ def main():
     tx_data = get_tx_futures()
     margin_balance = get_margin_balance()
     cp_rate = get_cp_rate()
-    anc_ratio = get_anc_ratio()
     
+    # 🌟 處理回傳的雙 ANC 字典
+    anc_data = get_anc_ratio()
+    if anc_data is None:
+        anc_data = {'ANC_Ratio_Min': None, 'ANC_Ratio_Min_Top4': None}
+    elif isinstance(anc_data, (float, int)): # 安全防護，若不小心拿到單一數字
+         anc_data = {'ANC_Ratio_Min': anc_data, 'ANC_Ratio_Min_Top4': anc_data}
+         
     new_data = {
         'Date': today,
         'TX_Price': tx_data['tx_price'],
         'TX_OI': tx_data['tx_oi'],
         'Margin_Balance_Billion': margin_balance,
-        'ANC_Ratio_Avg_Top4': anc_ratio,
+        'ANC_Ratio_Min_Top4': anc_data['ANC_Ratio_Min_Top4'],
+        'ANC_Ratio_Min': anc_data['ANC_Ratio_Min'],
         'CP_Rate': cp_rate
     }
     print(f"Final Data: {new_data}")
