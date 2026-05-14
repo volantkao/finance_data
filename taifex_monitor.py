@@ -78,11 +78,10 @@ def get_anc_ratio():
             
         print(f"Downloading ODS from: {ods_url}")
         ods_resp = requests.get(ods_url, timeout=20)
-        # 確保安裝了 odfpy
         try:
             df = pd.read_excel(BytesIO(ods_resp.content), engine='odf', header=None)
         except ImportError:
-            print("Error: 'odfpy' library is required to read ODS files. Please install it using 'pip install odfpy'.")
+            print("Error: 'odfpy' library is required to read ODS files.")
             return None
             
         header_row_idx = None
@@ -107,8 +106,16 @@ def get_anc_ratio():
                     if pd.isna(b) or '合計' in str(b) or '總計' in str(b): continue
                     try:
                         asset_val = float(str(a).replace(',', ''))
-                        anc_val = float(str(anc).replace('%', '').replace(',', ''))
-                        if anc_val < 5: anc_val = anc_val * 100
+                        
+                        # 🌟 修正版 ANC 讀取邏輯 (完美轉換 539%)
+                        raw_anc = str(anc).replace(' ', '')
+                        if '%' in raw_anc:
+                            anc_val = float(raw_anc.replace('%', '').replace(',', ''))
+                        else:
+                            anc_val = float(raw_anc.replace(',', ''))
+                            if anc_val < 200: # ODS 的 5.39 會在這裡乘以 100 變成 539.0
+                                anc_val = anc_val * 100
+                                
                         data.append({'Broker': b, 'Asset': asset_val, 'ANC': anc_val})
                     except: continue
                 
@@ -117,11 +124,9 @@ def get_anc_ratio():
                     print("ANC data parsing resulted in empty DataFrame.")
                     return None
                 
-                # 取得資產前四大
                 top_4 = res_df.sort_values(by='Asset', ascending=False).head(4)
                 print(f"Top 4 Brokers for ANC: {top_4['Broker'].tolist()}")
                 
-                # 🌟 分別計算全市場最低，與前四大最低
                 min_anc_all = round(res_df['ANC'].min(), 2)
                 min_anc_top4 = round(top_4['ANC'].min(), 2)
                 
@@ -169,11 +174,10 @@ def main():
     margin_balance = get_margin_balance()
     cp_rate = get_cp_rate()
     
-    # 🌟 處理回傳的雙 ANC 字典
     anc_data = get_anc_ratio()
     if anc_data is None:
         anc_data = {'ANC_Ratio_Min': None, 'ANC_Ratio_Min_Top4': None}
-    elif isinstance(anc_data, (float, int)): # 安全防護，若不小心拿到單一數字
+    elif isinstance(anc_data, (float, int)):
          anc_data = {'ANC_Ratio_Min': anc_data, 'ANC_Ratio_Min_Top4': anc_data}
          
     new_data = {
