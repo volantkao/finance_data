@@ -1,5 +1,5 @@
 {
-  "update_time": "2026-05-15 21:57",
+  "update_time": "2026-05-16 21:44",
   "data_date": "2026-05-15",
   "gcp_score": -0.58,
   "pci_score": 1.29,
@@ -9,7 +9,7 @@
     {
       "code": "P_CRYPTO",
       "name": "加密貨幣",
-      "value": -1.25,
+      "value": -1.22,
       "status": "loose"
     },
     {
@@ -21,7 +21,7 @@
     {
       "code": "P_TWD",
       "name": "台幣/地緣",
-      "value": -0.94,
+      "value": -0.93,
       "status": "neutral"
     },
     {
@@ -39,18 +39,18 @@
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": -0.51,
-      "status": "neutral"
-    },
-    {
-      "code": "P_EM",
-      "name": "新興市場",
-      "value": -0.38,
+      "value": -0.49,
       "status": "neutral"
     },
     {
       "code": "P_METAL",
       "name": "貴金屬/黃金",
+      "value": -0.39,
+      "status": "neutral"
+    },
+    {
+      "code": "P_EM",
+      "name": "新興市場",
       "value": -0.38,
       "status": "neutral"
     },
