@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-05-24 10:55:36",
+    "last_updated": "2026-05-24 22:30:27",
     "market_data": {
         "jp_10y": 2.753,
         "us_3m": 3.59,
@@ -38,11 +38,11 @@
             "hist_std": 0.24174268411136593
         },
         "vol_stress": {
-            "hv_mean": 8.1889,
-            "hv_std": 2.8423,
-            "slope_mean": -0.0468,
-            "slope_std": 1.267,
-            "yesterday_hv": 2.1754
+            "hv_mean": 8.1902,
+            "hv_std": 2.8395,
+            "slope_mean": -0.0455,
+            "slope_std": 1.2671,
+            "yesterday_hv": 2.5079
         },
         "spread_history_150d": [
             {
