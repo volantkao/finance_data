@@ -1,11 +1,11 @@
 {
     "meta": {
-        "update_time": "2026-05-22 22:32:19",
-        "data_count": 1004
+        "update_time": "2026-05-25 22:32:29",
+        "data_count": 1001
     },
     "latest": {
         "date": "2026-05-22",
-        "olsi": -0.73,
+        "olsi": -0.72,
         "state_code": 0,
         "duration": 0,
         "components": {
@@ -552,7 +552,7 @@
         {
             "date": "2026-05-22",
             "price": 745.64,
-            "olsi": -0.73,
+            "olsi": -0.72,
             "state": 0
         }
     ]
