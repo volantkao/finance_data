@@ -1,48 +1,48 @@
 {
-    "last_updated": "2026-06-03 14:13:07",
+    "last_updated": "2026-06-03 23:17:38",
     "market_data": {
         "jp_10y": 2.646,
-        "us_3m": 0.0,
-        "jp_3m": 0.0,
+        "us_3m": 3.63,
+        "jp_3m": 1.269,
         "sofr": 3.63,
         "iorb": 3.65,
         "sofr_date": "2026-06-02"
     },
     "risk_indicators": {
-        "high_yield_oas": 0.0,
-        "baa_spread": 0.0,
-        "financial_stress": -0.76,
+        "high_yield_oas": 2.71,
+        "baa_spread": 1.54,
+        "financial_stress": -0.69,
         "srf_usage": 0.0,
         "srf_date": "2026-06-03"
     },
     "z_score": {
-        "value": 1.59,
-        "mean": 1.4308,
-        "std": 0.2377,
+        "value": 1.58,
+        "mean": 1.4306,
+        "std": 0.2375,
         "status": "Warning",
         "details": {
             "w5000": 76001.0,
             "m2": 22804.5,
-            "ratio": 1.8083
+            "ratio": 1.8063
         },
         "history_debug": [
             "S:76001 | M2:22804",
-            "R:1.8083 (Mean:1.43)"
+            "R:1.8063 (Mean:1.43)"
         ]
     },
     "client_side_params": {
         "market_vuln": {
             "m2_supply": 22804.5,
             "jgb_10y": 2.646,
-            "hist_mean": 1.4307704021536987,
-            "hist_std": 0.2376583078835429
+            "hist_mean": 1.4306279780173836,
+            "hist_std": 0.23749039745362582
         },
         "vol_stress": {
-            "hv_mean": 7.8822,
-            "hv_std": 2.888,
-            "slope_mean": -0.0314,
-            "slope_std": 1.2606,
-            "yesterday_hv": 2.1692
+            "hv_mean": 7.854,
+            "hv_std": 2.9102,
+            "slope_mean": -0.0283,
+            "slope_std": 1.2595,
+            "yesterday_hv": 2.0678
         },
         "spread_history_150d": [
             {
@@ -643,25 +643,25 @@
             },
             {
                 "date": "2026-06-03",
-                "spread": 1.843
+                "spread": 1.845
             }
         ],
         "gray_rhino_ingredients": {
-            "pvd": 1.12,
-            "vpd": -0.52,
-            "csd": -2.41,
-            "lf": 3.62,
-            "ttd_slope": -0.0236
+            "pvd": 0.96,
+            "vpd": -0.4,
+            "csd": -2.07,
+            "lf": 0.35,
+            "ttd_slope": -0.0255
         },
         "stlfsi_z_params": {
-            "current": 0,
-            "mean": 0,
-            "std": 1
+            "current": -0.6885,
+            "mean": -0.6321,
+            "std": 0.1908
         },
         "move_z_params": {
-            "current": 73.43,
-            "mean": 79.52,
-            "std": 12.23
+            "current": 73.58,
+            "mean": 79.41,
+            "std": 12.25
         }
     }
 }
