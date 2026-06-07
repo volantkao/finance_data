@@ -1,7 +1,7 @@
 {
-  "update_time": "2026-06-06 22:01",
+  "update_time": "2026-06-07 22:01",
   "data_date": "2026-06-05",
-  "gcp_score": -0.29,
+  "gcp_score": -0.3,
   "pci_score": 2.0,
   "pci_z_score": 0.75,
   "spy_price": 753.4,
@@ -21,7 +21,7 @@
     {
       "code": "P_CRYPTO",
       "name": "加密貨幣",
-      "value": 1.41,
+      "value": 1.36,
       "status": "tight"
     },
     {
@@ -45,13 +45,13 @@
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": -0.55,
+      "value": -0.57,
       "status": "neutral"
     },
     {
       "code": "P_METAL",
       "name": "貴金屬/黃金",
-      "value": 0.3,
+      "value": 0.28,
       "status": "neutral"
     },
     {
