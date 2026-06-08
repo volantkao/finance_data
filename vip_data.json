@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-06-08 13:50:21",
+    "last_updated": "2026-06-08 22:57:10",
     "market_data": {
         "jp_10y": 2.721,
         "us_3m": 3.63,
@@ -10,39 +10,39 @@
     },
     "risk_indicators": {
         "high_yield_oas": 2.76,
-        "baa_spread": 1.54,
+        "baa_spread": 1.51,
         "financial_stress": -0.69,
         "srf_usage": 0.0,
         "srf_date": "2026-06-08"
     },
     "z_score": {
-        "value": 1.62,
-        "mean": 1.4246,
-        "std": 0.2312,
+        "value": 1.5,
+        "mean": 1.4224,
+        "std": 0.2294,
         "status": "Warning",
         "details": {
             "w5000": 73741.0,
             "m2": 22804.5,
-            "ratio": 1.7995
+            "ratio": 1.766
         },
         "history_debug": [
             "S:73741 | M2:22804",
-            "R:1.7995 (Mean:1.42)"
+            "R:1.7660 (Mean:1.42)"
         ]
     },
     "client_side_params": {
         "market_vuln": {
             "m2_supply": 22804.5,
             "jgb_10y": 2.721,
-            "hist_mean": 1.4246117591104868,
-            "hist_std": 0.23124916241690402
+            "hist_mean": 1.422366244385585,
+            "hist_std": 0.22936187171410427
         },
         "vol_stress": {
-            "hv_mean": 7.8081,
-            "hv_std": 2.9622,
-            "slope_mean": -0.0221,
-            "slope_std": 1.2602,
-            "yesterday_hv": 2.0084
+            "hv_mean": 7.7863,
+            "hv_std": 2.9763,
+            "slope_mean": -0.021,
+            "slope_std": 1.2577,
+            "yesterday_hv": 2.2675
         },
         "spread_history_150d": [
             {
@@ -643,15 +643,15 @@
             },
             {
                 "date": "2026-06-08",
-                "spread": 1.797
+                "spread": 1.831
             }
         ],
         "gray_rhino_ingredients": {
-            "pvd": 0.05,
+            "pvd": -0.06,
             "vpd": -0.39,
-            "csd": -2.02,
-            "lf": 8.24,
-            "ttd_slope": 0.0485
+            "csd": -1.96,
+            "lf": -0.76,
+            "ttd_slope": 0.0473
         },
         "stlfsi_z_params": {
             "current": -0.6885,
@@ -659,9 +659,9 @@
             "std": 0.1908
         },
         "move_z_params": {
-            "current": 75.2,
-            "mean": 79.27,
-            "std": 12.3
+            "current": 76.98,
+            "mean": 78.97,
+            "std": 12.13
         }
     }
 }
