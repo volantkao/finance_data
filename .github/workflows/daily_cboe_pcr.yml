@@ -3,7 +3,7 @@ name: Daily CBOE PCR Scraper
 
 on:
   schedule:
-    - cron: '0 0 * * *' # 每天 UTC 時間午夜執行
+    - cron: '03 0 * * *' # 每天 UTC 時間午夜執行
   workflow_dispatch: # 允許手動觸發
 
 jobs:
