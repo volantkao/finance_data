@@ -1,5 +1,5 @@
 {
-    "update_time": "2026-06-09 10:47",
+    "update_time": "2026-06-10 11:25",
     "signals": {
         "0050.TW": {
             "market_status": "多單持有",
@@ -8,43 +8,43 @@
             "top5_strategies": [
                 {
                     "strategy_name": "irs 14 tr cr",
-                    "cumulative_return_3y": "181.46%",
-                    "sharpe_ratio": "2.60",
+                    "cumulative_return_3y": "172.81%",
+                    "sharpe_ratio": "2.50",
                     "current_signal": 1,
                     "status": "HOLD",
                     "trigger_price_note": "Steady"
                 },
                 {
                     "strategy_name": "kd 8133與前日差5",
-                    "cumulative_return_3y": "209.53%",
-                    "sharpe_ratio": "2.56",
+                    "cumulative_return_3y": "199.26%",
+                    "sharpe_ratio": "2.46",
                     "current_signal": 1,
                     "status": "HOLD",
-                    "trigger_price_note": "SELL if Close < 90.85 (or >)"
+                    "trigger_price_note": "SELL if Close < 93.15 (or >)"
                 },
                 {
                     "strategy_name": "bias45創20日高",
-                    "cumulative_return_3y": "201.76%",
-                    "sharpe_ratio": "2.52",
+                    "cumulative_return_3y": "192.49%",
+                    "sharpe_ratio": "2.43",
                     "current_signal": 1,
                     "status": "HOLD",
-                    "trigger_price_note": "SELL if Close < 90.85 (or >)"
+                    "trigger_price_note": "SELL if Close < 93.15 (or >)"
                 },
                 {
                     "strategy_name": "c 大小ma10",
-                    "cumulative_return_3y": "196.69%",
-                    "sharpe_ratio": "2.42",
+                    "cumulative_return_3y": "186.84%",
+                    "sharpe_ratio": "2.33",
                     "current_signal": 0,
                     "status": "EMPTY",
-                    "trigger_price_note": "BUY if Close > 104.31"
+                    "trigger_price_note": "BUY if Close > 104.44"
                 },
                 {
                     "strategy_name": "aroonup(14)",
-                    "cumulative_return_3y": "194.63%",
-                    "sharpe_ratio": "2.34",
+                    "cumulative_return_3y": "185.58%",
+                    "sharpe_ratio": "2.26",
                     "current_signal": 1,
                     "status": "HOLD",
-                    "trigger_price_note": "SELL if Close < 90.85 (or >)"
+                    "trigger_price_note": "SELL if Close < 93.15 (or >)"
                 }
             ]
         },
@@ -86,7 +86,7 @@
                     "trigger_price_note": "Steady"
                 },
                 {
-                    "strategy_name": "kd81-5大小50",
+                    "strategy_name": "cci(42)大小0 a",
                     "cumulative_return_3y": "76.69%",
                     "sharpe_ratio": "1.75",
                     "current_signal": 1,
@@ -212,19 +212,19 @@
                 },
                 {
                     "strategy_name": "v60 1-2倍",
-                    "cumulative_return_3y": "107.92%",
-                    "sharpe_ratio": "0.82",
+                    "cumulative_return_3y": "110.81%",
+                    "sharpe_ratio": "0.83",
                     "current_signal": 1,
                     "status": "HOLD",
                     "trigger_price_note": "Steady"
                 },
                 {
                     "strategy_name": "cci(42)大小150-100",
-                    "cumulative_return_3y": "93.44%",
-                    "sharpe_ratio": "0.78",
+                    "cumulative_return_3y": "96.53%",
+                    "sharpe_ratio": "0.80",
                     "current_signal": 1,
                     "status": "HOLD",
-                    "trigger_price_note": "Steady"
+                    "trigger_price_note": "SELL if Close < 25.92 (or >)"
                 },
                 {
                     "strategy_name": "cci(42)大小50",
