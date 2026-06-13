@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-06-13 11:28:32",
+    "last_updated": "2026-06-13 22:37:09",
     "market_data": {
         "jp_10y": 2.62,
         "us_3m": 3.63,
@@ -13,7 +13,7 @@
         "baa_spread": 1.55,
         "financial_stress": -0.87,
         "srf_usage": 0.0,
-        "srf_date": ""
+        "srf_date": "2026-06-12"
     },
     "z_score": {
         "value": 1.36,
