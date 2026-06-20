@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-06-19 22:31:26",
+    "last_updated": "2026-06-20 11:30:15",
     "market_data": {
         "jp_10y": 2.649,
         "us_3m": 3.68,
@@ -42,7 +42,7 @@
             "hv_std": 3.1275,
             "slope_mean": -0.012,
             "slope_std": 1.2521,
-            "yesterday_hv": 2.9568
+            "yesterday_hv": 2.9587
         },
         "spread_history_150d": [
             {
@@ -599,7 +599,7 @@
             },
             {
                 "date": "2026-05-28",
-                "spread": 1.8056
+                "spread": 1.8055
             },
             {
                 "date": "2026-05-29",
@@ -611,7 +611,7 @@
             },
             {
                 "date": "2026-06-02",
-                "spread": 1.8057
+                "spread": 1.8056
             },
             {
                 "date": "2026-06-03",
@@ -643,7 +643,7 @@
             },
             {
                 "date": "2026-06-12",
-                "spread": 1.8379
+                "spread": 1.8378
             }
         ],
         "gray_rhino_ingredients": {
