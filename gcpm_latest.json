@@ -1,5 +1,5 @@
 {
-  "update_time": "2026-06-19 22:02",
+  "update_time": "2026-06-20 22:03",
   "data_date": "2026-06-19",
   "gcp_score": -0.14,
   "pci_score": 1.59,
@@ -27,7 +27,7 @@
     {
       "code": "P_CRYPTO",
       "name": "加密貨幣",
-      "value": 1.08,
+      "value": 1.07,
       "status": "tight"
     },
     {
@@ -39,7 +39,7 @@
     {
       "code": "P_CNH",
       "name": "中國/人民幣",
-      "value": -0.78,
+      "value": -0.79,
       "status": "neutral"
     },
     {
