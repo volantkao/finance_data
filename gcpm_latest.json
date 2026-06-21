@@ -1,9 +1,9 @@
 {
-  "update_time": "2026-06-20 22:03",
+  "update_time": "2026-06-21 22:12",
   "data_date": "2026-06-19",
   "gcp_score": -0.14,
-  "pci_score": 1.59,
-  "pci_z_score": 0.26,
+  "pci_score": 1.6,
+  "pci_z_score": 0.27,
   "spy_price": 746.77,
   "details": [
     {
@@ -27,7 +27,7 @@
     {
       "code": "P_CRYPTO",
       "name": "加密貨幣",
-      "value": 1.07,
+      "value": 1.08,
       "status": "tight"
     },
     {
