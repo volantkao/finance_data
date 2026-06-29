@@ -1,81 +1,81 @@
 {
-  "date": "2026-06-26",
+  "date": "2026-06-29",
   "market_status": {
-    "retail_z": -1.42,
-    "short_margin_z": -0.68,
+    "retail_z": -1.56,
+    "short_margin_z": -0.66,
     "short_margin_ratio_percent": 2.19
   },
   "yuna_insight": {
-    "mood": "chill",
-    "title": "😴 盤整睡大覺",
-    "desc": "多空在打架，看不出誰會贏。不如先喝杯茶，等趨勢出來再說？"
+    "mood": "happy",
+    "title": "🥬 超跌撿便宜",
+    "desc": "市場好安靜，大家都停損在阿呆谷了。雖然還沒軋空，但短期沒有大危險了。"
   },
   "sectors": [
     {
-      "code": "TW_HIGH",
-      "name": "千金指標",
-      "pressure_score": -0.67,
-      "pressure_delta_5d": -0.13
-    },
-    {
       "code": "KING_MTK",
       "name": "聯發科",
-      "pressure_score": -0.38,
-      "pressure_delta_5d": -0.25
+      "pressure_score": -0.37,
+      "pressure_delta_5d": -0.2
+    },
+    {
+      "code": "TW_HIGH",
+      "name": "千金指標",
+      "pressure_score": -0.27,
+      "pressure_delta_5d": 0.5
     },
     {
       "code": "TW_IC",
       "name": "IC 設計",
-      "pressure_score": -0.37,
-      "pressure_delta_5d": -0.28
+      "pressure_score": -0.11,
+      "pressure_delta_5d": 0.3
     },
     {
       "code": "TW_BIO",
       "name": "生技",
       "pressure_score": -0.04,
-      "pressure_delta_5d": -0.08
-    },
-    {
-      "code": "TW_FIN",
-      "name": "金融",
-      "pressure_score": 0.1,
-      "pressure_delta_5d": -0.11
-    },
-    {
-      "code": "KING_TSMC",
-      "name": "台積電",
-      "pressure_score": 0.19,
-      "pressure_delta_5d": 0.32
+      "pressure_delta_5d": -0.09
     },
     {
       "code": "TW_MAT",
       "name": "傳產",
-      "pressure_score": 0.3,
-      "pressure_delta_5d": -0.73
+      "pressure_score": 0.03,
+      "pressure_delta_5d": -1.05
+    },
+    {
+      "code": "TW_FIN",
+      "name": "金融",
+      "pressure_score": 0.17,
+      "pressure_delta_5d": 0.06
+    },
+    {
+      "code": "KING_TSMC",
+      "name": "台積電",
+      "pressure_score": 0.22,
+      "pressure_delta_5d": 0.31
     },
     {
       "code": "TW_AI",
       "name": "AI 伺服器",
-      "pressure_score": 0.76,
-      "pressure_delta_5d": -0.12
+      "pressure_score": 0.66,
+      "pressure_delta_5d": -0.21
     },
     {
       "code": "TW_SHIP",
       "name": "航運",
-      "pressure_score": 0.9,
-      "pressure_delta_5d": 0.04
+      "pressure_score": 0.91,
+      "pressure_delta_5d": -0.0
     },
     {
       "code": "TW_POWER",
       "name": "重電綠能",
-      "pressure_score": 1.28,
-      "pressure_delta_5d": -0.29
+      "pressure_score": 1.24,
+      "pressure_delta_5d": -0.3
     },
     {
       "code": "KING_FOX",
       "name": "鴻海",
-      "pressure_score": 1.58,
-      "pressure_delta_5d": 0.23
+      "pressure_score": 1.41,
+      "pressure_delta_5d": 0.03
     }
   ]
 }
