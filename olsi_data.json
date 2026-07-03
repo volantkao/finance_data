@@ -1,6 +1,6 @@
 {
     "meta": {
-        "update_time": "2026-07-02 22:34:06",
+        "update_time": "2026-07-03 22:30:49",
         "data_count": 1003
     },
     "latest": {
@@ -11,7 +11,7 @@
         "components": {
             "friction_z": 0.13,
             "srf_z": -1.09,
-            "flow_z": 0.28
+            "flow_z": 0.27
         }
     },
     "history": [
