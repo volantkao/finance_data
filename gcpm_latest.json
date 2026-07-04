@@ -1,5 +1,5 @@
 {
-  "update_time": "2026-07-03 22:02",
+  "update_time": "2026-07-04 21:56",
   "data_date": "2026-07-03",
   "gcp_score": 0.15,
   "pci_score": 1.82,
@@ -33,7 +33,7 @@
     {
       "code": "P_USD",
       "name": "美元池壓力",
-      "value": 1.16,
+      "value": 1.15,
       "status": "tight"
     },
     {
@@ -63,7 +63,7 @@
     {
       "code": "P_EM",
       "name": "新興市場",
-      "value": 0.12,
+      "value": 0.18,
       "status": "neutral"
     }
   ]
