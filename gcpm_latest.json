@@ -1,5 +1,5 @@
 {
-  "update_time": "2026-07-04 21:56",
+  "update_time": "2026-07-05 21:58",
   "data_date": "2026-07-03",
   "gcp_score": 0.15,
   "pci_score": 1.82,
@@ -27,7 +27,7 @@
     {
       "code": "P_JPY",
       "name": "日圓套息",
-      "value": -1.45,
+      "value": -1.44,
       "status": "loose"
     },
     {
