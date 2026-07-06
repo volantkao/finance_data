@@ -1,5 +1,5 @@
 {
-    "update_time": "2026-07-03 10:16",
+    "update_time": "2026-07-06 11:49",
     "signals": {
         "0050.TW": {
             "market_status": "多單持有",
@@ -8,11 +8,11 @@
             "top5_strategies": [
                 {
                     "strategy_name": "kd 8133與前日差5",
-                    "cumulative_return_3y": "202.20%",
-                    "sharpe_ratio": "2.38",
+                    "cumulative_return_3y": "199.75%",
+                    "sharpe_ratio": "2.36",
                     "current_signal": 1,
                     "status": "HOLD",
-                    "trigger_price_note": "Steady"
+                    "trigger_price_note": "SELL if Close < 97.51 (or >)"
                 },
                 {
                     "strategy_name": "bias45創20日高",
@@ -20,23 +20,7 @@
                     "sharpe_ratio": "2.29",
                     "current_signal": 0,
                     "status": "EMPTY",
-                    "trigger_price_note": "BUY if Close > 117.48"
-                },
-                {
-                    "strategy_name": "fd 大小30-30",
-                    "cumulative_return_3y": "287.43%",
-                    "sharpe_ratio": "2.19",
-                    "current_signal": 1,
-                    "status": "HOLD",
-                    "trigger_price_note": "Steady"
-                },
-                {
-                    "strategy_name": "fd cr 30-30",
-                    "cumulative_return_3y": "287.43%",
-                    "sharpe_ratio": "2.19",
-                    "current_signal": 1,
-                    "status": "HOLD",
-                    "trigger_price_note": "Steady"
+                    "trigger_price_note": "BUY if Close > 115.90"
                 },
                 {
                     "strategy_name": "irs 14 tr cr",
@@ -44,6 +28,22 @@
                     "sharpe_ratio": "2.19",
                     "current_signal": 0,
                     "status": "EMPTY",
+                    "trigger_price_note": "BUY if Close > 111.09"
+                },
+                {
+                    "strategy_name": "fd 大小30-30",
+                    "cumulative_return_3y": "284.29%",
+                    "sharpe_ratio": "2.18",
+                    "current_signal": 1,
+                    "status": "HOLD",
+                    "trigger_price_note": "Steady"
+                },
+                {
+                    "strategy_name": "fd cr 30-30",
+                    "cumulative_return_3y": "284.29%",
+                    "sharpe_ratio": "2.18",
+                    "current_signal": 1,
+                    "status": "HOLD",
                     "trigger_price_note": "Steady"
                 }
             ]
