@@ -5,9 +5,12 @@ import datetime
 import json
 import os
 
-def get_bond_yield(url, target_maturity_year, company_name):
+# 取得當前腳本所在的絕對資料夾路徑，確保跨平台相容性
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-    os.makedirs("/home/ubuntu/debug_html", exist_ok=True) # Ensure debug directory exists
+def get_bond_yield(url, target_maturity_year, company_name):
+    debug_dir = os.path.join(BASE_DIR, "debug_html")
+    os.makedirs(debug_dir, exist_ok=True) # Ensure debug directory exists
     try:
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36)'
@@ -34,21 +37,20 @@ def get_bond_yield(url, target_maturity_year, company_name):
                     break
 
         if not table:
-            os.makedirs("/home/ubuntu/debug_html", exist_ok=True)
+            os.makedirs(debug_dir, exist_ok=True)
 
-            with open(f"/home/ubuntu/debug_html/{company_name}_bond_page.html", "w") as f:
+            with open(os.path.join(debug_dir, f"{company_name}_bond_page.html"), "w") as f:
                 f.write(response.text)
 
             return None
 
-        # Extract headers to find the index of 'YTW %' and 'Maturity date'
+# Extract headers to find the index of 'YTW %' and 'Maturity date'
         # Extract headers from the first row, checking both th and td elements
         headers_row = table.find("thead").find("tr") if table.find("thead") else table.find("tr")
         if not headers_row:
-            os.makedirs("/home/ubuntu/debug_html", exist_ok=True)
-            with open(f"/home/ubuntu/debug_html/{company_name}_bond_page.html", "w") as f:
+            os.makedirs(debug_dir, exist_ok=True)
+            with open(os.path.join(debug_dir, f"{company_name}_bond_page.html"), "w") as f:
                 f.write(response.text)
-
 
             return None
         headers = [cell.text.replace("\xa0", " ").strip() for cell in headers_row.find_all(["th", "td"])]
@@ -84,30 +86,30 @@ def get_bond_yield(url, target_maturity_year, company_name):
 
     except requests.exceptions.RequestException as e:
         print(f"Error fetching {url}: {e}")
-        os.makedirs("/home/ubuntu/debug_html", exist_ok=True)
+        os.makedirs(debug_dir, exist_ok=True)
         # Only attempt to write response.text if response object exists and has text
         if 'response' in locals() and response.text:
-            with open(f"/home/ubuntu/debug_html/{company_name}_bond_page_fetch_error.html", "w") as f:
+            with open(os.path.join(debug_dir, f"{company_name}_bond_page_fetch_error.html"), "w") as f:
                 f.write(response.text)
         else:
-            with open(f"/home/ubuntu/debug_html/{company_name}_bond_page_fetch_error.log", "w") as f:
+            with open(os.path.join(debug_dir, f"{company_name}_bond_page_fetch_error.log"), "w") as f:
                 f.write(str(e))
         return None
     except Exception as e:
         print(f"Error parsing {url}: {e}")
-        os.makedirs("/home/ubuntu/debug_html", exist_ok=True)
+        os.makedirs(debug_dir, exist_ok=True)
         # Only attempt to write response.text if response object exists and has text
         if 'response' in locals() and response.text:
-            with open(f"/home/ubuntu/debug_html/{company_name}_bond_page_parse_error.html", "w") as f:
+            with open(os.path.join(debug_dir, f"{company_name}_bond_page_parse_error.html"), "w") as f:
                 f.write(response.text)
         else:
-            with open(f"/home/ubuntu/debug_html/{company_name}_bond_page_parse_error.log", "w") as f:
+            with open(os.path.join(debug_dir, f"{company_name}_bond_page_parse_error.log"), "w") as f:
                 f.write(str(e))
         return None
 
 def main():
-    config_path = '/home/ubuntu/bond_monitor_config.json'
-    output_dir = '/home/ubuntu/bond_data'
+    config_path = os.path.join(BASE_DIR, 'bond_monitor_config.json')
+    output_dir = os.path.join(BASE_DIR, 'bond_data')
     os.makedirs(output_dir, exist_ok=True)
     output_file = os.path.join(output_dir, 'corporate_bond_spreads.csv')
 
