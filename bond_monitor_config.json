@@ -1,0 +1,40 @@
+{
+  "companies": {
+    "Apple": {
+      "tradingview_symbol": "NASDAQ:AAPL",
+      "target_maturity_year": 2036
+    },
+    "Microsoft": {
+      "tradingview_symbol": "NASDAQ:MSFT",
+      "target_maturity_year": 2036
+    },
+    "Alphabet": {
+      "tradingview_symbol": "NASDAQ:GOOGL",
+      "target_maturity_year": 2036
+    },
+    "Amazon": {
+      "tradingview_symbol": "NASDAQ:AMZN",
+      "target_maturity_year": 2036
+    },
+    "Nvidia": {
+      "tradingview_symbol": "NASDAQ:NVDA",
+      "target_maturity_year": 2036
+    },
+    "Meta": {
+      "tradingview_symbol": "NASDAQ:META",
+      "target_maturity_year": 2036
+    },
+    "Tesla": {
+      "tradingview_symbol": "NASDAQ:TSLA",
+      "target_maturity_year": 2030
+    },
+    "TSMC": {
+      "tradingview_symbol": "NYSE:TSM",
+      "target_maturity_year": 2036
+    }
+  },
+  "treasury": {
+    "symbol": "TMUBMUSD10Y",
+    "name": "U.S. 10 Year Treasury Note"
+  }
+}
