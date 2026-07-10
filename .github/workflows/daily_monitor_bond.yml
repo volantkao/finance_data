@@ -1,0 +1,35 @@
+name: Daily Bond Monitor
+
+on:
+  schedule:
+    # Runs every day at 00:09 UTC
+    - cron: '09 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests beautifulsoup4 pandas
+
+    - name: Run bond monitor script
+      run: python bond_monitor.py
+
+    - name: Commit and push if changes
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add bond_data/corporate_bond_spreads.csv
+        git commit -m "Update corporate bond spreads data" || echo "No changes to commit"
+        git push
