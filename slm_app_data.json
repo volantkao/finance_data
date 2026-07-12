@@ -1,7 +1,7 @@
 {
   "date": "2026-07-10",
   "market_status": {
-    "retail_z": -0.05,
+    "retail_z": -1.32,
     "short_margin_z": -0.81,
     "short_margin_ratio_percent": 2.12
   },
@@ -74,8 +74,8 @@
     {
       "code": "TW_HIGH",
       "name": "千金指標",
-      "pressure_score": 2.09,
-      "pressure_delta_5d": 1.04
+      "pressure_score": 2.11,
+      "pressure_delta_5d": 1.07
     }
   ]
 }
