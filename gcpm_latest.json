@@ -1,5 +1,5 @@
 {
-  "update_time": "2026-07-11 21:45",
+  "update_time": "2026-07-12 21:45",
   "data_date": "2026-07-10",
   "gcp_score": 0.03,
   "pci_score": 1.4,
@@ -27,7 +27,7 @@
     {
       "code": "P_EUR",
       "name": "歐元區",
-      "value": -0.77,
+      "value": -0.78,
       "status": "neutral"
     },
     {
@@ -39,7 +39,7 @@
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": -0.57,
+      "value": -0.6,
       "status": "neutral"
     },
     {
