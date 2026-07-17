@@ -2,7 +2,7 @@ name: Daily Bond Monitor
 
 on:
   schedule:
-    # Runs every day at 00:09 UTC
+    # Runs every day at 00:15 UTC
     - cron: '15 0 * * 1-5'
   workflow_dispatch:
 
