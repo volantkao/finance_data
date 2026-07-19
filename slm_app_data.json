@@ -1,14 +1,14 @@
 {
   "date": "2026-07-17",
   "market_status": {
-    "retail_z": -0.61,
+    "retail_z": -1.86,
     "short_margin_z": -1.25,
     "short_margin_ratio_percent": 2.53
   },
   "yuna_insight": {
-    "mood": "chill",
-    "title": "😴 盤整睡大覺",
-    "desc": "多空在打架，看不出誰會贏。不如先喝杯茶，等趨勢出來再說？"
+    "mood": "happy",
+    "title": "🥬 超跌撿便宜",
+    "desc": "市場好安靜，大家都停損在阿呆谷了。雖然還沒軋空，但短期沒有大危險了。"
   },
   "sectors": [
     {
