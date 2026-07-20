@@ -1,21 +1,21 @@
 {
-  "update_time": "2026-07-19 21:48",
+  "update_time": "2026-07-20 21:57",
   "data_date": "2026-07-20",
   "gcp_score": -0.08,
-  "pci_score": 1.34,
-  "pci_z_score": -0.55,
-  "spy_price": 748.79,
+  "pci_score": 1.31,
+  "pci_z_score": -0.62,
+  "spy_price": 748.55,
   "details": [
     {
       "code": "P_TWD",
       "name": "台幣/地緣",
-      "value": 1.3,
+      "value": 1.27,
       "status": "tight"
     },
     {
       "code": "P_METAL",
       "name": "貴金屬/黃金",
-      "value": 0.9,
+      "value": 0.91,
       "status": "neutral"
     },
     {
@@ -27,43 +27,43 @@
     {
       "code": "P_EUR",
       "name": "歐元區",
-      "value": -0.76,
+      "value": -0.77,
       "status": "neutral"
     },
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": -0.58,
-      "status": "neutral"
-    },
-    {
-      "code": "P_CNH",
-      "name": "中國/人民幣",
-      "value": -0.49,
+      "value": -0.54,
       "status": "neutral"
     },
     {
       "code": "P_CRYPTO",
       "name": "加密貨幣",
-      "value": 0.49,
+      "value": 0.47,
+      "status": "neutral"
+    },
+    {
+      "code": "P_CNH",
+      "name": "中國/人民幣",
+      "value": -0.44,
       "status": "neutral"
     },
     {
       "code": "P_USD",
       "name": "美元池壓力",
-      "value": 0.46,
+      "value": 0.41,
       "status": "neutral"
     },
     {
       "code": "P_KRW",
       "name": "韓元/風險",
-      "value": -0.3,
+      "value": -0.37,
       "status": "neutral"
     },
     {
       "code": "P_EM",
       "name": "新興市場",
-      "value": -0.09,
+      "value": -0.06,
       "status": "neutral"
     }
   ]
