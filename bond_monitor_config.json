@@ -28,6 +28,14 @@
       "tradingview_symbol": "NASDAQ:TSLA",
       "target_maturity_year": 2030
     },
+    "SpaceX": {
+      "tradingview_symbol": "NASDAQ:SACX",
+      "target_maturity_year": 2036
+    },
+    "Oracle": {
+      "tradingview_symbol": "NASDAQ:ORCL",
+      "target_maturity_year": 2036
+    },
     "TSMC": {
       "tradingview_symbol": "NYSE:TSM",
       "target_maturity_year": 2036
