@@ -1,7 +1,7 @@
 {
-    "last_updated": "2026-07-23 22:31:33",
+    "last_updated": "2026-07-24 11:17:30",
     "market_data": {
-        "jp_10y": 2.78,
+        "jp_10y": 2.82,
         "us_3m": 3.75,
         "jp_3m": 1.274,
         "sofr": 3.62,
@@ -16,33 +16,33 @@
         "srf_date": "2026-07-23"
     },
     "z_score": {
-        "value": 0.77,
+        "value": 0.92,
         "mean": 1.5025,
         "std": 0.2367,
         "status": "Normal",
         "details": {
             "w5000": 74661.0,
             "m2": 23052.3,
-            "ratio": 1.6842
+            "ratio": 1.72
         },
         "history_debug": [
             "S:74661 | M2:23052",
-            "R:1.6842 (Mean:1.50)"
+            "R:1.7200 (Mean:1.50)"
         ]
     },
     "client_side_params": {
         "market_vuln": {
             "m2_supply": 23052.3,
-            "jgb_10y": 2.78,
+            "jgb_10y": 2.82,
             "hist_mean": 1.5024938515392776,
             "hist_std": 0.23665066963077203
         },
         "vol_stress": {
-            "hv_mean": 7.1389,
-            "hv_std": 3.2374,
-            "slope_mean": -0.0424,
-            "slope_std": 1.171,
-            "yesterday_hv": 4.0792
+            "hv_mean": 7.1083,
+            "hv_std": 3.2088,
+            "slope_mean": -0.0429,
+            "slope_std": 1.1732,
+            "yesterday_hv": 3.9803
         },
         "spread_history_150d": [
             {
@@ -503,154 +503,154 @@
             },
             {
                 "date": "2026-06-02",
-                "spread": 1.7829
+                "spread": 1.7822
             },
             {
                 "date": "2026-06-03",
-                "spread": 1.8168
+                "spread": 1.8153
             },
             {
                 "date": "2026-06-04",
-                "spread": 1.8007
+                "spread": 1.7985
             },
             {
                 "date": "2026-06-05",
-                "spread": 1.8575
+                "spread": 1.8547
             },
             {
                 "date": "2026-06-08",
-                "spread": 1.8672
+                "spread": 1.8622
             },
             {
                 "date": "2026-06-09",
-                "spread": 1.8411
+                "spread": 1.8354
             },
             {
                 "date": "2026-06-10",
-                "spread": 1.853
+                "spread": 1.8465
             },
             {
                 "date": "2026-06-11",
-                "spread": 1.7718
+                "spread": 1.7647
             },
             {
                 "date": "2026-06-12",
-                "spread": 1.7937
+                "spread": 1.7859
             },
             {
                 "date": "2026-06-15",
-                "spread": 1.7694
+                "spread": 1.7594
             },
             {
                 "date": "2026-06-16",
-                "spread": 1.7263
+                "spread": 1.7155
             },
             {
                 "date": "2026-06-17",
-                "spread": 1.7592
+                "spread": 1.7477
             },
             {
                 "date": "2026-06-18",
-                "spread": 1.745
+                "spread": 1.7329
             },
             {
                 "date": "2026-06-22",
-                "spread": 1.7946
+                "spread": 1.7796
             },
             {
                 "date": "2026-06-23",
-                "spread": 1.7765
+                "spread": 1.7607
             },
             {
                 "date": "2026-06-24",
-                "spread": 1.6833
+                "spread": 1.6669
             },
             {
                 "date": "2026-06-25",
-                "spread": 1.6712
+                "spread": 1.6541
             },
             {
                 "date": "2026-06-26",
-                "spread": 1.6491
+                "spread": 1.6312
             },
             {
                 "date": "2026-06-29",
-                "spread": 1.6448
+                "spread": 1.6248
             },
             {
                 "date": "2026-06-30",
-                "spread": 1.6867
+                "spread": 1.6659
             },
             {
                 "date": "2026-07-01",
-                "spread": 1.7415
+                "spread": 1.7201
             },
             {
                 "date": "2026-07-02",
-                "spread": 1.7494
+                "spread": 1.7273
             },
             {
                 "date": "2026-07-06",
-                "spread": 1.735
+                "spread": 1.7099
             },
             {
                 "date": "2026-07-07",
-                "spread": 1.7828
+                "spread": 1.7571
             },
             {
                 "date": "2026-07-08",
-                "spread": 1.8207
+                "spread": 1.7943
             },
             {
                 "date": "2026-07-09",
-                "spread": 1.7886
+                "spread": 1.7615
             },
             {
                 "date": "2026-07-10",
-                "spread": 1.8165
+                "spread": 1.7886
             },
             {
                 "date": "2026-07-13",
-                "spread": 1.8502
+                "spread": 1.8201
             },
             {
                 "date": "2026-07-14",
-                "spread": 1.824
+                "spread": 1.7933
             },
             {
                 "date": "2026-07-15",
-                "spread": 1.7819
+                "spread": 1.7505
             },
             {
                 "date": "2026-07-16",
-                "spread": 1.8038
+                "spread": 1.7716
             },
             {
                 "date": "2026-07-17",
-                "spread": 1.7737
+                "spread": 1.7408
             },
             {
                 "date": "2026-07-20",
-                "spread": 1.8243
+                "spread": 1.7893
             },
             {
                 "date": "2026-07-21",
-                "spread": 1.8522
+                "spread": 1.8165
             },
             {
                 "date": "2026-07-22",
-                "spread": 1.8791
+                "spread": 1.8427
             },
             {
                 "date": "2026-07-23",
-                "spread": 1.923
+                "spread": 1.8858
             }
         ],
         "gray_rhino_ingredients": {
             "pvd": 0.11,
             "vpd": -0.56,
             "csd": -1.8,
-            "lf": 1.01,
+            "lf": 1.0,
             "ttd_slope": 0.0556
         },
         "stlfsi_z_params": {
@@ -659,9 +659,9 @@
             "std": 0.0981
         },
         "move_z_params": {
-            "current": 80.08,
-            "mean": 72.03,
-            "std": 4.72
+            "current": 70.88,
+            "mean": 71.86,
+            "std": 4.6
         }
     }
 }
