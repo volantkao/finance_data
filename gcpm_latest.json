@@ -1,15 +1,15 @@
 {
-  "update_time": "2026-07-24 22:02",
+  "update_time": "2026-07-25 21:52",
   "data_date": "2026-07-24",
   "gcp_score": -0.23,
-  "pci_score": 1.86,
-  "pci_z_score": 0.72,
+  "pci_score": 1.9,
+  "pci_z_score": 0.81,
   "spy_price": 742.98,
   "details": [
     {
       "code": "P_TWD",
       "name": "台幣/地緣",
-      "value": 1.86,
+      "value": 1.9,
       "status": "tight"
     },
     {
@@ -27,7 +27,7 @@
     {
       "code": "P_KRW",
       "name": "韓元/風險",
-      "value": -0.87,
+      "value": -0.86,
       "status": "neutral"
     },
     {
@@ -39,19 +39,19 @@
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": -0.62,
+      "value": -0.61,
       "status": "neutral"
     },
     {
       "code": "P_CNH",
       "name": "中國/人民幣",
-      "value": -0.51,
+      "value": -0.56,
       "status": "neutral"
     },
     {
       "code": "P_CRYPTO",
       "name": "加密貨幣",
-      "value": 0.21,
+      "value": 0.2,
       "status": "neutral"
     },
     {
