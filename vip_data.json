@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-07-25 10:52:44",
+    "last_updated": "2026-07-25 22:27:38",
     "market_data": {
         "jp_10y": 2.8,
         "us_3m": 3.81,
@@ -16,26 +16,26 @@
         "srf_date": "2026-07-24"
     },
     "z_score": {
-        "value": 0.93,
-        "mean": 1.5041,
-        "std": 0.2374,
+        "value": 0.84,
+        "mean": 1.5025,
+        "std": 0.2367,
         "status": "Normal",
         "details": {
             "w5000": 74661.0,
             "m2": 23052.3,
-            "ratio": 1.7237
+            "ratio": 1.7019
         },
         "history_debug": [
             "S:74661 | M2:23052",
-            "R:1.7237 (Mean:1.50)"
+            "R:1.7019 (Mean:1.50)"
         ]
     },
     "client_side_params": {
         "market_vuln": {
             "m2_supply": 23052.3,
             "jgb_10y": 2.8,
-            "hist_mean": 1.5040798158161717,
-            "hist_std": 0.2373756748821401
+            "hist_mean": 1.5024938515392776,
+            "hist_std": 0.23665066963077203
         },
         "vol_stress": {
             "hv_mean": 7.0944,
@@ -647,11 +647,11 @@
             }
         ],
         "gray_rhino_ingredients": {
-            "pvd": 0.14,
-            "vpd": -0.54,
-            "csd": -1.83,
-            "lf": -0.99,
-            "ttd_slope": 0.0465
+            "pvd": 0.11,
+            "vpd": -0.56,
+            "csd": -1.8,
+            "lf": 1.0,
+            "ttd_slope": 0.0556
         },
         "stlfsi_z_params": {
             "current": -0.7011,
