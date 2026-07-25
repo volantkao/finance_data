@@ -2,7 +2,7 @@ name: Daily JP10Y Recorder
 
 on:
   schedule:
-    - cron: '08 22 * * *'
+    - cron: '18 22 * * *'
   workflow_dispatch:
 
 jobs:
