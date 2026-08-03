@@ -212,7 +212,10 @@ def _update_history_csv(history_file, latest_row, columns, date_col='Date'):
         return
 
     if os.path.exists(history_file):
-        df_history = pd.read_csv(history_file)
+        df_history = pd.read_csv(
+         history_file,
+         dtype={date_col: str}
+         )
     else:
         df_history = pd.DataFrame(columns=columns)
 
