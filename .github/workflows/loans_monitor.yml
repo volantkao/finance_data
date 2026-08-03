@@ -1,0 +1,33 @@
+name: Monitor Taiwan Loan Data
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'  # 每月 1 號執行一次
+  workflow_dispatch:      # 允許手動觸發
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/checkout@v3
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install requests pandas matplotlib
+
+      - name: Run monitor script
+        run: python monitor_loans.py
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add taiwan_working_capital_loans.csv loan_trend.png
+          git commit -m "Update loan data: $(date +'%Y-%m-%d')" || exit 0
+          git push
