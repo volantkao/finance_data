@@ -2,7 +2,7 @@ name: Monitor Taiwan Loan Data
 
 on:
   schedule:
-    - cron: '0 0 1 * *'  # 每月 1 號執行一次
+    - cron: '12 0 1 * *'  # 每月 1 號執行一次
   workflow_dispatch:      # 允許手動觸發
 
 jobs:
