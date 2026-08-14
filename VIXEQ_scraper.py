@@ -36,8 +36,6 @@ TICKERS = {
     "VIX1D": "^VIX1D",   # CBOE已停止維護VIX3D，Yahoo無資料；VIX1D是CBOE現行的1日波動率指數替代品
     "GVZ": "^GVZ",       # Cboe Gold ETF波動率指數，用於黃金gamma squeeze/擠壓監控對照
 }
-}
-
 
 def fetch_vix_family():
     """
