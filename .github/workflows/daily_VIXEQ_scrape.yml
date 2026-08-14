@@ -27,10 +27,11 @@ jobs:
         # 直接安裝，不需要 requirements.txt
         run: |
           python -m pip install --upgrade pip
-          pip install selenium pandas webdriver-manager openpyxl yfinance
+          pip install selenium pandas webdriver-manager openpyxl yfinance xlrd
 
       - name: Run Scraper
         run: python VIXEQ_scraper.py
+        run: python comex_stocks_scraper.py
 
       - name: Commit and Push changes
         run: |
