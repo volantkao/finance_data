@@ -31,7 +31,7 @@ jobs:
 
       - name: Run Scraper
         run: python VIXEQ_scraper.py
-        run: python comex_stocks_scraper.py
+             python comex_stocks_scraper.py
 
       - name: Commit and Push changes
         run: |
