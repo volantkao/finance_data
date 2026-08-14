@@ -70,7 +70,14 @@ def calculate_gex_and_levels(spot_price, df_calls, df_puts, r=0.04):
     # 計算 GEX
     df_calls.loc[:, 'GEX'] = df_calls['gamma'] * df_calls['openInterest'] * 100 * spot_price * spot_price * 0.01
     df_puts.loc[:, 'GEX'] = df_puts['gamma'] * df_puts['openInterest'] * 100 * spot_price * spot_price * 0.01 * -1
-    
+
+    # NEW: Net GEX 總量（美元，每1%現貨變動的dealer gamma曝險）
+    # 原本這兩欄算完就丟掉了，只拿去算ZGL/wall，沒有存下"強度"這個數字。
+    # 這是判斷gamma squeeze力道大小的關鍵指標：
+    #   正值 = dealer整體long gamma → 現貨波動會被壓抑（mean-reverting)
+    #   負值 = dealer整體short gamma → 現貨波動可能被放大（trending/squeeze風險）
+    net_gex = df_calls['GEX'].sum() + df_puts['GEX'].sum()
+
     # Walls
     put_wall = df_puts.groupby('strike')['openInterest'].sum().idxmax()
     call_wall = df_calls.groupby('strike')['openInterest'].sum().idxmax()
@@ -95,9 +102,9 @@ def calculate_gex_and_levels(spot_price, df_calls, df_puts, r=0.04):
         idx = zero_cross_idx[0]
         zgl = strikes[idx] - total_gammas[idx] * (strikes[idx+1] - strikes[idx]) / (total_gammas[idx+1] - total_gammas[idx])
         
-    return zgl, put_wall, call_wall
+    return zgl, put_wall, call_wall, net_gex
 
-def save_to_csv(ticker, spot, zgl, put_wall, call_wall):
+def save_to_csv(ticker, spot, zgl, put_wall, call_wall, net_gex):
     """
     將結果儲存或追加到 CSV 檔案中
     """
@@ -109,11 +116,15 @@ def save_to_csv(ticker, spot, zgl, put_wall, call_wall):
         'Spot': round(spot, 2),
         'ZGL': round(zgl, 2) if zgl else None,
         'PutWall': round(put_wall, 2),
-        'CallWall': round(call_wall, 2)
+        'CallWall': round(call_wall, 2),
+        'NetGEX': round(net_gex, 0)  # NEW: 單位為美元，正值=dealer long gamma(壓抑波動)，負值=short gamma(放大波動)
     }])
     
     if os.path.exists(filename):
         df_history = pd.read_csv(filename)
+        # 舊資料沒有 NetGEX 欄位時自動補上，避免 concat 出現欄位不齊的問題
+        if 'NetGEX' not in df_history.columns:
+            df_history['NetGEX'] = None
         df_history = pd.concat([df_history, new_data], ignore_index=True)
     else:
         df_history = new_data
@@ -127,15 +138,16 @@ def main(ticker_symbol):
         spot_price, df_calls, df_puts = get_option_chain_data(ticker_symbol)
         print(f"Current Spot Price: {spot_price:.2f}")
         
-        zgl, put_wall, call_wall = calculate_gex_and_levels(spot_price, df_calls, df_puts)
+        zgl, put_wall, call_wall, net_gex = calculate_gex_and_levels(spot_price, df_calls, df_puts)
         
         print("-" * 30)
         print(f"Zero Gamma Level (ZGL): {zgl:.2f}" if zgl else "ZGL: Not found")
         print(f"Put Wall: {put_wall:.2f}")
         print(f"Call Wall: {call_wall:.2f}")
+        print(f"Net GEX: {net_gex:,.0f} ({'long gamma - 波動壓抑' if net_gex > 0 else 'short gamma - 波動放大風險'})")
         print("-" * 30)
         
-        save_to_csv(ticker_symbol, spot_price, zgl, put_wall, call_wall)
+        save_to_csv(ticker_symbol, spot_price, zgl, put_wall, call_wall, net_gex)
         
     except Exception as e:
         print(f"Error: {e}")
