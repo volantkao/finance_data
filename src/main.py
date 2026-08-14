@@ -54,11 +54,21 @@ def fetch_and_update_commodity(commodity_name: str, config: dict, api_client: CF
             start_date = start_date_obj.strftime('%Y-%m-%d')
         
         # 從 API 獲取數據
+        # 若 config 有指定 contract_market_name / futonly_or_combined
+        # （用於消除同一 commodity_name 底下混雜多合約、多 report type 的問題，
+        # 例如黃金/白銀），一併帶入篩選條件
+        extra_filters = {}
+        if config.get('contract_market_name'):
+            extra_filters['contract_market_name'] = config['contract_market_name']
+        if config.get('futonly_or_combined'):
+            extra_filters['futonly_or_combined'] = config['futonly_or_combined']
+
         raw_data = api_client.fetch_data(
             api_endpoint=config['api_endpoint'],
             filter_field=config['filter_field'],
             filter_value=config['filter_value'],
-            start_date=start_date
+            start_date=start_date,
+            extra_filters=extra_filters if extra_filters else None
         )
         
         if not raw_data:
