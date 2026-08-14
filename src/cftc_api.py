@@ -40,7 +40,8 @@ class CFTCAPIClient:
         filter_field: str,
         filter_value: str,
         start_date: Optional[str] = None,
-        limit: int = PAGE_SIZE
+        limit: int = PAGE_SIZE,
+        extra_filters: Optional[Dict[str, str]] = None
     ) -> List[Dict]:
         """
         從 CFTC API 獲取數據（使用 GET 方法和 SoQL 查詢參數）
@@ -51,12 +52,18 @@ class CFTCAPIClient:
             filter_value: 篩選值
             start_date: 起始日期 (YYYY-MM-DD)，如果為 None 則獲取最新數據
             limit: 返回記錄數限制
+            extra_filters: 額外篩選條件字典（可選），例如
+                {'contract_market_name': 'GOLD', 'futonly_or_combined': 'FutOnly'}，
+                用於消除同一 commodity_name 底下混雜多個合約/report type 的問題
             
         Returns:
             包含 COT 數據的字典列表
         """
         # 構建 SoQL WHERE 子句
         where_clause = f"{filter_field} = '{filter_value}'"
+        if extra_filters:
+            for extra_field, extra_value in extra_filters.items():
+                where_clause += f" AND {extra_field} = '{extra_value}'"
         if start_date:
             where_clause += f" AND report_date_as_yyyy_mm_dd >= '{start_date}'"
         
