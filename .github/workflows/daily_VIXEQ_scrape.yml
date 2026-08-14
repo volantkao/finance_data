@@ -20,9 +20,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install selenium pandas webdriver-manager openpyxl yfinance xlrd
       - name: Run Scraper
-        run: |
-          python VIXEQ_scraper.py
-          python comex_stocks_scraper.py
+        run:  python VIXEQ_scraper.py
       - name: Commit and Push changes
         run: |
           git config --global user.name "GitHub Action Bot"
