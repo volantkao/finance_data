@@ -6,10 +6,10 @@ VIX 家族指數抓取器 (取代原本 VIXEQ_scraper.py 的 Selenium 作法)
 不需要開瀏覽器：
     ^VIX    - CBOE Volatility Index (標準 VIX)
     ^VIX9D  - 9-day VIX
-    ^VIX3D  - 3-day VIX
+    ^VIX1D  - 1-day VIX
     ^VIXEQ  - Cboe S&P 500 Constituent Volatility Index
 
-輸出檔案：沿用原本的 vixeq-history.csv，欄位新增 VIX/VIX9D/VIX3D，
+輸出檔案：沿用原本的 vixeq-history.csv，欄位新增 VIX/VIX9D/VIX1D，
 但 Date、Close 兩個既有欄位維持不變（Close = VIXEQ 收盤值），
 確保其他監控腳本讀取這個檔案不會壞掉。
 """
@@ -32,7 +32,7 @@ TICKERS = {
     "Close": "^VIXEQ",   # 沿用舊欄位名稱 Close = VIXEQ，避免破壞既有監控腳本
     "VIX": "^VIX",
     "VIX9D": "^VIX9D",
-    "VIX3D": "^VIX3D",
+    "VIX1D": "^VIX1D",
 }
 
 
@@ -41,7 +41,7 @@ def fetch_vix_family():
     透過 yfinance 抓取 VIX 家族指數的最新收盤值
 
     Returns:
-        dict: {"Close": float, "VIX": float, "VIX9D": float, "VIX3D": float}
+        dict: {"Close": float, "VIX": float, "VIX9D": float, "VIX1D": float}
               抓取失敗的欄位值為 None
     """
     results = {}
@@ -82,8 +82,8 @@ def update_csv(values: dict):
     else:
         df = pd.DataFrame(columns=["Date", "Close"])
 
-    # 2. 確保新欄位存在（既有資料沒有 VIX/VIX9D/VIX3D 的部分會是 NaN，不影響舊資料）
-    for col in ["VIX", "VIX9D", "VIX3D"]:
+    # 2. 確保新欄位存在（既有資料沒有 VIX/VIX9D/VIX1D 的部分會是 NaN，不影響舊資料）
+    for col in ["VIX", "VIX9D", "VIX1D"]:
         if col not in df.columns:
             df[col] = None
 
