@@ -1,102 +1,117 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
+"""
+VIX 家族指數抓取器 (取代原本 VIXEQ_scraper.py 的 Selenium 作法)
+
+原本的 VIXEQ_scraper.py 用 Selenium + Google Finance 抓 VIXEQ 單一數值，
+確認 Yahoo Finance 其實直接有這些 ticker，可以用 yfinance 一次抓齊，
+不需要開瀏覽器：
+    ^VIX    - CBOE Volatility Index (標準 VIX)
+    ^VIX9D  - 9-day VIX
+    ^VIX3D  - 3-day VIX
+    ^VIXEQ  - Cboe S&P 500 Constituent Volatility Index
+
+輸出檔案：沿用原本的 vixeq-history.csv，欄位新增 VIX/VIX9D/VIX3D，
+但 Date、Close 兩個既有欄位維持不變（Close = VIXEQ 收盤值），
+確保其他監控腳本讀取這個檔案不會壞掉。
+"""
+
+import yfinance as yf
 import pandas as pd
 from datetime import datetime
 import os
-import sys
+import logging
 
-# 設定檔案名稱 (請確保您的歷史檔案名稱與此一致，或在此修改)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 FILENAME = "vixeq-history.csv"
 
-import re # 新增正則表達式模組，加在最上方的 import 區塊
+TICKERS = {
+    "Close": "^VIXEQ",   # 沿用舊欄位名稱 Close = VIXEQ，避免破壞既有監控腳本
+    "VIX": "^VIX",
+    "VIX9D": "^VIX9D",
+    "VIX3D": "^VIX3D",
+}
 
-def get_vixeq_selenium():
-    print("🚀 啟動 Chrome 瀏覽器...")
-    chrome_options = Options()
-    chrome_options.add_argument("--headless=new")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--window-size=1920,1080")
-    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-    chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
-    
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    
-    url = "https://www.google.com/finance/quote/VIXEQ:INDEXCBOE"
-    
-    try:
-        print(f"🔗 前往: {url}")
-        driver.get(url)
-        
-        # 🌟 核心戰術改變：不抓易變的 CSS 元素，直接等網頁標題加載
-        wait = WebDriverWait(driver, 15)
-        wait.until(EC.title_contains("VIXEQ")) 
-        
-        title = driver.title
-        print(f"📄 讀取到網頁標題: {title}")
-        
-        # 🌟 用正則表達式從 "VIXEQ 43.09 (▲ 1.13%)..." 萃取數字
-        match = re.search(r'VIXEQ\s+([\d,\.]+)', title)
-        
-        if match:
-            price_text = match.group(1).replace(',', '')
-            price = float(price_text)
-            print(f"✅ 成功從標題解析出價格: {price}")
-            driver.quit()
-            return price
-        else:
-            print("❌ 無法從標題中找到價格格式！")
-            driver.quit()
-            return None
-            
-    except Exception as e:
-        print(f"❌ Selenium 抓取失敗: {e}")
+
+def fetch_vix_family():
+    """
+    透過 yfinance 抓取 VIX 家族指數的最新收盤值
+
+    Returns:
+        dict: {"Close": float, "VIX": float, "VIX9D": float, "VIX3D": float}
+              抓取失敗的欄位值為 None
+    """
+    results = {}
+    for col_name, ticker_symbol in TICKERS.items():
         try:
-            print(f"網頁標題: {driver.title}")
-        except: pass
-        driver.quit()
-        return None
+            ticker = yf.Ticker(ticker_symbol)
+            hist = ticker.history(period="5d")  # 抓5天避免遇到假日/資料延遲抓不到
+            if hist.empty:
+                logger.warning(f"⚠️ {ticker_symbol} 沒有資料")
+                results[col_name] = None
+                continue
+            price = round(float(hist['Close'].iloc[-1]), 2)
+            results[col_name] = price
+            logger.info(f"✅ {ticker_symbol} = {price}")
+        except Exception as e:
+            logger.error(f"❌ 抓取 {ticker_symbol} 失敗: {e}")
+            results[col_name] = None
+    return results
 
-def update_csv(price):
+
+def update_csv(values: dict):
+    """
+    更新或新增今天的資料到 CSV
+
+    Args:
+        values: fetch_vix_family() 回傳的字典
+    """
     today_str = datetime.now().strftime("%Y-%m-%d")
-    
+
     # 1. 讀取或建立 DataFrame
     if os.path.exists(FILENAME):
         try:
             df = pd.read_csv(FILENAME)
-            # 嘗試統一日期格式，將舊有的 M/D/YYYY 轉為 YYYY-MM-DD
             df['Date'] = pd.to_datetime(df['Date']).dt.strftime('%Y-%m-%d')
         except Exception as e:
-            print(f"⚠️ 讀取 CSV 失敗，建立新檔: {e}")
+            logger.warning(f"⚠️ 讀取 CSV 失敗，建立新檔: {e}")
             df = pd.DataFrame(columns=["Date", "Close"])
     else:
         df = pd.DataFrame(columns=["Date", "Close"])
 
-    # 2. 檢查今天是否已經有資料 (避免重複執行導致重複數據)
-    if today_str in df['Date'].values:
-        print(f"ℹ️ {today_str} 的資料已存在，更新數值...")
-        df.loc[df['Date'] == today_str, 'Close'] = price
-    else:
-        print(f"➕ 新增資料: {today_str} = {price}")
-        new_row = pd.DataFrame([[today_str, price]], columns=["Date", "Close"])
-        df = pd.concat([df, new_row], ignore_index=True)
+    # 2. 確保新欄位存在（既有資料沒有 VIX/VIX9D/VIX3D 的部分會是 NaN，不影響舊資料）
+    for col in ["VIX", "VIX9D", "VIX3D"]:
+        if col not in df.columns:
+            df[col] = None
 
-    # 3. 排序並存檔
+    # 3. 檢查今天是否已有資料
+    if today_str in df['Date'].values:
+        logger.info(f"ℹ️ {today_str} 的資料已存在，更新數值...")
+        for col, val in values.items():
+            df.loc[df['Date'] == today_str, col] = val
+    else:
+        logger.info(f"➕ 新增資料: {today_str} = {values}")
+        new_row = {"Date": today_str, **values}
+        df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+
+    # 4. 排序並存檔
     df = df.sort_values(by="Date")
-    df.to_csv(FILENAME, index=False)
-    print(f"💾 檔案已保存至 {FILENAME}")
+    try:
+        df.to_csv(FILENAME, index=False)
+        logger.info(f"💾 檔案已保存至 {FILENAME}")
+    except Exception as e:
+        logger.error(f"❌ 儲存 CSV 失敗: {e}")
+        raise
+
 
 if __name__ == "__main__":
-    price = get_vixeq_selenium()
-    if price:
-        update_csv(price)
+    import sys
+    values = fetch_vix_family()
+    if values.get("Close") is not None:
+        update_csv(values)
     else:
-        print("❌ 無法獲取價格，程式終止。")
-        sys.exit(1) # 回傳錯誤代碼讓 GitHub Actions 知道失敗了
+        logger.error("❌ 無法獲取 VIXEQ 價格，程式終止。")
+        sys.exit(1)
