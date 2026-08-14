@@ -22,6 +22,16 @@ COMMODITIES = {
         "api_type": "disaggregated",
         "filter_field": "commodity_name",
         "filter_value": "GOLD",
+        # NEW: two fixes for the same root cause - CFTC's disaggregated report
+        # returns MULTIPLE rows per report_date for GOLD: (1) different contracts
+        # sharing commodity_name=GOLD (main 100oz COMEX vs Micro Gold etc), and
+        # (2) a 'FutOnly' row AND a 'Combined' (futures+options) row for the same
+        # contract/date (see the futonly_or_combined field in the raw API response).
+        # Without filtering both, drop_duplicates(keep='first') non-deterministically
+        # keeps whichever row the API happened to return first that week, causing OI
+        # to swing wildly between weeks (e.g. ~380k vs ~50-80k). Pin both explicitly.
+        "contract_market_name": "GOLD",
+        "futonly_or_combined": "FutOnly",
         "long_field": "m_money_positions_long_all",
         "short_field": "m_money_positions_short_all",
         "output_file": BASE_DIR / "data" / "gold_cot_data.csv",
@@ -32,6 +42,9 @@ COMMODITIES = {
         "api_type": "disaggregated",
         "filter_field": "commodity_name",
         "filter_value": "SILVER",
+        # See note on GOLD above - same disambiguation applied here.
+        "contract_market_name": "SILVER",
+        "futonly_or_combined": "FutOnly",
         "long_field": "m_money_positions_long_all",
         "short_field": "m_money_positions_short_all",
         "output_file": BASE_DIR / "data" / "silver_cot_data.csv",
