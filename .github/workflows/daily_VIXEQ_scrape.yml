@@ -40,7 +40,7 @@ jobs:
           
           # 檢查是否有檔案變動
           if [[ -n $(git status --porcelain) ]]; then
-            git add vixeq-history.csv
+            git add .
             git commit -m "📈 Auto-update VIXEQ data: $(date +'%Y-%m-%d')"
             git push
           else
