@@ -8,7 +8,7 @@ name: TIC / Primary Dealer Monitor
 # 更新報告時間戳，不會產生重複記錄。
 on:
   schedule:
-    - cron: "0 12 * * 5"
+    - cron: "04 12 * * 5"
   workflow_dispatch: {}   # 允許在 GitHub 網頁上手動觸發，方便你要臨時跑一次時不用等排程
 
 permissions:
