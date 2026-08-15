@@ -1,5 +1,5 @@
 {
-  "update_time": "2026-08-14 21:21",
+  "update_time": "2026-08-15 21:17",
   "data_date": "2026-08-14",
   "gcp_score": -0.12,
   "pci_score": 1.57,
@@ -21,7 +21,7 @@
     {
       "code": "P_KRW",
       "name": "韓元/風險",
-      "value": -1.35,
+      "value": -1.36,
       "status": "loose"
     },
     {
@@ -33,25 +33,25 @@
     {
       "code": "P_CRYPTO",
       "name": "加密貨幣",
-      "value": -0.79,
+      "value": -0.8,
       "status": "neutral"
     },
     {
       "code": "P_EM",
       "name": "新興市場",
-      "value": -0.58,
-      "status": "neutral"
-    },
-    {
-      "code": "P_METAL",
-      "name": "貴金屬/黃金",
-      "value": -0.48,
+      "value": -0.59,
       "status": "neutral"
     },
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
       "value": -0.48,
+      "status": "neutral"
+    },
+    {
+      "code": "P_METAL",
+      "name": "貴金屬/黃金",
+      "value": -0.46,
       "status": "neutral"
     },
     {
