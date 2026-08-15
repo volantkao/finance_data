@@ -1,0 +1,52 @@
+name: TIC / Primary Dealer Monitor
+
+# 排程：每週五 UTC 12:00（= 台灣時間週五 20:00）跑一次。
+# 選這個時間點是因為 NY Fed primary dealer 統計固定在每週四約 4:15pm ET
+# 發布前一週資料，週五抓可以確保前一天的更新已經上線。
+# TIC 官方持有數據是月頻、且發布滯後約 2-3 個月，週跑已經綽綽有餘，
+# 不需要更密集的排程——腳本本身有 change-detection，沒有新資料也只會
+# 更新報告時間戳，不會產生重複記錄。
+on:
+  schedule:
+    - cron: "0 12 * * 5"
+  workflow_dispatch: {}   # 允許在 GitHub 網頁上手動觸發，方便你要臨時跑一次時不用等排程
+
+permissions:
+  contents: write   # 需要寫回 repo 才能 commit 更新後的 data/observations.csv
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run TIC / Primary Dealer monitor
+        env:
+          OUTPUT_DIR: data
+          # 如果你有設定 Discord/Slack 之類的 webhook 通知，去 repo 的
+          # Settings -> Secrets and variables -> Actions 加一個叫
+          # ALERT_WEBHOOK_URL 的 secret，這裡會自動讀到；沒設定就單純不發通知。
+          ALERT_WEBHOOK_URL: ${{ secrets.ALERT_WEBHOOK_URL }}
+          ALERT_THRESHOLD_BN: "50"
+        run: python TIC_Dealer_monitor.py
+
+      - name: Commit updated data (if changed)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/observations.csv data/latest_report.md
+          # 用 --quiet 檢查有沒有實際變動；is_new_observation 沒抓到新資料時
+          # observations.csv 不會變，但 latest_report.md 的時間戳每次都會變，
+          # 所以這裡還是可能有 commit，但不會是重複的資料列，只是報告時間戳更新。
+          if git diff --cached --quiet; then
+            echo "沒有變動，略過 commit"
+          else
+            git commit -m "chore: update TIC/dealer monitor data ($(date -u +%Y-%m-%d))"
+            git push
+          fi
