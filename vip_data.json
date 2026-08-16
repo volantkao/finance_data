@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-08-16 09:51:46",
+    "last_updated": "2026-08-16 21:45:55",
     "market_data": {
         "jp_10y": 2.88,
         "us_3m": 3.71,
@@ -38,11 +38,11 @@
             "hist_std": 1
         },
         "vol_stress": {
-            "hv_mean": 7.1203,
+            "hv_mean": 7.1204,
             "hv_std": 3.2477,
-            "slope_mean": -0.0089,
-            "slope_std": 1.2421,
-            "yesterday_hv": 5.0864
+            "slope_mean": -0.0088,
+            "slope_std": 1.2419,
+            "yesterday_hv": 5.1009
         },
         "spread_history_150d": [
             {
@@ -110,22 +110,16 @@
                 "spread": 1.8215
             }
         ],
-        "gray_rhino_ingredients": {
-            "pvd": 0.69,
-            "vpd": 0.47,
-            "csd": -2.06,
-            "lf": -0.62,
-            "ttd_slope": -0.017
-        },
+        "gray_rhino_ingredients": {},
         "stlfsi_z_params": {
             "current": -0.7709,
             "mean": -0.7565,
             "std": 0.1308
         },
         "move_z_params": {
-            "current": 70.88,
-            "mean": 71.86,
-            "std": 4.6
+            "current": 69.58,
+            "mean": 69.58,
+            "std": NaN
         }
     }
 }
