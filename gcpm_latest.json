@@ -1,15 +1,15 @@
 {
-  "update_time": "2026-08-21 21:20",
+  "update_time": "2026-08-22 21:18",
   "data_date": "2026-08-21",
-  "gcp_score": -0.19,
-  "pci_score": 1.95,
-  "pci_z_score": 0.54,
+  "gcp_score": -0.2,
+  "pci_score": 1.94,
+  "pci_z_score": 0.52,
   "spy_price": 767.5,
   "details": [
     {
       "code": "P_CNH",
       "name": "中國/人民幣",
-      "value": -1.77,
+      "value": -1.81,
       "status": "loose"
     },
     {
@@ -33,7 +33,7 @@
     {
       "code": "P_METAL",
       "name": "貴金屬/黃金",
-      "value": -0.84,
+      "value": -0.83,
       "status": "neutral"
     },
     {
