@@ -1,8 +1,8 @@
 {
     "meta": {
-        "generated_at": "2026-08-25 07:37:02",
-        "start_date": "2026-08-24",
-        "end_date": "2026-08-24"
+        "generated_at": "2026-08-25 19:24:23",
+        "start_date": "2026-08-25",
+        "end_date": "2026-08-25"
     },
     "stats": {
         "total_trading_days": 1,
@@ -12,10 +12,10 @@
     },
     "recent_data": {
         "dates": [
-            "2026-08-24"
+            "2026-08-25"
         ],
         "ratios": [
-            0.888
+            0.871
         ],
         "signals": [
             false
