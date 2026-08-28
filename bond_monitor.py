@@ -8,7 +8,27 @@ import os
 # 取得當前腳本所在的絕對資料夾路徑，確保跨平台相容性
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-def get_bond_yield(url, target_maturity_year, company_name):
+def find_data_table(soup):
+    """
+    TradingView's bond grid renders TWO <table> elements for the same visual
+    widget: a sticky-header table that has <thead> but NO <tbody> (a decoy for
+    layout purposes), followed by the real table that has both <thead> and a
+    populated <tbody>. Naively taking "the next table after the heading" grabs
+    the decoy, whose missing tbody causes an AttributeError deep in the parsing
+    logic. This walks the candidate tables in document order and returns the
+    first one that actually has data rows and looks like the YTW grid.
+    """
+    heading = (soup.find('h1', string='Corporate debt securities')
+               or soup.find('h2', string='Corporate debt securities'))
+    candidates = heading.find_all_next('table') if heading else soup.find_all('table')
+    for t in candidates:
+        tbody = t.find('tbody')
+        if tbody and tbody.find_all('tr') and 'YTW' in t.get_text():
+            return t
+    return None
+
+
+def get_bond_yield(url, target_maturity_year, company_name, instrument_type=None):
     debug_dir = os.path.join(BASE_DIR, "debug_html")
     os.makedirs(debug_dir, exist_ok=True) # Ensure debug directory exists
     try:
@@ -21,19 +41,7 @@ def get_bond_yield(url, target_maturity_year, company_name):
 
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Try to find the table more robustly
-        # Look for the div containing "Corporate debt securities" and then the table within it
-        corporate_debt_section = soup.find('h1', string='Corporate debt securities') or soup.find('h2', string='Corporate debt securities')
-        table = None
-        if corporate_debt_section:
-            table = corporate_debt_section.find_next('table')
-        
-        if not table:
-            # Fallback: search for any table that contains 'YTW %' in its headers
-            for t in soup.find_all('table'):
-                if t.find('th', string='YTW %') or t.find('td', string='YTW %'): # Check both th and td for headers
-                    table = t
-                    break
+        table = find_data_table(soup)
 
         if not table:
             os.makedirs(debug_dir, exist_ok=True)
@@ -42,15 +50,14 @@ def get_bond_yield(url, target_maturity_year, company_name):
             return None
 
         # Extract headers to find the index of 'YTW %' and 'Maturity date'
-        # Extract headers from the first row, checking both th and td elements
         headers_row = table.find("thead").find("tr") if table.find("thead") else table.find("tr")
         if not headers_row:
             os.makedirs(debug_dir, exist_ok=True)
             with open(os.path.join(debug_dir, f"{company_name}_bond_page.html"), "w", encoding='utf-8') as f:
                 f.write(response.text)
             return None
-            
-        headers = [cell.text.replace("\xa0", " ").strip() for cell in headers_row.find_all(["th", "td"])]
+
+        headers = [cell.get_text().replace("\xa0", " ").strip() for cell in headers_row.find_all(["th", "td"])]
         try:
             ytw_index = headers.index("YTW %")
             maturity_index = headers.index("Maturity date")
@@ -58,24 +65,32 @@ def get_bond_yield(url, target_maturity_year, company_name):
             return None
 
         bond_yields = []
-        rows = table.find('tbody').find_all('tr') # Assuming tbody contains the data rows
+        rows = table.find('tbody').find_all('tr')
         for row in rows:
             cells = row.find_all('td')
             if len(cells) > max(ytw_index, maturity_index):
-                maturity_date_str = cells[maturity_index].text.strip()
+                maturity_date_str = cells[maturity_index].get_text().replace("\xa0", " ").strip()
+                ytw_raw = cells[ytw_index].get_text().replace("\xa0", " ").strip()
+
+                # Convertible notes routinely show "—" (no YTW published) because
+                # price reflects conversion value, not a straight discount yield.
+                # Skip these rows instead of letting float() throw.
+                if not ytw_raw or ytw_raw in ("—", "-", "N/A"):
+                    continue
 
                 try:
                     maturity_date = datetime.datetime.strptime(maturity_date_str, '%Y-%m-%d').date()
                     if target_maturity_year - 5 <= maturity_date.year <= target_maturity_year + 5:
-                        ytw_percent = cells[ytw_index].text.strip().replace("%", "")
-                        bond_yields.append(float(ytw_percent))
+                        bond_yields.append(float(ytw_raw.replace("%", "")))
                 except ValueError:
                     # Handle cases where maturity date or yield cannot be parsed
                     continue
-        
+
         if bond_yields:
             return sum(bond_yields) / len(bond_yields) # Return the average yield
         else:
+            if instrument_type == "convertible":
+                print(f"{company_name}: no YTW published (convertible note) — recording as N/A, not a scraper failure")
             return None
 
     except requests.exceptions.RequestException as e:
@@ -134,12 +149,23 @@ def main():
 
     # Fetch Corporate Bond Yields
     for company, details in config['companies'].items():
+        instrument_type = details.get('instrument_type')
         tradingview_url = f"https://www.tradingview.com/symbols/{details['tradingview_symbol']}/bonds/"
-        bond_yield = get_bond_yield(tradingview_url, details['target_maturity_year'], company)
-        data[f'{company}_Yield'] = bond_yield
-        if bond_yield is not None and data['US10Y_Yield'] is not None:
-            data[f'{company}_Spread'] = bond_yield - data['US10Y_Yield']
+        bond_yield = get_bond_yield(tradingview_url, details['target_maturity_year'], company, instrument_type)
+
+        if bond_yield is not None:
+            data[f'{company}_Yield'] = bond_yield
+            data[f'{company}_Spread'] = (
+                bond_yield - data['US10Y_Yield'] if data['US10Y_Yield'] is not None else None
+            )
+        elif instrument_type == "convertible":
+            # Known data limitation, not a scraper failure: TradingView does not
+            # publish YTW for these convertible notes. Flag it explicitly so it
+            # isn't mistaken for a broken fetch when the CSV is reviewed later.
+            data[f'{company}_Yield'] = "N/A (convertible, no YTW)"
+            data[f'{company}_Spread'] = None
         else:
+            data[f'{company}_Yield'] = None
             data[f'{company}_Spread'] = None
 
     df_new = pd.DataFrame([data])
