@@ -36,6 +36,22 @@
       "tradingview_symbol": "NYSE:ORCL",
       "target_maturity_year": 2036
     },
+   "Oracle": {
+      "tradingview_symbol": "NYSE:CRWV",
+      "target_maturity_year": 2036
+    },
+   "Oracle": {
+      "tradingview_symbol": "NYSE:NBIS",
+      "target_maturity_year": 2036
+    },
+   "Oracle": {
+      "tradingview_symbol": "NYSE:IREN",
+      "target_maturity_year": 2036
+    },
+   "Oracle": {
+      "tradingview_symbol": "NYSE:CBRS",
+      "target_maturity_year": 2036
+    },
     "TSMC": {
       "tradingview_symbol": "NYSE:TSM",
       "target_maturity_year": 2036
