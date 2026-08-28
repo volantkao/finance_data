@@ -37,19 +37,19 @@
       "target_maturity_year": 2036
     },
    "CoreWeave": {
-      "tradingview_symbol": "NYSE:CRWV",
+      "tradingview_symbol": "NASDAQ:CRWV",
       "target_maturity_year": 2031
     },
    "Nebius": {
-      "tradingview_symbol": "NYSE:NBIS",
+      "tradingview_symbol": "NASDAQ:NBIS",
       "target_maturity_year": 2031
     },
    "IREN": {
-      "tradingview_symbol": "NYSE:IREN",
+      "tradingview_symbol": "NASDAQ:IREN",
       "target_maturity_year": 2031
     },
    "Cerebras": {
-      "tradingview_symbol": "NYSE:CBRS",
+      "tradingview_symbol": "NASDAQ:CBRS",
       "target_maturity_year": 2031
     },
     "TSMC": {
