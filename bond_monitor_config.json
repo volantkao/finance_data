@@ -48,10 +48,6 @@
       "tradingview_symbol": "NASDAQ:IREN",
       "target_maturity_year": 2031
     },
-   "Cerebras": {
-      "tradingview_symbol": "NASDAQ:CBRS",
-      "target_maturity_year": 2031
-    },
     "TSMC": {
       "tradingview_symbol": "NYSE:TSM",
       "target_maturity_year": 2036
