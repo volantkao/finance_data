@@ -42,13 +42,11 @@
     },
    "Nebius": {
       "tradingview_symbol": "NASDAQ:NBIS",
-      "target_maturity_year": 2031,
-      "instrument_type": "convertible"
+      "target_maturity_year": 2031
     },
    "IREN": {
       "tradingview_symbol": "NASDAQ:IREN",
-      "target_maturity_year": 2031,
-      "instrument_type": "convertible"
+      "target_maturity_year": 2031
     },
     "TSMC": {
       "tradingview_symbol": "NYSE:TSM",
