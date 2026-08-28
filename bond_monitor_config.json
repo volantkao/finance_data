@@ -36,19 +36,19 @@
       "tradingview_symbol": "NYSE:ORCL",
       "target_maturity_year": 2036
     },
-   "Oracle": {
+   "CoreWeave": {
       "tradingview_symbol": "NYSE:CRWV",
       "target_maturity_year": 2031
     },
-   "Oracle": {
+   "Nebius": {
       "tradingview_symbol": "NYSE:NBIS",
       "target_maturity_year": 2031
     },
-   "Oracle": {
+   "IREN": {
       "tradingview_symbol": "NYSE:IREN",
       "target_maturity_year": 2031
     },
-   "Oracle": {
+   "Cerebras": {
       "tradingview_symbol": "NYSE:CBRS",
       "target_maturity_year": 2031
     },
