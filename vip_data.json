@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-08-29 03:16:07",
+    "last_updated": "2026-08-29 14:38:56",
     "market_data": {
         "jp_10y": 2.921,
         "us_3m": 3.69,
@@ -16,26 +16,26 @@
         "srf_date": "2026-08-28"
     },
     "z_score": {
-        "value": 1.52,
-        "mean": 1.5423,
-        "std": 0.2037,
+        "value": 1.74,
+        "mean": 1.5455,
+        "std": 0.2055,
         "status": "Warning",
         "details": {
             "w5000": 77340.0,
             "m2": 23218.0,
-            "ratio": 1.8516
+            "ratio": 1.9024
         },
         "history_debug": [
             "S:77340 | M2:23218",
-            "R:1.8516 (Mean:1.54)"
+            "R:1.9024 (Mean:1.55)"
         ]
     },
     "client_side_params": {
         "market_vuln": {
             "m2_supply": 23218.0,
             "jgb_10y": 2.921,
-            "hist_mean": 1.542291099918511,
-            "hist_std": 0.20371492299192628
+            "hist_mean": 1.5455376528152405,
+            "hist_std": 0.20545393445394664
         },
         "vol_stress": {
             "hv_mean": 7.0426,
@@ -45,6 +45,10 @@
             "yesterday_hv": 5.3187
         },
         "spread_history_150d": [
+            {
+                "date": "2026-01-23",
+                "spread": 2.0913
+            },
             {
                 "date": "2026-01-26",
                 "spread": 2.0778
@@ -640,18 +644,14 @@
             {
                 "date": "2026-08-27",
                 "spread": 1.7566
-            },
-            {
-                "date": "2026-08-28",
-                "spread": 1.8018
             }
         ],
         "gray_rhino_ingredients": {
-            "pvd": 0.8,
+            "pvd": 0.86,
             "vpd": -0.05,
-            "csd": -2.15,
-            "lf": -0.62,
-            "ttd_slope": 0.0106
+            "csd": -2.23,
+            "lf": 0.6,
+            "ttd_slope": 0.019
         },
         "stlfsi_z_params": {
             "current": -0.8107,
@@ -659,8 +659,8 @@
             "std": 0.1204
         },
         "move_z_params": {
-            "current": 70.97,
-            "mean": 72.43,
+            "current": 69.86,
+            "mean": 72.47,
             "std": 4.01
         }
     }
