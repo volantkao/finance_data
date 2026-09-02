@@ -76,7 +76,14 @@ def get_anc_ratio():
         if not ods_url:
             print("Could not find ODS URL for ANC Ratio.")
             return None
-            
+
+        # 🌟 從檔名解析資料所屬月份 (例如 ...202607.ods -> 2026-07)，
+        # 之後才能精準對應「該月月底 TAIEX 收盤價」，不用用今天日期去猜
+        data_period = None
+        m = re.search(r'(20\d{2})(0[1-9]|1[0-2])\.(?:ods|xlsx|ODS|XLSX)', ods_url)
+        if m:
+            data_period = f"{m.group(1)}-{m.group(2)}"
+
         print(f"Downloading ODS from: {ods_url}")
         ods_resp = requests.get(ods_url, timeout=20)
         # 確保安裝了 odfpy
@@ -85,6 +92,16 @@ def get_anc_ratio():
         except ImportError:
             print("Error: 'odfpy' library is required to read ODS files. Please install it using 'pip install odfpy'.")
             return None
+
+        # 檔名解析失敗時的備援：從表內文字「115年7 月」反推 (民國年+1911=西元年)
+        if not data_period:
+            for idx in range(min(5, len(df))):
+                cell = str(df.iloc[idx].values[0])
+                m2 = re.search(r'(\d{2,3})年\s*(\d{1,2})\s*月', cell)
+                if m2:
+                    ad_year = int(m2.group(1)) + 1911
+                    data_period = f"{ad_year}-{int(m2.group(2)):02d}"
+                    break
             
         header_row_idx = None
         for idx, row in df.iterrows():
@@ -164,6 +181,7 @@ def get_anc_ratio():
                     'anc_min_all': anc_min_all,
                     'headroom_all_100m': headroom_all,
                     'headroom_top4_100m': headroom_top4,
+                    'data_period': data_period,
                 }
             else:
                 print(f"Could not find rows: Asset={asset_row_idx}, ANC={anc_row_idx}")
@@ -211,6 +229,7 @@ def main():
     anc_min_all = anc_result.get('anc_min_all') if anc_result else None
     headroom_all = anc_result.get('headroom_all_100m') if anc_result else None
     headroom_top4 = anc_result.get('headroom_top4_100m') if anc_result else None
+    data_period = anc_result.get('data_period') if anc_result else None
 
     new_data = {
         'Date': today,
@@ -221,6 +240,7 @@ def main():
         'ANC_Ratio_Min': anc_min_all,
         'ANC_Headroom_All_100M': headroom_all,
         'ANC_Headroom_Top4_100M': headroom_top4,
+        'ANC_Data_Period': data_period,
         'CP_Rate': cp_rate
     }
     print(f"Final Data: {new_data}")
