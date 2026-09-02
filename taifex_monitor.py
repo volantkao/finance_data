@@ -51,7 +51,8 @@ def get_margin_balance():
         return None
 
 def get_anc_ratio():
-    """從期交所 ODS 檔解析：全市場 ANC 最低值、與前四大期貨商 ANC 最低值"""
+    """從期交所 ODS 檔解析所有專營期貨商的 ANC 比率，回傳「前四大資產中最弱一家」與
+    「全市場最弱一家」的最小值 (水桶最短板)，以及對應的 ANC=15% 紅線前剩餘保證金承載空間"""
     list_url = "https://www.taifex.com.tw/cht/8/fcmFinancial"
     try:
         resp = requests.get(list_url, timeout=15)
@@ -78,10 +79,11 @@ def get_anc_ratio():
             
         print(f"Downloading ODS from: {ods_url}")
         ods_resp = requests.get(ods_url, timeout=20)
+        # 確保安裝了 odfpy
         try:
             df = pd.read_excel(BytesIO(ods_resp.content), engine='odf', header=None)
         except ImportError:
-            print("Error: 'odfpy' library is required to read ODS files.")
+            print("Error: 'odfpy' library is required to read ODS files. Please install it using 'pip install odfpy'.")
             return None
             
         header_row_idx = None
@@ -92,47 +94,76 @@ def get_anc_ratio():
         
         if header_row_idx is not None:
             brokers = df.iloc[header_row_idx].values[1:]
-            asset_row_idx, anc_row_idx = None, None
+            asset_row_idx, anc_row_idx, capital_row_idx = None, None, None
             for idx, row in df.iterrows():
                 row_val = str(row.values[0]).replace('\n', '').replace(' ', '')
                 if '資產合計' == row_val: asset_row_idx = idx
                 if 'ANC比率(%)' in row_val: anc_row_idx = idx
+                if '調整後資本' == row_val: capital_row_idx = idx
             
             if asset_row_idx is not None and anc_row_idx is not None:
                 assets = df.iloc[asset_row_idx].values[1:]
                 ancs = df.iloc[anc_row_idx].values[1:]
+                # 調整後資本 (ANC 的分子) 若找不到該列則整段補 None，headroom 計算會自動略過
+                capitals = df.iloc[capital_row_idx].values[1:] if capital_row_idx is not None else [None] * len(ancs)
                 data = []
-                for b, a, anc in zip(brokers, assets, ancs):
+                for b, a, anc, cap in zip(brokers, assets, ancs, capitals):
                     if pd.isna(b) or '合計' in str(b) or '總計' in str(b): continue
                     try:
                         asset_val = float(str(a).replace(',', ''))
-                        
-                        # 🌟 修正版 ANC 讀取邏輯 (完美轉換 539%)
-                        raw_anc = str(anc).replace(' ', '')
-                        if '%' in raw_anc:
-                            anc_val = float(raw_anc.replace('%', '').replace(',', ''))
-                        else:
-                            anc_val = float(raw_anc.replace(',', ''))
-                            if anc_val < 200: # ODS 的 5.39 會在這裡乘以 100 變成 539.0
-                                anc_val = anc_val * 100
-                                
-                        data.append({'Broker': b, 'Asset': asset_val, 'ANC': anc_val})
+                        anc_val = float(str(anc).replace('%', '').replace(',', ''))
+                        if anc_val < 5: anc_val = anc_val * 100
+                        cap_val = None
+                        if cap is not None:
+                            try: cap_val = float(str(cap).replace(',', ''))
+                            except: cap_val = None
+                        data.append({'Broker': b, 'Asset': asset_val, 'ANC': anc_val, 'AdjCapital': cap_val})
                     except: continue
                 
                 res_df = pd.DataFrame(data)
                 if res_df.empty:
                     print("ANC data parsing resulted in empty DataFrame.")
                     return None
-                
                 top_4 = res_df.sort_values(by='Asset', ascending=False).head(4)
-                print(f"Top 4 Brokers for ANC: {top_4['Broker'].tolist()}")
-                
-                min_anc_all = round(res_df['ANC'].min(), 2)
-                min_anc_top4 = round(top_4['ANC'].min(), 2)
-                
+                print(f"Top 4 Brokers by Asset: {top_4['Broker'].tolist()}")
+
+                # 🌟 修正：水桶「最短板」邏輯 -> 用 min，不是 mean
+                # anc_min_top4：資產前四大期貨商中最弱的一家 (量體最大者的極限)
+                # anc_min_all ：全市場所有專營期貨商中最弱的一家 (最先被迫停單者)
+                anc_min_top4 = round(top_4['ANC'].min(), 2)
+                anc_min_all = round(res_df['ANC'].min(), 2)
+
+                # ==========================================
+                # 🌟 ANC=15% 政策紅線前，還可以承載多少客戶保證金 (資金天花板)
+                # 依規定 ANC比率 = 調整後淨資本 / 期貨交易人未沖銷部位所需之客戶保證金總額
+                # 因此每家期貨商目前的保證金分母 = AdjCapital / (ANC% / 100)
+                # 在 AdjCapital 不變的假設下，跌到 15% 前，分母(保證金承載量)還能再擴張多少
+                # 這裡刻意用「加總」而非「最小值」-- 目的不同：Min 是抓誰先觸線，
+                # Headroom 加總是抓全市場/前四大整體還有多少資金緩衝空間
+                # ==========================================
+                def headroom_100m(sub_df):
+                    total = 0.0
+                    valid = False
+                    for _, r in sub_df.iterrows():
+                        cap, anc = r['AdjCapital'], r['ANC']
+                        if cap is None or pd.isna(cap) or anc is None or pd.isna(anc) or anc <= 0:
+                            continue
+                        current_margin_req = cap / (anc / 100)
+                        max_margin_req_at_15 = cap / 0.15
+                        total += (max_margin_req_at_15 - current_margin_req)
+                        valid = True
+                    return round(total / 1e8, 2) if valid else None  # 轉換為「億元」
+
+                headroom_all = headroom_100m(res_df)
+                headroom_top4 = headroom_100m(top_4)
+                print(f"ANC 最小值: 前四大 {anc_min_top4}% / 全市場 {anc_min_all}%")
+                print(f"ANC=15% 紅線前剩餘保證金承載空間: 全市場 {headroom_all} 億元 / 前四大 {headroom_top4} 億元")
+
                 return {
-                    'ANC_Ratio_Min': min_anc_all,
-                    'ANC_Ratio_Min_Top4': min_anc_top4
+                    'anc_min_top4': anc_min_top4,
+                    'anc_min_all': anc_min_all,
+                    'headroom_all_100m': headroom_all,
+                    'headroom_top4_100m': headroom_top4,
                 }
             else:
                 print(f"Could not find rows: Asset={asset_row_idx}, ANC={anc_row_idx}")
@@ -173,20 +204,23 @@ def main():
     tx_data = get_tx_futures()
     margin_balance = get_margin_balance()
     cp_rate = get_cp_rate()
-    
-    anc_data = get_anc_ratio()
-    if anc_data is None:
-        anc_data = {'ANC_Ratio_Min': None, 'ANC_Ratio_Min_Top4': None}
-    elif isinstance(anc_data, (float, int)):
-         anc_data = {'ANC_Ratio_Min': anc_data, 'ANC_Ratio_Min_Top4': anc_data}
-         
+    anc_result = get_anc_ratio()
+
+    # 相容處理：get_anc_ratio() 現在回傳 dict（若解析失敗則為 None）
+    anc_min_top4 = anc_result.get('anc_min_top4') if anc_result else None
+    anc_min_all = anc_result.get('anc_min_all') if anc_result else None
+    headroom_all = anc_result.get('headroom_all_100m') if anc_result else None
+    headroom_top4 = anc_result.get('headroom_top4_100m') if anc_result else None
+
     new_data = {
         'Date': today,
         'TX_Price': tx_data['tx_price'],
         'TX_OI': tx_data['tx_oi'],
         'Margin_Balance_Billion': margin_balance,
-        'ANC_Ratio_Min_Top4': anc_data['ANC_Ratio_Min_Top4'],
-        'ANC_Ratio_Min': anc_data['ANC_Ratio_Min'],
+        'ANC_Ratio_Min_Top4': anc_min_top4,
+        'ANC_Ratio_Min': anc_min_all,
+        'ANC_Headroom_All_100M': headroom_all,
+        'ANC_Headroom_Top4_100M': headroom_top4,
         'CP_Rate': cp_rate
     }
     print(f"Final Data: {new_data}")
