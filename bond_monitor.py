@@ -146,16 +146,23 @@ def main():
 
     if os.path.exists(output_file):
         existing_df = pd.read_csv(output_file)
-        
+
+        # 【日期正規化】：舊資料裡混雜了 "YYYY-MM-DD" 和 "YYYY/M/D" 兩種格式，
+        # 直接用字串排序會錯亂（例如 "2026-08-28" 會排在 "2026/7/13" 前面，
+        # 因為 '-' 的 ASCII 值比 '/' 小）。這裡統一解析成真正的日期型別，
+        # 排序完再輸出成統一的 "YYYY-MM-DD" 格式，一勞永逸修正歷史資料。
+        existing_df['Date'] = pd.to_datetime(existing_df['Date'], format='mixed').dt.date.astype(str)
+
         # 【核心修正】：Upsert (Update or Insert) 邏輯
         # 如果今天已經有資料，先刪除舊的，避免因為重複執行產生多筆相同日期的無效行
         existing_df = existing_df[existing_df['Date'] != today]
-        
+
         # 合併最新資料
         df = pd.concat([existing_df, df_new], ignore_index=True)
-        
-        # 依照日期排序，確保時間序列乾淨
-        df = df.sort_values(by='Date')
+
+        # 依照「真正的日期」排序，確保時間序列乾淨（而非依字串排序）
+        df['_sort_key'] = pd.to_datetime(df['Date'], format='mixed')
+        df = df.sort_values(by='_sort_key').drop(columns=['_sort_key'])
     else:
         df = df_new
 
