@@ -4,7 +4,7 @@ name: Daily Finance Monitor
 on:
   schedule:
     # 每天 UTC 時間 21:30 執行 (大約是台灣時間早上 05:30，美股收盤後)
-    - cron: '30 9,21 * * *'
+    - cron: '30 21 * * *'
   # 允許手動點按鈕觸發 (方便測試)
   workflow_dispatch:
 
