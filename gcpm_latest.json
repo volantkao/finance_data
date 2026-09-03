@@ -1,57 +1,57 @@
 {
-  "update_time": "2026-09-02 22:57",
-  "data_date": "2026-09-02",
-  "gcp_score": -0.45,
-  "pci_score": 2.07,
-  "pci_z_score": 0.76,
-  "spy_price": 766.89,
+  "update_time": "2026-09-03 22:57",
+  "data_date": "2026-09-03",
+  "gcp_score": -0.43,
+  "pci_score": 2.04,
+  "pci_z_score": 0.68,
+  "spy_price": 767.3,
   "details": [
     {
       "code": "P_KRW",
       "name": "韓元/風險",
-      "value": -2.07,
+      "value": -2.04,
       "status": "loose"
     },
     {
       "code": "P_CNH",
       "name": "中國/人民幣",
-      "value": -1.9,
+      "value": -1.82,
       "status": "loose"
     },
     {
       "code": "P_TWD",
       "name": "台幣/地緣",
-      "value": -1.57,
+      "value": -1.76,
       "status": "loose"
     },
     {
       "code": "P_CRYPTO",
       "name": "加密貨幣",
-      "value": -1.16,
+      "value": -1.04,
       "status": "loose"
-    },
-    {
-      "code": "P_EM",
-      "name": "新興市場",
-      "value": -0.69,
-      "status": "neutral"
     },
     {
       "code": "P_JPY",
       "name": "日圓套息",
-      "value": 0.58,
+      "value": 0.65,
       "status": "neutral"
     },
     {
-      "code": "P_METAL",
-      "name": "貴金屬/黃金",
-      "value": -0.56,
+      "code": "P_EM",
+      "name": "新興市場",
+      "value": -0.61,
       "status": "neutral"
     },
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": 0.49,
+      "value": 0.47,
+      "status": "neutral"
+    },
+    {
+      "code": "P_METAL",
+      "name": "貴金屬/黃金",
+      "value": -0.4,
       "status": "neutral"
     },
     {
@@ -63,7 +63,7 @@
     {
       "code": "P_USD",
       "name": "美元池壓力",
-      "value": 0.24,
+      "value": 0.19,
       "status": "neutral"
     }
   ]
