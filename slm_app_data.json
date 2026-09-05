@@ -2,8 +2,8 @@
   "date": "2026-09-04",
   "market_status": {
     "retail_z": -1.45,
-    "short_margin_z": 1.5,
-    "short_margin_ratio_percent": 2.5
+    "short_margin_z": 1.45,
+    "short_margin_ratio_percent": 2.46
   },
   "yuna_insight": {
     "mood": "chill",
@@ -26,8 +26,8 @@
     {
       "code": "TW_FIN",
       "name": "金融",
-      "pressure_score": -1.27,
-      "pressure_delta_5d": -0.82
+      "pressure_score": -1.25,
+      "pressure_delta_5d": -0.68
     },
     {
       "code": "TW_AI",
