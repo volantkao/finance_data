@@ -1,21 +1,21 @@
 {
-  "update_time": "2026-09-05 22:37",
+  "update_time": "2026-09-06 22:40",
   "data_date": "2026-09-04",
   "gcp_score": -0.43,
-  "pci_score": 2.0,
-  "pci_z_score": 0.59,
+  "pci_score": 2.01,
+  "pci_z_score": 0.61,
   "spy_price": 767.47,
   "details": [
     {
       "code": "P_KRW",
       "name": "韓元/風險",
-      "value": -2.0,
+      "value": -2.01,
       "status": "loose"
     },
     {
       "code": "P_CNH",
       "name": "中國/人民幣",
-      "value": -1.75,
+      "value": -1.72,
       "status": "loose"
     },
     {
@@ -45,19 +45,19 @@
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": 0.45,
-      "status": "neutral"
-    },
-    {
-      "code": "P_EUR",
-      "name": "歐元區",
-      "value": 0.37,
+      "value": 0.41,
       "status": "neutral"
     },
     {
       "code": "P_METAL",
       "name": "貴金屬/黃金",
-      "value": -0.36,
+      "value": -0.39,
+      "status": "neutral"
+    },
+    {
+      "code": "P_EUR",
+      "name": "歐元區",
+      "value": 0.36,
       "status": "neutral"
     },
     {
