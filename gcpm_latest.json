@@ -1,5 +1,5 @@
 {
-  "update_time": "2026-09-11 22:57",
+  "update_time": "2026-09-12 22:49",
   "data_date": "2026-09-11",
   "gcp_score": -0.21,
   "pci_score": 1.99,
@@ -21,7 +21,7 @@
     {
       "code": "P_TWD",
       "name": "台幣/地緣",
-      "value": -1.7,
+      "value": -1.69,
       "status": "loose"
     },
     {
@@ -37,9 +37,15 @@
       "status": "neutral"
     },
     {
+      "code": "P_AUD",
+      "name": "澳幣/原物料",
+      "value": 0.37,
+      "status": "neutral"
+    },
+    {
       "code": "P_METAL",
       "name": "貴金屬/黃金",
-      "value": -0.39,
+      "value": -0.37,
       "status": "neutral"
     },
     {
@@ -52,12 +58,6 @@
       "code": "P_EUR",
       "name": "歐元區",
       "value": 0.36,
-      "status": "neutral"
-    },
-    {
-      "code": "P_AUD",
-      "name": "澳幣/原物料",
-      "value": 0.33,
       "status": "neutral"
     },
     {
