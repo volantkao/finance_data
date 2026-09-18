@@ -1,23 +1,35 @@
 {
     "meta": {
-        "generated_at": "2026-09-17 21:50:36",
-        "start_date": "2026-09-17",
+        "generated_at": "2026-09-18 12:00:03",
+        "start_date": "2024-01-02",
         "end_date": "2026-09-17"
     },
     "stats": {
-        "total_trading_days": 1,
-        "panic_signal_days": 0,
-        "panic_frequency": 0.0,
-        "last_panic_signal": "N/A"
+        "total_trading_days": 680,
+        "panic_signal_days": 129,
+        "panic_frequency": 0.1897,
+        "last_panic_signal": "2026-09-15"
     },
     "recent_data": {
         "dates": [
+            "2026-09-11",
+            "2026-09-14",
+            "2026-09-15",
+            "2026-09-16",
             "2026-09-17"
         ],
         "ratios": [
+            0.914,
+            0.989,
+            1.001,
+            0.982,
             0.867
         ],
         "signals": [
+            false,
+            false,
+            true,
+            false,
             false
         ]
     }
