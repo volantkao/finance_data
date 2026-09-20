@@ -1,5 +1,5 @@
 {
-  "update_time": "2026-09-19 22:38",
+  "update_time": "2026-09-20 22:56",
   "data_date": "2026-09-18",
   "gcp_score": -0.21,
   "pci_score": 1.54,
@@ -9,7 +9,7 @@
     {
       "code": "P_JPY",
       "name": "日圓套息",
-      "value": 1.48,
+      "value": 1.5,
       "status": "tight"
     },
     {
@@ -27,7 +27,7 @@
     {
       "code": "P_TWD",
       "name": "台幣/地緣",
-      "value": -1.13,
+      "value": -1.12,
       "status": "loose"
     },
     {
@@ -57,13 +57,13 @@
     {
       "code": "P_EUR",
       "name": "歐元區",
-      "value": -0.31,
+      "value": -0.33,
       "status": "neutral"
     },
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": 0.27,
+      "value": 0.22,
       "status": "neutral"
     }
   ]
