@@ -1,551 +1,545 @@
 {
     "meta": {
-        "update_time": "2026-09-18 23:25:03",
-        "data_count": 1004
+        "update_time": "2026-09-22 00:11:52",
+        "data_count": 1001
     },
     "latest": {
-        "date": "2026-09-18",
-        "olsi": -0.24,
+        "date": "2026-09-21",
+        "olsi": -0.16,
         "state_code": 0,
         "duration": 0,
         "components": {
             "friction_z": -0.97,
-            "srf_z": 0.53,
-            "flow_z": -0.1
+            "srf_z": 0.61,
+            "flow_z": 0.0
         }
     },
     "history": [
         {
-            "date": "2026-05-12",
-            "price": 736.28,
-            "olsi": -0.3,
-            "state": 0
-        },
-        {
             "date": "2026-05-13",
-            "price": 740.4,
+            "price": 738.57,
             "olsi": -0.25,
             "state": 0
         },
         {
             "date": "2026-05-14",
-            "price": 746.25,
+            "price": 744.4,
             "olsi": -0.4,
             "state": 0
         },
         {
             "date": "2026-05-15",
-            "price": 737.27,
+            "price": 735.44,
             "olsi": -0.49,
             "state": 0
         },
         {
             "date": "2026-05-18",
-            "price": 736.75,
+            "price": 734.93,
             "olsi": -0.52,
             "state": 0
         },
         {
             "date": "2026-05-19",
-            "price": 731.84,
+            "price": 730.03,
             "olsi": -0.69,
             "state": 0
         },
         {
             "date": "2026-05-20",
-            "price": 739.35,
+            "price": 737.51,
             "olsi": -0.83,
             "state": 0
         },
         {
             "date": "2026-05-21",
-            "price": 740.81,
+            "price": 738.98,
             "olsi": -0.82,
             "state": 0
         },
         {
             "date": "2026-05-22",
-            "price": 743.72,
+            "price": 741.88,
             "olsi": -0.67,
             "state": 0
         },
         {
             "date": "2026-05-26",
-            "price": 748.66,
+            "price": 746.81,
             "olsi": -0.49,
             "state": 0
         },
         {
             "date": "2026-05-27",
-            "price": 748.53,
+            "price": 746.68,
             "olsi": -0.27,
             "state": 0
         },
         {
             "date": "2026-05-28",
-            "price": 752.66,
+            "price": 750.8,
             "olsi": -0.1,
             "state": 0
         },
         {
             "date": "2026-05-29",
-            "price": 754.54,
+            "price": 752.67,
             "olsi": 0.09,
             "state": 0
         },
         {
             "date": "2026-06-01",
-            "price": 756.59,
+            "price": 754.72,
             "olsi": 0.09,
             "state": 0
         },
         {
             "date": "2026-06-02",
-            "price": 757.62,
+            "price": 755.74,
             "olsi": 0.08,
             "state": 0
         },
         {
             "date": "2026-06-03",
-            "price": 752.3,
+            "price": 750.44,
             "olsi": 0.01,
             "state": 0
         },
         {
             "date": "2026-06-04",
-            "price": 755.14,
+            "price": 753.27,
             "olsi": 0.01,
             "state": 0
         },
         {
             "date": "2026-06-05",
-            "price": 735.65,
+            "price": 733.83,
             "olsi": -0.04,
             "state": 0
         },
         {
             "date": "2026-06-08",
-            "price": 737.32,
+            "price": 735.49,
             "olsi": -0.12,
             "state": 0
         },
         {
             "date": "2026-06-09",
-            "price": 735.16,
+            "price": 733.34,
             "olsi": -0.2,
             "state": 0
         },
         {
             "date": "2026-06-10",
-            "price": 723.57,
+            "price": 721.77,
             "olsi": -0.29,
             "state": 0
         },
         {
             "date": "2026-06-11",
-            "price": 735.86,
+            "price": 734.04,
             "olsi": -0.36,
             "state": 0
         },
         {
             "date": "2026-06-12",
-            "price": 739.84,
+            "price": 738.01,
             "olsi": -0.4,
             "state": 0
         },
         {
             "date": "2026-06-15",
-            "price": 752.89,
+            "price": 751.03,
             "olsi": -0.15,
             "state": 0
         },
         {
             "date": "2026-06-16",
-            "price": 748.4,
+            "price": 746.55,
             "olsi": -0.06,
             "state": 0
         },
         {
             "date": "2026-06-17",
-            "price": 739.06,
+            "price": 737.23,
             "olsi": 0.07,
             "state": 0
         },
         {
             "date": "2026-06-18",
-            "price": 746.74,
+            "price": 744.89,
             "olsi": 0.13,
             "state": 0
         },
         {
             "date": "2026-06-22",
-            "price": 744.39,
+            "price": 742.55,
             "olsi": 0.06,
             "state": 0
         },
         {
             "date": "2026-06-23",
-            "price": 733.58,
+            "price": 731.76,
             "olsi": -0.19,
             "state": 0
         },
         {
             "date": "2026-06-24",
-            "price": 733.24,
+            "price": 731.42,
             "olsi": -0.27,
             "state": 0
         },
         {
             "date": "2026-06-25",
-            "price": 734.3,
+            "price": 732.48,
             "olsi": -0.28,
             "state": 0
         },
         {
             "date": "2026-06-26",
-            "price": 728.99,
+            "price": 727.18,
             "olsi": -0.42,
             "state": 0
         },
         {
             "date": "2026-06-29",
-            "price": 741.0,
+            "price": 739.16,
             "olsi": -0.42,
             "state": 0
         },
         {
             "date": "2026-06-30",
-            "price": 746.77,
+            "price": 744.92,
             "olsi": -0.28,
             "state": 0
         },
         {
             "date": "2026-07-01",
-            "price": 745.76,
+            "price": 743.91,
             "olsi": -0.2,
             "state": 0
         },
         {
             "date": "2026-07-02",
-            "price": 744.78,
+            "price": 742.94,
             "olsi": -0.28,
             "state": 0
         },
         {
             "date": "2026-07-06",
-            "price": 751.28,
+            "price": 749.42,
             "olsi": -0.11,
             "state": 0
         },
         {
             "date": "2026-07-07",
-            "price": 747.71,
+            "price": 745.86,
             "olsi": 0.01,
             "state": 0
         },
         {
             "date": "2026-07-08",
-            "price": 745.4,
+            "price": 743.55,
             "olsi": -0.16,
             "state": 0
         },
         {
             "date": "2026-07-09",
-            "price": 751.71,
+            "price": 749.85,
             "olsi": -0.47,
             "state": 0
         },
         {
             "date": "2026-07-10",
-            "price": 754.95,
+            "price": 753.08,
             "olsi": -0.61,
             "state": 0
         },
         {
             "date": "2026-07-13",
-            "price": 749.17,
+            "price": 747.31,
             "olsi": -0.79,
             "state": 0
         },
         {
             "date": "2026-07-14",
-            "price": 751.83,
+            "price": 749.97,
             "olsi": -0.75,
             "state": 0
         },
         {
             "date": "2026-07-15",
-            "price": 754.81,
+            "price": 752.94,
             "olsi": -0.52,
             "state": 0
         },
         {
             "date": "2026-07-16",
-            "price": 750.72,
+            "price": 748.86,
             "olsi": -0.39,
             "state": 0
         },
         {
             "date": "2026-07-17",
-            "price": 743.29,
+            "price": 741.45,
             "olsi": -0.35,
             "state": 0
         },
         {
             "date": "2026-07-20",
-            "price": 742.09,
+            "price": 740.25,
             "olsi": -0.41,
             "state": 0
         },
         {
             "date": "2026-07-21",
-            "price": 748.28,
+            "price": 746.43,
             "olsi": -0.58,
             "state": 0
         },
         {
             "date": "2026-07-22",
-            "price": 747.41,
+            "price": 745.56,
             "olsi": -0.76,
             "state": 0
         },
         {
             "date": "2026-07-23",
-            "price": 738.18,
+            "price": 736.35,
             "olsi": -0.64,
             "state": 0
         },
         {
             "date": "2026-07-24",
-            "price": 738.93,
+            "price": 737.1,
             "olsi": -0.46,
             "state": 0
         },
         {
             "date": "2026-07-27",
-            "price": 739.09,
+            "price": 737.26,
             "olsi": -0.23,
             "state": 0
         },
         {
             "date": "2026-07-28",
-            "price": 740.86,
+            "price": 739.02,
             "olsi": -0.05,
             "state": 0
         },
         {
             "date": "2026-07-29",
-            "price": 729.46,
+            "price": 727.65,
             "olsi": 0.08,
             "state": 0
         },
         {
             "date": "2026-07-30",
-            "price": 741.69,
+            "price": 739.85,
             "olsi": 0.12,
             "state": 0
         },
         {
             "date": "2026-07-31",
-            "price": 747.03,
+            "price": 745.18,
             "olsi": 0.06,
             "state": 0
         },
         {
             "date": "2026-08-03",
-            "price": 757.67,
+            "price": 755.79,
             "olsi": -0.01,
             "state": 0
         },
         {
             "date": "2026-08-04",
-            "price": 771.33,
+            "price": 769.42,
             "olsi": 0.03,
             "state": 0
         },
         {
             "date": "2026-08-05",
-            "price": 769.79,
+            "price": 767.88,
             "olsi": 0.08,
             "state": 0
         },
         {
             "date": "2026-08-06",
-            "price": 768.56,
+            "price": 766.66,
             "olsi": 0.0,
             "state": 0
         },
         {
             "date": "2026-08-07",
-            "price": 773.26,
+            "price": 771.34,
             "olsi": -0.04,
             "state": 0
         },
         {
             "date": "2026-08-10",
-            "price": 773.03,
+            "price": 771.12,
             "olsi": -0.08,
             "state": 0
         },
         {
             "date": "2026-08-11",
-            "price": 770.56,
+            "price": 768.65,
             "olsi": -0.12,
             "state": 0
         },
         {
             "date": "2026-08-12",
-            "price": 772.49,
+            "price": 770.58,
             "olsi": -0.3,
             "state": 0
         },
         {
             "date": "2026-08-13",
-            "price": 777.88,
+            "price": 775.95,
             "olsi": -0.28,
             "state": 0
         },
         {
             "date": "2026-08-14",
-            "price": 776.34,
+            "price": 774.42,
             "olsi": -0.31,
             "state": 0
         },
         {
             "date": "2026-08-17",
-            "price": 772.67,
+            "price": 770.76,
             "olsi": -0.19,
             "state": 0
         },
         {
             "date": "2026-08-18",
-            "price": 767.45,
+            "price": 765.55,
             "olsi": -0.21,
             "state": 0
         },
         {
             "date": "2026-08-19",
-            "price": 769.06,
+            "price": 767.15,
             "olsi": -0.12,
             "state": 0
         },
         {
             "date": "2026-08-20",
-            "price": 762.6,
+            "price": 760.71,
             "olsi": -0.23,
             "state": 0
         },
         {
             "date": "2026-08-21",
-            "price": 765.72,
+            "price": 763.82,
             "olsi": -0.19,
             "state": 0
         },
         {
             "date": "2026-08-24",
-            "price": 763.47,
+            "price": 761.58,
             "olsi": -0.32,
             "state": 0
         },
         {
             "date": "2026-08-25",
-            "price": 765.91,
+            "price": 764.01,
             "olsi": -0.29,
             "state": 0
         },
         {
             "date": "2026-08-26",
-            "price": 766.08,
+            "price": 764.18,
             "olsi": -0.26,
             "state": 0
         },
         {
             "date": "2026-08-27",
-            "price": 771.1,
+            "price": 769.19,
             "olsi": -0.09,
             "state": 0
         },
         {
             "date": "2026-08-28",
-            "price": 769.35,
+            "price": 767.44,
             "olsi": 0.02,
             "state": 0
         },
         {
             "date": "2026-08-31",
-            "price": 767.05,
+            "price": 765.15,
             "olsi": 0.18,
             "state": 0
         },
         {
             "date": "2026-09-01",
-            "price": 761.78,
+            "price": 759.89,
             "olsi": 0.19,
             "state": 0
         },
         {
             "date": "2026-09-02",
-            "price": 765.16,
+            "price": 763.26,
             "olsi": 0.1,
             "state": 0
         },
         {
             "date": "2026-09-03",
-            "price": 773.17,
+            "price": 771.25,
             "olsi": 0.11,
             "state": 0
         },
         {
             "date": "2026-09-04",
-            "price": 770.19,
+            "price": 768.28,
             "olsi": 0.01,
             "state": 0
         },
         {
             "date": "2026-09-08",
-            "price": 765.96,
+            "price": 764.06,
             "olsi": -0.04,
             "state": 0
         },
         {
             "date": "2026-09-09",
-            "price": 762.4,
+            "price": 760.51,
             "olsi": -0.08,
             "state": 0
         },
         {
             "date": "2026-09-10",
-            "price": 757.83,
+            "price": 755.95,
             "olsi": -0.03,
             "state": 0
         },
         {
             "date": "2026-09-11",
-            "price": 764.29,
+            "price": 762.4,
             "olsi": -0.23,
             "state": 0
         },
         {
             "date": "2026-09-14",
-            "price": 760.88,
+            "price": 759.0,
             "olsi": -0.29,
             "state": 0
         },
         {
             "date": "2026-09-15",
-            "price": 757.39,
+            "price": 755.51,
             "olsi": -0.28,
             "state": 0
         },
         {
             "date": "2026-09-16",
-            "price": 754.05,
+            "price": 752.18,
             "olsi": -0.3,
             "state": 0
         },
         {
             "date": "2026-09-17",
-            "price": 762.6,
+            "price": 760.71,
             "olsi": -0.32,
             "state": 0
         },
@@ -553,6 +547,12 @@
             "date": "2026-09-18",
             "price": 761.69,
             "olsi": -0.24,
+            "state": 0
+        },
+        {
+            "date": "2026-09-21",
+            "price": NaN,
+            "olsi": -0.16,
             "state": 0
         }
     ]
