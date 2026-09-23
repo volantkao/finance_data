@@ -123,20 +123,46 @@ def get_anc_ratio():
                 ancs = df.iloc[anc_row_idx].values[1:]
                 # 調整後資本 (ANC 的分子) 若找不到該列則整段補 None，headroom 計算會自動略過
                 capitals = df.iloc[capital_row_idx].values[1:] if capital_row_idx is not None else [None] * len(ancs)
-                data = []
+                raw_rows = []
                 for b, a, anc, cap in zip(brokers, assets, ancs, capitals):
                     if pd.isna(b) or '合計' in str(b) or '總計' in str(b): continue
                     try:
                         asset_val = float(str(a).replace(',', ''))
-                        anc_val = float(str(anc).replace('%', '').replace(',', ''))
-                        if anc_val < 5: anc_val = anc_val * 100
+                        anc_raw = float(str(anc).replace('%', '').replace(',', ''))
                         cap_val = None
                         if cap is not None:
                             try: cap_val = float(str(cap).replace(',', ''))
                             except: cap_val = None
-                        data.append({'Broker': b, 'Asset': asset_val, 'ANC': anc_val, 'AdjCapital': cap_val})
+                        raw_rows.append({'Broker': b, 'Asset': asset_val, 'ANC_raw': anc_raw, 'AdjCapital': cap_val})
                     except: continue
-                
+
+                if not raw_rows:
+                    print("ANC data parsing resulted in empty DataFrame.")
+                    return None
+
+                # 🌟 修正 bug：原本逐筆判斷「anc_val < 5 才乘以100」，
+                # 會被單一家 ANC 特別高（例如客戶保證金極少、ANC>500%，
+                # 原始值本身就 >=5）的期貨商誤判成「已經是百分比」，
+                # 導致那家公司的 ANC 被錯砍成 1/100，反而變成全市場最小值，
+                # 蓋掉真正該被抓出來的最小值。
+                # 改成：同一個月的資料表格式應該是一致的（要嘛全部存小數、
+                # 要嘛全部存百分比），所以用「整批的中位數」判斷一次縮放係數，
+                # 不受個別極端值影響，再統一套用到每一筆。
+                raw_vals = [r['ANC_raw'] for r in raw_rows]
+                median_raw = sorted(raw_vals)[len(raw_vals) // 2]
+                scale = 100 if median_raw < 5 else 1
+                if scale != 1:
+                    print(f"ANC 原始值中位數為 {median_raw}，判定為小數格式，統一 x{scale}")
+
+                data = []
+                for r in raw_rows:
+                    data.append({
+                        'Broker': r['Broker'],
+                        'Asset': r['Asset'],
+                        'ANC': round(r['ANC_raw'] * scale, 4),
+                        'AdjCapital': r['AdjCapital'],
+                    })
+
                 res_df = pd.DataFrame(data)
                 if res_df.empty:
                     print("ANC data parsing resulted in empty DataFrame.")
