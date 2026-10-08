@@ -1,5 +1,5 @@
 {
-    "update_time": "2026-10-07 14:44",
+    "update_time": "2026-10-08 14:55",
     "signals": {
         "0050.TW": {
             "market_status": "多單持有",
@@ -8,90 +8,90 @@
             "top5_strategies": [
                 {
                     "strategy_name": "bias45創20日高",
-                    "cumulative_return_3y": "176.60%",
-                    "sharpe_ratio": "2.28",
+                    "cumulative_return_3y": "184.32%",
+                    "sharpe_ratio": "2.33",
                     "current_signal": 1,
                     "status": "HOLD",
-                    "trigger_price_note": "SELL if Close < 104.35 (or >)"
+                    "trigger_price_note": "SELL if Close < 104.85 (or >)"
                 },
                 {
                     "strategy_name": "irs 14 tr cr",
-                    "cumulative_return_3y": "159.62%",
-                    "sharpe_ratio": "2.27",
+                    "cumulative_return_3y": "166.45%",
+                    "sharpe_ratio": "2.32",
                     "current_signal": 1,
                     "status": "HOLD",
-                    "trigger_price_note": "SELL if Close < 104.35 (or >)"
+                    "trigger_price_note": "SELL if Close < 104.85 (or >)"
+                },
+                {
+                    "strategy_name": "c cr ma60 1_",
+                    "cumulative_return_3y": "252.73%",
+                    "sharpe_ratio": "2.14",
+                    "current_signal": 1,
+                    "status": "HOLD",
+                    "trigger_price_note": "Steady"
                 },
                 {
                     "strategy_name": "fd 大小30-30",
-                    "cumulative_return_3y": "298.37%",
-                    "sharpe_ratio": "2.11",
+                    "cumulative_return_3y": "308.84%",
+                    "sharpe_ratio": "2.14",
                     "current_signal": 1,
                     "status": "HOLD",
                     "trigger_price_note": "Steady"
                 },
                 {
                     "strategy_name": "fd cr 30-30",
-                    "cumulative_return_3y": "298.37%",
-                    "sharpe_ratio": "2.11",
+                    "cumulative_return_3y": "308.84%",
+                    "sharpe_ratio": "2.14",
                     "current_signal": 1,
                     "status": "HOLD",
                     "trigger_price_note": "Steady"
-                },
-                {
-                    "strategy_name": "c cr ma60 1_",
-                    "cumulative_return_3y": "243.14%",
-                    "sharpe_ratio": "2.10",
-                    "current_signal": 1,
-                    "status": "HOLD",
-                    "trigger_price_note": "SELL if Close < 104.35 (or >)"
                 }
             ]
         },
         "SPY": {
             "market_status": "多單持有",
-            "signal_strength": "4/5",
+            "signal_strength": "5/5",
             "ranking_method": "SHARPE",
             "top5_strategies": [
                 {
+                    "strategy_name": "kd81-5大小50",
+                    "cumulative_return_3y": "87.58%",
+                    "sharpe_ratio": "1.89",
+                    "current_signal": 1,
+                    "status": "HOLD",
+                    "trigger_price_note": "Steady"
+                },
+                {
                     "strategy_name": "kd81-5 cr 50",
-                    "cumulative_return_3y": "86.56%",
-                    "sharpe_ratio": "1.88",
+                    "cumulative_return_3y": "87.58%",
+                    "sharpe_ratio": "1.89",
                     "current_signal": 1,
                     "status": "HOLD",
                     "trigger_price_note": "Steady"
                 },
                 {
                     "strategy_name": "cci(42)大小0 a",
-                    "cumulative_return_3y": "86.56%",
-                    "sharpe_ratio": "1.88",
+                    "cumulative_return_3y": "87.58%",
+                    "sharpe_ratio": "1.89",
                     "current_signal": 1,
                     "status": "HOLD",
-                    "trigger_price_note": "Steady"
-                },
-                {
-                    "strategy_name": "kd81-5大小50",
-                    "cumulative_return_3y": "86.56%",
-                    "sharpe_ratio": "1.88",
-                    "current_signal": 1,
-                    "status": "HOLD",
-                    "trigger_price_note": "Steady"
-                },
-                {
-                    "strategy_name": "c cr ma60",
-                    "cumulative_return_3y": "58.60%",
-                    "sharpe_ratio": "1.82",
-                    "current_signal": 0,
-                    "status": "EMPTY",
                     "trigger_price_note": "Steady"
                 },
                 {
                     "strategy_name": "RJ cr",
-                    "cumulative_return_3y": "67.98%",
-                    "sharpe_ratio": "1.79",
+                    "cumulative_return_3y": "68.90%",
+                    "sharpe_ratio": "1.81",
                     "current_signal": 1,
                     "status": "HOLD",
                     "trigger_price_note": "Steady"
+                },
+                {
+                    "strategy_name": "bias(50)大0",
+                    "cumulative_return_3y": "80.04%",
+                    "sharpe_ratio": "1.80",
+                    "current_signal": 1,
+                    "status": "HOLD",
+                    "trigger_price_note": "SELL if Close < 699.50 (or >)"
                 }
             ]
         },
@@ -102,8 +102,8 @@
             "top5_strategies": [
                 {
                     "strategy_name": "bias(50) cr 0",
-                    "cumulative_return_3y": "145.18%",
-                    "sharpe_ratio": "1.78",
+                    "cumulative_return_3y": "142.48%",
+                    "sharpe_ratio": "1.76",
                     "current_signal": 1,
                     "status": "HOLD",
                     "trigger_price_note": "Steady"
@@ -118,8 +118,8 @@
                 },
                 {
                     "strategy_name": "v大小mav60",
-                    "cumulative_return_3y": "125.71%",
-                    "sharpe_ratio": "1.61",
+                    "cumulative_return_3y": "121.64%",
+                    "sharpe_ratio": "1.58",
                     "current_signal": 0,
                     "status": "EMPTY",
                     "trigger_price_note": "Steady"
@@ -130,12 +130,12 @@
                     "sharpe_ratio": "1.53",
                     "current_signal": 0,
                     "status": "EMPTY",
-                    "trigger_price_note": "BUY if Close > 395.01"
+                    "trigger_price_note": "BUY if Close > 395.24"
                 },
                 {
                     "strategy_name": "bias(50)大0",
-                    "cumulative_return_3y": "116.28%",
-                    "sharpe_ratio": "1.49",
+                    "cumulative_return_3y": "113.90%",
+                    "sharpe_ratio": "1.47",
                     "current_signal": 1,
                     "status": "HOLD",
                     "trigger_price_note": "Steady"
@@ -157,7 +157,7 @@
                 },
                 {
                     "strategy_name": "c cr ma8-21-55",
-                    "cumulative_return_3y": "504.06%",
+                    "cumulative_return_3y": "502.81%",
                     "sharpe_ratio": "0.57",
                     "current_signal": 0,
                     "status": "EMPTY",
@@ -173,7 +173,7 @@
                 },
                 {
                     "strategy_name": "短期多空排列",
-                    "cumulative_return_3y": "478.91%",
+                    "cumulative_return_3y": "477.72%",
                     "sharpe_ratio": "0.57",
                     "current_signal": 0,
                     "status": "EMPTY",
@@ -181,7 +181,7 @@
                 },
                 {
                     "strategy_name": "c大小ma8-21-55",
-                    "cumulative_return_3y": "471.65%",
+                    "cumulative_return_3y": "470.47%",
                     "sharpe_ratio": "0.56",
                     "current_signal": 0,
                     "status": "EMPTY",
@@ -196,43 +196,43 @@
             "top5_strategies": [
                 {
                     "strategy_name": "cci(42)7日內大小150 0",
-                    "cumulative_return_3y": "104.55%",
-                    "sharpe_ratio": "0.85",
+                    "cumulative_return_3y": "94.12%",
+                    "sharpe_ratio": "0.80",
                     "current_signal": 1,
                     "status": "HOLD",
-                    "trigger_price_note": "SELL if Close < 27.85 (or >)"
+                    "trigger_price_note": "SELL if Close < 27.81 (or >)"
                 },
                 {
                     "strategy_name": "c創20日新高低",
-                    "cumulative_return_3y": "104.92%",
-                    "sharpe_ratio": "0.81",
+                    "cumulative_return_3y": "94.48%",
+                    "sharpe_ratio": "0.76",
                     "current_signal": 1,
                     "status": "HOLD",
-                    "trigger_price_note": "SELL if Close < 27.85 (or >)"
+                    "trigger_price_note": "SELL if Close < 27.81 (or >)"
                 },
                 {
                     "strategy_name": "cci(42)7日內大小200 0",
-                    "cumulative_return_3y": "75.64%",
-                    "sharpe_ratio": "0.71",
+                    "cumulative_return_3y": "66.68%",
+                    "sharpe_ratio": "0.66",
+                    "current_signal": 1,
+                    "status": "HOLD",
+                    "trigger_price_note": "Steady"
+                },
+                {
+                    "strategy_name": "bias(50) cr 0",
+                    "cumulative_return_3y": "69.04%",
+                    "sharpe_ratio": "0.62",
                     "current_signal": 1,
                     "status": "HOLD",
                     "trigger_price_note": "Steady"
                 },
                 {
                     "strategy_name": "c cr ma60",
-                    "cumulative_return_3y": "76.78%",
-                    "sharpe_ratio": "0.67",
+                    "cumulative_return_3y": "67.77%",
+                    "sharpe_ratio": "0.62",
                     "current_signal": 1,
                     "status": "HOLD",
-                    "trigger_price_note": "SELL if Close < 27.85 (or >)"
-                },
-                {
-                    "strategy_name": "bias(50) cr 0",
-                    "cumulative_return_3y": "73.74%",
-                    "sharpe_ratio": "0.65",
-                    "current_signal": 1,
-                    "status": "HOLD",
-                    "trigger_price_note": "Steady"
+                    "trigger_price_note": "SELL if Close < 27.81 (or >)"
                 }
             ]
         }
