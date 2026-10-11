@@ -3,11 +3,14 @@
 source:
   url: "https://www.gurufocus.com/economic_indicators/4359/insider-buysell-ratio-usa-overall-market"
 
-  # requests    : 輕量,但 GitHub 機房 IP 會被 GuruFocus 回 403
-  # playwright  : 真實瀏覽器(workflow 已安裝 Chromium + xvfb)
-  method: playwright
-  headless: false      # playwright 用:false 搭配 xvfb 較不易被擋
+  # 依序嘗試,第一個成功的就用:
+  #   curl_cffi  : 模擬 Chrome TLS 指紋,輕量(pip install curl_cffi)
+  #   playwright : 真實瀏覽器(pip install playwright; playwright install chromium)
+  #   requests   : 一般 Python 請求,會被 Cloudflare 回 403,僅供除錯
+  methods: [curl_cffi, playwright]
+  headless: false      # playwright 用:false 較不易被擋(Windows 直接可用;Linux 需 xvfb)
   wait_sec: 40         # playwright 用:最多等 Cloudflare 驗證幾秒
+  table_wait_sec: 15   # playwright 用:標題已出現後,再等資料表(多月份)渲染幾秒
 
   timeout_sec: 30
   retries: 3
