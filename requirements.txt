@@ -9,3 +9,4 @@ webdriver-manager
 yfinance 
 scipy 
 matplotlib
+PyYAML>=6.0
