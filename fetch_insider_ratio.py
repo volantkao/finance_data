@@ -44,23 +44,47 @@ def fetch_requests(cfg):
     if _cookie(cfg):
         headers["Cookie"] = _cookie(cfg)
     r = requests.get(cfg["url"], headers=headers, timeout=cfg["timeout_sec"])
+    if r.status_code != 200:
+        log.warning("HTTP %s | server=%s | cf-mitigated=%s | body開頭=%r", r.status_code,
+                    r.headers.get("server"), r.headers.get("cf-mitigated"), r.text[:120])
     r.raise_for_status()
     return r.text
 
 
+def _page_has_data(html):
+    return "data-column" in html or bool(SENTENCE_RE.search(html)) or bool(TITLE_RE.search(html))
+
+
 def fetch_playwright(cfg):
+    """用真實 Chromium 開頁面。headless: false 搭配 xvfb(workflow 內 xvfb-run)較不易被判為機器人。
+    會等待 Cloudflare 驗證頁("Just a moment")過去,最久 wait_sec 秒。"""
     from playwright.sync_api import sync_playwright  # 延遲載入,requests 模式不需安裝
+    wait_sec = cfg.get("wait_sec", 40)
     with sync_playwright() as p:
-        browser = p.chromium.launch()
-        ctx = browser.new_context(user_agent=UA)
+        browser = p.chromium.launch(
+            headless=cfg.get("headless", True),
+            args=["--disable-blink-features=AutomationControlled", "--no-sandbox"],
+        )
+        ctx = browser.new_context(
+            user_agent=UA, locale="en-US", timezone_id="America/New_York",
+            viewport={"width": 1366, "height": 900},
+        )
         if _cookie(cfg):
             ctx.set_extra_http_headers({"Cookie": _cookie(cfg)})
         page = ctx.new_page()
-        page.goto(cfg["url"], timeout=cfg["timeout_sec"] * 1000, wait_until="domcontentloaded")
-        page.wait_for_timeout(4000)
-        html = page.title() + "\n" + page.content()
-        browser.close()
-        return html
+        try:
+            resp = page.goto(cfg["url"], timeout=cfg["timeout_sec"] * 1000, wait_until="domcontentloaded")
+            log.info("goto status=%s", resp.status if resp else None)
+            html = ""
+            for _ in range(wait_sec):
+                html = page.title() + "\n" + page.content()
+                if _page_has_data(html):
+                    return html
+                page.wait_for_timeout(1000)
+            raise RuntimeError(f"等待 {wait_sec}s 仍無資料(title={page.title()!r},"
+                               f"疑似 Cloudflare 驗證/封鎖)")
+        finally:
+            browser.close()
 
 
 def get_latest(cfg):
