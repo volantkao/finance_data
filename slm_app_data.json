@@ -24,12 +24,6 @@
       "pressure_delta_5d": 0.16
     },
     {
-      "code": "KING_MTK",
-      "name": "聯發科",
-      "pressure_score": -1.04,
-      "pressure_delta_5d": 0.4
-    },
-    {
       "code": "TW_SHIP",
       "name": "航運",
       "pressure_score": -0.48,
@@ -52,6 +46,12 @@
       "name": "IC 設計",
       "pressure_score": -0.03,
       "pressure_delta_5d": 0.47
+    },
+    {
+      "code": "KING_MTK",
+      "name": "聯發科",
+      "pressure_score": 0,
+      "pressure_delta_5d": 0
     },
     {
       "code": "KING_FOX",
