@@ -27,13 +27,15 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      # 若 config.yaml 改用 method: playwright,取消下面兩行註解
-      # - run: pip install playwright && playwright install --with-deps chromium
+      - name: Install browser (Playwright Chromium + xvfb)
+        run: |
+          sudo apt-get update && sudo apt-get install -y xvfb
+          python -m playwright install --with-deps chromium
 
       - name: Fetch latest ratio
         env:
           GURUFOCUS_COOKIE: ${{ secrets.GURUFOCUS_COOKIE }}   # 沒有就不用設定
-        run: python fetch_insider_ratio.py
+        run: xvfb-run -a python fetch_insider_ratio.py
 
       - name: Commit if changed
         run: |
