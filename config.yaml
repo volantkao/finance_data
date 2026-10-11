@@ -1,0 +1,31 @@
+# ===== GuruFocus Insider Buy/Sell Ratio 抓取設定 =====
+
+source:
+  url: "https://www.gurufocus.com/economic_indicators/4359/insider-buysell-ratio-usa-overall-market"
+
+  # requests    : 輕量,先試這個
+  # playwright  : 被 Cloudflare 擋(403)時改用,需額外安裝瀏覽器(workflow 內有註解)
+  method: requests
+
+  timeout_sec: 30
+  retries: 3
+  retry_wait_sec: 10
+
+  # 若頁面需登入才看得到數值:把瀏覽器 Cookie 整串存進 GitHub Secret,
+  # 這裡填 Secret 對應的環境變數名稱。不需要就留空字串。
+  cookie_env: "GURUFOCUS_COOKIE"
+
+output:
+  # 相對於本 yaml 所在目錄(即與程式同目錄)
+  csv_file: "insider_buy_sell_ratio_usa_overall_market_monthly.csv"
+  # true: 順便把舊資料被 Excel 吃掉尾端 0 的列(0.4 -> 0.40)統一成兩位小數(會有一次性 diff)
+  normalize_decimals: false
+
+validation:
+  # 超出此範圍視為抓取異常,不寫入(歷史區間約 0.12 ~ 2.01)
+  min_ratio: 0.0
+  max_ratio: 10.0
+  # 頁面最新月份比 CSV 最新月份還舊 -> 視為過期資料,不覆蓋
+  reject_older_than_csv: true
+  # 頁面近 ~14 個月的值若與 CSV 不同,只修正 CSV 最新月份往前這幾個月內的列
+  revise_months: 3
