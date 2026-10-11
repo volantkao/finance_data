@@ -10,6 +10,7 @@ import html as htmllib
 import logging
 import os
 import re
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -39,14 +40,34 @@ def _cookie(cfg):
     return os.environ.get(cfg.get("cookie_env") or "", "")
 
 
+def _diagnose(status, headers, body):
+    title = re.search(r"<title>(.*?)</title>", body, re.S | re.I)
+    code = re.search(r"Error\s*(?:code\s*)?(\d{3,4})", body)
+    log.warning("HTTP %s | server=%s | cf-mitigated=%s | title=%r | CF錯誤碼=%s",
+                status, headers.get("server"), headers.get("cf-mitigated"),
+                title.group(1).strip()[:80] if title else None, code.group(1) if code else None)
+
+
 def fetch_requests(cfg):
     headers = {"User-Agent": UA, "Accept-Language": "en-US,en;q=0.9"}
     if _cookie(cfg):
         headers["Cookie"] = _cookie(cfg)
     r = requests.get(cfg["url"], headers=headers, timeout=cfg["timeout_sec"])
     if r.status_code != 200:
-        log.warning("HTTP %s | server=%s | cf-mitigated=%s | body開頭=%r", r.status_code,
-                    r.headers.get("server"), r.headers.get("cf-mitigated"), r.text[:120])
+        _diagnose(r.status_code, r.headers, r.text)
+    r.raise_for_status()
+    return r.text
+
+
+def fetch_curl_cffi(cfg):
+    """模擬 Chrome 的 TLS/HTTP2 指紋,不需瀏覽器。pip install curl_cffi"""
+    from curl_cffi import requests as cr  # 延遲載入
+    headers = {"Accept-Language": "en-US,en;q=0.9"}
+    if _cookie(cfg):
+        headers["Cookie"] = _cookie(cfg)
+    r = cr.get(cfg["url"], headers=headers, impersonate="chrome", timeout=cfg["timeout_sec"])
+    if r.status_code != 200:
+        _diagnose(r.status_code, r.headers, r.text)
     r.raise_for_status()
     return r.text
 
@@ -61,10 +82,20 @@ def fetch_playwright(cfg):
     from playwright.sync_api import sync_playwright  # 延遲載入,requests 模式不需安裝
     wait_sec = cfg.get("wait_sec", 40)
     with sync_playwright() as p:
-        browser = p.chromium.launch(
-            headless=cfg.get("headless", True),
-            args=["--disable-blink-features=AutomationControlled", "--no-sandbox"],
-        )
+        headless = cfg.get("headless", True)
+        if not headless and sys.platform.startswith("linux") and not os.environ.get("DISPLAY"):
+            log.info("Linux 無 DISPLAY(未用 xvfb-run),改用 headless")
+            headless = True
+        launch_kw = dict(headless=headless,
+                         args=["--disable-blink-features=AutomationControlled", "--no-sandbox"])
+        try:
+            browser = p.chromium.launch(**launch_kw)
+        except Exception as e:  # noqa: BLE001
+            if "Executable doesn't exist" not in str(e):
+                raise
+            log.info("找不到 Chromium,自動執行 playwright install chromium ...")
+            subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=True)
+            browser = p.chromium.launch(**launch_kw)
         ctx = browser.new_context(
             user_agent=UA, locale="en-US", timezone_id="America/New_York",
             viewport={"width": 1366, "height": 900},
@@ -75,30 +106,58 @@ def fetch_playwright(cfg):
         try:
             resp = page.goto(cfg["url"], timeout=cfg["timeout_sec"] * 1000, wait_until="domcontentloaded")
             log.info("goto status=%s", resp.status if resp else None)
-            html = ""
-            for _ in range(wait_sec):
+            html, first_data_at = "", None
+            table_wait = cfg.get("table_wait_sec", 15)
+            for sec in range(wait_sec):
                 html = page.title() + "\n" + page.content()
                 if _page_has_data(html):
-                    return html
+                    try:
+                        n_months = len(parse_html(html))
+                    except ValueError:
+                        n_months = 0
+                    if n_months > 1:  # 資料表已渲染,可一次補多個月
+                        return html
+                    # 只有標題/文字(單月):捲動頁面觸發表格載入,再多等 table_wait 秒
+                    if first_data_at is None:
+                        first_data_at = sec
+                    if sec - first_data_at >= table_wait:
+                        log.info("等了 %ss 資料表仍未出現,改用單月備援", table_wait)
+                        return html
+                    page.mouse.wheel(0, 1200)
                 page.wait_for_timeout(1000)
+            if _page_has_data(html):
+                return html
             raise RuntimeError(f"等待 {wait_sec}s 仍無資料(title={page.title()!r},"
                                f"疑似 Cloudflare 驗證/封鎖)")
         finally:
             browser.close()
 
 
+FETCHERS = {"requests": fetch_requests, "curl_cffi": fetch_curl_cffi, "playwright": fetch_playwright}
+
+
 def get_latest(cfg):
-    fetcher = {"requests": fetch_requests, "playwright": fetch_playwright}[cfg["method"]]
-    last_err = None
-    for i in range(1, cfg["retries"] + 1):
-        try:
-            return parse_html(fetcher(cfg))
-        except Exception as e:  # noqa: BLE001
-            last_err = e
-            log.warning("第 %d/%d 次失敗: %s", i, cfg["retries"], e)
-            if i < cfg["retries"]:
-                time.sleep(cfg["retry_wait_sec"])
-    raise RuntimeError(f"抓取失敗: {last_err}")
+    """依 methods 順序嘗試(每種各自重試 retries 次),第一個成功解析的就用。"""
+    methods = cfg.get("methods") or cfg.get("method") or ["requests"]
+    if isinstance(methods, str):
+        methods = [methods]
+    errors = []
+    for name in methods:
+        for i in range(1, cfg["retries"] + 1):
+            try:
+                result = parse_html(FETCHERS[name](cfg))
+                log.info("方法 %s 成功", name)
+                return result
+            except ImportError as e:
+                log.warning("[%s] 套件未安裝,跳過: %s", name, e)
+                errors.append(f"{name}: 未安裝")
+                break
+            except Exception as e:  # noqa: BLE001
+                log.warning("[%s] 第 %d/%d 次失敗: %s", name, i, cfg["retries"], e)
+                errors.append(f"{name}: {e}")
+                if i < cfg["retries"]:
+                    time.sleep(cfg["retry_wait_sec"])
+    raise RuntimeError("所有方法都失敗: " + " | ".join(errors[-len(methods):]))
 
 
 def parse_html(html):
