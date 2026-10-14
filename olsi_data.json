@@ -1,26 +1,20 @@
 {
     "meta": {
-        "update_time": "2026-10-13 02:38:31",
+        "update_time": "2026-10-14 00:25:36",
         "data_count": 1001
     },
     "latest": {
-        "date": "2026-10-12",
-        "olsi": -0.23,
+        "date": "2026-10-13",
+        "olsi": -0.29,
         "state_code": 0,
         "duration": 0,
         "components": {
-            "friction_z": -0.61,
+            "friction_z": -0.6,
             "srf_z": -1.13,
             "flow_z": 0.0
         }
     },
     "history": [
-        {
-            "date": "2026-06-04",
-            "price": 753.27,
-            "olsi": 0.01,
-            "state": 0
-        },
         {
             "date": "2026-06-05",
             "price": 733.83,
@@ -553,6 +547,12 @@
             "date": "2026-10-12",
             "price": 778.1,
             "olsi": -0.23,
+            "state": 0
+        },
+        {
+            "date": "2026-10-13",
+            "price": NaN,
+            "olsi": -0.29,
             "state": 0
         }
     ]
