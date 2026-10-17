@@ -1,15 +1,15 @@
 {
-  "update_time": "2026-10-16 23:14",
+  "update_time": "2026-10-17 22:51",
   "data_date": "2026-10-16",
   "gcp_score": -0.07,
-  "pci_score": 1.15,
-  "pci_z_score": -1.59,
+  "pci_score": 1.17,
+  "pci_z_score": -1.56,
   "spy_price": 772.15,
   "details": [
     {
       "code": "P_KRW",
       "name": "韓元/風險",
-      "value": -1.15,
+      "value": -1.17,
       "status": "loose"
     },
     {
@@ -21,7 +21,7 @@
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": -0.82,
+      "value": -0.79,
       "status": "neutral"
     },
     {
@@ -45,7 +45,7 @@
     {
       "code": "P_CRYPTO",
       "name": "加密貨幣",
-      "value": -0.34,
+      "value": -0.33,
       "status": "neutral"
     },
     {
