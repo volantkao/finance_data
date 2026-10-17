@@ -2,8 +2,8 @@
   "date": "2026-10-16",
   "market_status": {
     "retail_z": NaN,
-    "short_margin_z": 0.63,
-    "short_margin_ratio_percent": 2.41
+    "short_margin_z": 0.69,
+    "short_margin_ratio_percent": 2.45
   },
   "yuna_insight": {
     "mood": "chill",
