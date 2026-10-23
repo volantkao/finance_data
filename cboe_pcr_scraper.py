@@ -69,6 +69,58 @@ def _get_with_retry(tag, url, retries=3, backoff=5, **kwargs):
 # ---------------------------------------------------------------------------
 # 1. CBOE Put/Call Ratio
 # ---------------------------------------------------------------------------
+def _extract_next_chunks(soup):
+    """
+    收集頁面中所有 self.__next_f.push([1, "..."]) 的字串內容，
+    用 json.loads 正確還原跳脫字元後串接成一整段文字。
+    資料可能被切在多個 push 區塊裡，所以必須全部串起來再找。
+    """
+    chunks = []
+    for script in soup.find_all('script'):
+        s = script.string
+        if not s or 'self.__next_f.push' not in s:
+            continue
+        m = re.search(r'self\.__next_f\.push\((\[.*\])\)', s, re.S)
+        if not m:
+            continue
+        try:
+            arr = json.loads(m.group(1))
+        except json.JSONDecodeError:
+            continue
+        if isinstance(arr, list) and len(arr) >= 2 and isinstance(arr[1], str):
+            chunks.append(arr[1])
+    return "".join(chunks)
+
+
+def _find_json_after_key(text, key, start=0):
+    """在 text 中找 "key": 之後的 JSON 值，用 raw_decode 解析（能正確處理巢狀大括號）。"""
+    marker = f'"{key}":'
+    idx = text.find(marker, start)
+    while idx != -1:
+        pos = idx + len(marker)
+        while pos < len(text) and text[pos] in ' \n\r\t':
+            pos += 1
+        try:
+            obj, _ = json.JSONDecoder().raw_decode(text, pos)
+            return obj, idx
+        except json.JSONDecodeError:
+            idx = text.find(marker, idx + 1)
+    return None, -1
+
+
+def _resolve_rsc_ref(text, obj):
+    """Next.js RSC 有時會把資料放在別處，這裡只留一個 "$1f" 之類的參照，需要解開。"""
+    if isinstance(obj, str) and re.fullmatch(r'\$[0-9a-f]+', obj):
+        m = re.search(rf'(?m)^{re.escape(obj[1:])}:', text)
+        if m:
+            try:
+                resolved, _ = json.JSONDecoder().raw_decode(text, m.end())
+                return resolved
+            except json.JSONDecodeError:
+                pass
+    return obj
+
+
 def get_latest_cboe_pcr():
     """從 CBOE 網站抓取最新的每日 PCR 數據。"""
     url = "https://www.cboe.com/markets/us/options/market-statistics/daily/"
@@ -80,67 +132,74 @@ def get_latest_cboe_pcr():
         return None
 
     soup = BeautifulSoup(response.text, 'html.parser')
+    combined = _extract_next_chunks(soup)
+    print(f"[CBOE] 串接後的 Next.js 內嵌資料長度: {len(combined)}")
 
     script_data = None
-    actual_data_date_str = None
-    push_count = 0
+    opt_idx = -1
+    search_from = 0
+    while True:
+        obj, idx = _find_json_after_key(combined, "optionsData", search_from)
+        if idx == -1:
+            break
+        obj = _resolve_rsc_ref(combined, obj)
+        if isinstance(obj, dict) and obj:
+            script_data = obj
+            opt_idx = idx
+            break
+        search_from = idx + 1
 
-    for script in soup.find_all('script'):
-        if script.string and 'self.__next_f.push' in script.string:
-            push_count += 1
-            match = re.search(r'self\.__next_f\.push\(\[1,\"(.*)\"\]\)', script.string)
-            if match:
-                json_str_escaped = match.group(1)
-                json_str = json_str_escaped.replace('\\\"', '"').replace('\\\\n', '\\n')
-                try:
-                    data_match = re.search(r'"optionsData":(\{.*?\}),"selectedDate":"(.*?)"', json_str)
-                    if data_match:
-                        options_data_str = data_match.group(1)
-                        actual_data_date_str = data_match.group(2)
-                        script_data = json.loads(options_data_str)
-                        break
-                except json.JSONDecodeError as e:
-                    print(f"[CBOE] JSON 解碼失敗: {e}")
-                    continue
+    # selectedDate：優先取 optionsData 之後最近的一個，找不到就取第一個
+    actual_data_date_str = None
+    date_matches = list(re.finditer(r'"selectedDate":\s*"([^"]*)"', combined))
+    for dm in date_matches:
+        if dm.start() >= opt_idx:
+            actual_data_date_str = dm.group(1)
+            break
+    if actual_data_date_str is None and date_matches:
+        actual_data_date_str = date_matches[0].group(1)
 
     if not script_data or not actual_data_date_str:
-        print(f"[CBOE] 未找到最新數據。頁面中含 __next_f.push 的 script 數量: {push_count}")
-        print(f"[CBOE] 頁面是否含 'optionsData' 字樣: {'optionsData' in response.text}")
-        print(f"[CBOE] 頁面是否含 'selectedDate' 字樣: {'selectedDate' in response.text}")
-        if push_count == 0:
-            print("[CBOE] 完全沒有 Next.js 內嵌資料，很可能拿到的是 challenge/擋頁而非正常頁面。")
+        print("[CBOE] 未找到最新數據。")
+        print(f"[CBOE] optionsData 解析結果: {'成功' if script_data else '失敗'}；selectedDate: {actual_data_date_str}")
+        pos = combined.find('optionsData')
+        if pos != -1:
+            print(f"[CBOE] optionsData 附近內容: {combined[max(0, pos - 100):pos + 700]!r}")
         else:
-            print("[CBOE] 有 Next.js 內嵌資料但 regex 沒對上，很可能是網站改版（欄位名稱或資料切塊方式變動）。")
+            pos = response.text.find('optionsData')
+            print(f"[CBOE] (原始 HTML) optionsData 附近內容: {response.text[max(0, pos - 100):pos + 700]!r}")
         return None
+
+    print(f"[CBOE] optionsData 頂層欄位: {list(script_data.keys())}")
 
     pcr_values = {}
 
-    if 'ratios' in script_data:
-        for ratio in script_data['ratios']:
-            name = ratio['name']
-            value = float(ratio['value']) if ratio['value'] else None
+    try:
+        for ratio in script_data.get('ratios', []):
+            name = str(ratio.get('name', ''))
+            raw = ratio.get('value')
+            value = float(raw) if raw not in (None, '') else None
             if "EQUITY PUT/CALL RATIO" in name:
                 pcr_values['Equity PCR'] = value
             elif "INDEX PUT/CALL RATIO" in name:
                 pcr_values['Index PCR'] = value
+    except (TypeError, ValueError, AttributeError) as e:
+        print(f"[CBOE] 解析 ratios 失敗: {e}")
 
-    if 'EQUITY OPTIONS' in script_data:
-        for item in script_data['EQUITY OPTIONS']:
-            if item['name'] == 'OPEN INTEREST':
+    for section, col in (('EQUITY OPTIONS', 'Equity OI PCR'), ('INDEX OPTIONS', 'Index OI PCR')):
+        for item in script_data.get(section, []) or []:
+            if item.get('name') == 'OPEN INTEREST':
                 call_oi = item.get('call', 0)
                 put_oi = item.get('put', 0)
                 if call_oi is not None and put_oi is not None and call_oi > 0:
-                    pcr_values['Equity OI PCR'] = round(put_oi / call_oi, 2)
+                    pcr_values[col] = round(put_oi / call_oi, 2)
                 break
 
-    if 'INDEX OPTIONS' in script_data:
-        for item in script_data['INDEX OPTIONS']:
-            if item['name'] == 'OPEN INTEREST':
-                call_oi = item.get('call', 0)
-                put_oi = item.get('put', 0)
-                if call_oi is not None and put_oi is not None and call_oi > 0:
-                    pcr_values['Index OI PCR'] = round(put_oi / call_oi, 2)
-                break
+    if not pcr_values:
+        print("[CBOE] 抓到 optionsData 但裡面沒有預期的 PCR 欄位，欄位結構可能已改變。")
+        for k, v in script_data.items():
+            print(f"[CBOE]   {k}: {str(v)[:200]!r}")
+        return None
 
     pcr_values['Date'] = actual_data_date_str
     return pcr_values
