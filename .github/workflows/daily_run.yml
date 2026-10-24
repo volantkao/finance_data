@@ -1,23 +1,32 @@
+
 name: Daily Finance Monitor
+
+# 避免同一個 workflow 同時執行多次
+concurrency:
+  group: daily-finance-monitor
+  cancel-in-progress: false
 
 # 設定觸發時機
 on:
   schedule:
-    # 每天 UTC 時間 21:30 執行 (大約是台灣時間早上 05:30，美股收盤後)
+    # 每天 UTC 21:30（台灣時間隔天 05:30）
     - cron: '30 21 * * *'
-  # 允許手動點按鈕觸發 (方便測試)
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    # 允許 Actions 推送更新回 repository
+    permissions:
+      contents: write
+
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.9'
 
@@ -28,21 +37,23 @@ jobs:
 
     - name: Run Monitor Script
       env:
-        # 這裡會從 GitHub Secrets 讀取您的 Key，注入到環境變數中
         FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        # 如果您的程式有用到 Email，也要在這裡注入
-        # SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
       run: |
         echo "Run 1: run monitor_lite.py..."
         python monitor_lite.py
 
-
     - name: Commit and Push JSON
-      # 這一步會把生成的 json 檔推回 GitHub，這樣 App 就能讀到了
       run: |
-        git config --global user.name "GitHub Action"
-        git config --global user.email "action@github.com"
+        git config user.name "GitHub Action"
+        git config user.email "action@github.com"
+
         git add vip_data.json
-        # 如果有變動才 commit，沒變動就不做動作
-        git commit -m "Update vip_data.json" || exit 0
-        git push
+
+        # 如果沒有資料變動，就正常結束
+        git diff --cached --quiet && exit 0
+
+        git commit -m "Update vip_data.json"
+
+        # 整合遠端最新提交，再推送
+        git pull --rebase origin main
+        git push origin main
