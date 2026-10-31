@@ -1,39 +1,39 @@
 {
-  "update_time": "2026-10-31 00:20",
+  "update_time": "2026-10-31 23:56",
   "data_date": "2026-10-30",
-  "gcp_score": 0.04,
-  "pci_score": 1.36,
-  "pci_z_score": -0.72,
-  "spy_price": 769.21,
+  "gcp_score": 0.05,
+  "pci_score": 1.42,
+  "pci_z_score": -0.56,
+  "spy_price": 766.48,
   "details": [
     {
       "code": "P_USD",
       "name": "美元池壓力",
-      "value": 1.36,
+      "value": 1.35,
       "status": "tight"
     },
     {
       "code": "P_TWD",
       "name": "台幣/地緣",
+      "value": 0.84,
+      "status": "neutral"
+    },
+    {
+      "code": "P_METAL",
+      "name": "貴金屬/黃金",
       "value": 0.82,
       "status": "neutral"
     },
     {
       "code": "P_KRW",
       "name": "韓元/風險",
-      "value": -0.82,
-      "status": "neutral"
-    },
-    {
-      "code": "P_METAL",
-      "name": "貴金屬/黃金",
-      "value": 0.76,
+      "value": -0.81,
       "status": "neutral"
     },
     {
       "code": "P_CNH",
       "name": "中國/人民幣",
-      "value": -0.69,
+      "value": -0.73,
       "status": "neutral"
     },
     {
@@ -57,13 +57,13 @@
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": -0.21,
+      "value": -0.15,
       "status": "neutral"
     },
     {
       "code": "P_EM",
       "name": "新興市場",
-      "value": 0.02,
+      "value": 0.09,
       "status": "neutral"
     }
   ]
