@@ -68,8 +68,8 @@
     {
       "code": "TW_POWER",
       "name": "重電綠能",
-      "pressure_score": 0.32,
-      "pressure_delta_5d": 0.12
+      "pressure_score": 1.4,
+      "pressure_delta_5d": 0.3
     },
     {
       "code": "TW_HIGH",
