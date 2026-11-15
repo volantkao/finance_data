@@ -1,10 +1,10 @@
 {
-  "update_time": "2026-11-14 01:15",
+  "update_time": "2026-11-15 00:43",
   "data_date": "2026-11-13",
-  "gcp_score": 0.69,
-  "pci_score": 2.12,
-  "pci_z_score": 1.27,
-  "spy_price": 755.33,
+  "gcp_score": 0.7,
+  "pci_score": 2.31,
+  "pci_z_score": 1.67,
+  "spy_price": 754.78,
   "details": [
     {
       "code": "P_TWD",
@@ -13,21 +13,21 @@
       "status": "tight"
     },
     {
-      "code": "P_EM",
-      "name": "新興市場",
-      "value": 1.57,
+      "code": "P_CRYPTO",
+      "name": "加密貨幣",
+      "value": 1.68,
       "status": "tight"
     },
     {
-      "code": "P_CRYPTO",
-      "name": "加密貨幣",
-      "value": 1.46,
+      "code": "P_EM",
+      "name": "新興市場",
+      "value": 1.59,
       "status": "tight"
     },
     {
       "code": "P_METAL",
       "name": "貴金屬/黃金",
-      "value": 1.39,
+      "value": 1.38,
       "status": "tight"
     },
     {
@@ -39,7 +39,7 @@
     {
       "code": "P_KRW",
       "name": "韓元/風險",
-      "value": 0.89,
+      "value": 0.91,
       "status": "neutral"
     },
     {
@@ -57,13 +57,13 @@
     {
       "code": "P_CNH",
       "name": "中國/人民幣",
-      "value": 0.21,
+      "value": 0.17,
       "status": "neutral"
     },
     {
       "code": "P_AUD",
       "name": "澳幣/原物料",
-      "value": 0.21,
+      "value": 0.17,
       "status": "neutral"
     }
   ]
