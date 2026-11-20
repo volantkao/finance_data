@@ -1,16 +1,16 @@
 # TIC / Primary Dealer Monitor
 
-Retrieved: 2026-11-13T19:12:34.451202+00:00 （新觀測值，已寫入 observations.csv）
+Retrieved: 2026-11-20T19:37:01.568244+00:00 （新觀測值，已寫入 observations.csv）
 
 | Series | Observation date | Latest (USD bn) | Change vs prior recorded (USD bn) |
 |---|---:|---:|---:|
-| Foreign official Treasury holdings | 2026-08 | 3,755.600 | +0.000 |
-| Foreign official Treasury bills | 2026-08 | 312.200 | +0.000 |
-| Foreign official T-bonds & notes | 2026-08 | 3,443.400 | +0.000 |
-| Dealer net Treasury position, ex-TIPS | 2026-11-04 | 467.271 | +14.512 |
+| Foreign official Treasury holdings | 2026-09 | 3,674.700 | -80.900 |
+| Foreign official Treasury bills | 2026-09 | 288.500 | -23.700 |
+| Foreign official T-bonds & notes | 2026-09 | 3,386.100 | -57.300 |
+| Dealer net Treasury position, ex-TIPS | 2026-11-11 | 456.007 | -11.264 |
 
 TIC source: [https://ticdata.treasury.gov/resource-center/data-chart-center/tic/Documents/slt_table5.txt](https://ticdata.treasury.gov/resource-center/data-chart-center/tic/Documents/slt_table5.txt)
 NY Fed source: [https://markets.newyorkfed.org/api/pd/get/PDPOSGST-TOT.json](https://markets.newyorkfed.org/api/pd/get/PDPOSGST-TOT.json)
 
-Raw TIC SHA-256: `e5de973b1a6f13c8ec95707d665ce107f53f467db10d7a2d991677ee67d1de11`
-Raw NY Fed SHA-256: `a06c662d387fc57fe0ed98a5c736105033c81d0e544b510f1c5d97d9f9ad26a3`
+Raw TIC SHA-256: `18d2dece0370bf48929341ca3805a5482533520ae42485942a73081fd6cf8392`
+Raw NY Fed SHA-256: `51b4367f1f22a550327492232717d5b5e8125e224a84c802826a1cfec75307d6`
