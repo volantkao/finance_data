@@ -14,68 +14,68 @@
     {
       "code": "TW_MAT",
       "name": "傳產",
-      "pressure_score": -1.22,
-      "pressure_delta_5d": -0.25
+      "pressure_score": -1.11,
+      "pressure_delta_5d": -0.14
     },
     {
       "code": "TW_SHIP",
       "name": "航運",
-      "pressure_score": -1.18,
-      "pressure_delta_5d": -0.65
-    },
-    {
-      "code": "TW_FIN",
-      "name": "金融",
-      "pressure_score": -0.28,
-      "pressure_delta_5d": 0.0
+      "pressure_score": -1.09,
+      "pressure_delta_5d": -0.56
     },
     {
       "code": "KING_TSMC",
       "name": "台積電",
-      "pressure_score": -0.17,
-      "pressure_delta_5d": 0.7
+      "pressure_score": -0.22,
+      "pressure_delta_5d": 0.65
+    },
+    {
+      "code": "TW_FIN",
+      "name": "金融",
+      "pressure_score": -0.15,
+      "pressure_delta_5d": 0.13
     },
     {
       "code": "TW_IC",
       "name": "IC 設計",
-      "pressure_score": 0.09,
-      "pressure_delta_5d": -0.01
+      "pressure_score": 0.16,
+      "pressure_delta_5d": 0.06
     },
     {
       "code": "KING_FOX",
       "name": "鴻海",
-      "pressure_score": 0.59,
-      "pressure_delta_5d": 0.68
+      "pressure_score": 0.57,
+      "pressure_delta_5d": 0.66
     },
     {
       "code": "KING_MTK",
       "name": "聯發科",
-      "pressure_score": 1.02,
-      "pressure_delta_5d": 0.23
+      "pressure_score": 1.15,
+      "pressure_delta_5d": 0.36
     },
     {
       "code": "TW_AI",
       "name": "AI 伺服器",
-      "pressure_score": 1.59,
-      "pressure_delta_5d": 0.51
+      "pressure_score": 1.56,
+      "pressure_delta_5d": 0.48
     },
     {
       "code": "TW_POWER",
       "name": "重電綠能",
-      "pressure_score": 1.63,
-      "pressure_delta_5d": -0.52
+      "pressure_score": 1.73,
+      "pressure_delta_5d": -0.42
     },
     {
       "code": "TW_HIGH",
       "name": "千金指標",
-      "pressure_score": 2.31,
-      "pressure_delta_5d": 0.16
+      "pressure_score": 2.36,
+      "pressure_delta_5d": 0.2
     },
     {
       "code": "TW_BIO",
       "name": "生技",
-      "pressure_score": 2.31,
-      "pressure_delta_5d": 2.32
+      "pressure_score": 2.42,
+      "pressure_delta_5d": 2.43
     }
   ]
 }
