@@ -1,13 +1,13 @@
 # TIC / Primary Dealer Monitor
 
-Retrieved: 2026-11-20T19:37:01.568244+00:00 （新觀測值，已寫入 observations.csv）
+Retrieved: 2026-11-27T20:41:02.424425+00:00 （跟上一筆記錄相同，本次未寫入 observations.csv，避免重複列）
 
 | Series | Observation date | Latest (USD bn) | Change vs prior recorded (USD bn) |
 |---|---:|---:|---:|
-| Foreign official Treasury holdings | 2026-09 | 3,674.700 | -80.900 |
-| Foreign official Treasury bills | 2026-09 | 288.500 | -23.700 |
-| Foreign official T-bonds & notes | 2026-09 | 3,386.100 | -57.300 |
-| Dealer net Treasury position, ex-TIPS | 2026-11-11 | 456.007 | -11.264 |
+| Foreign official Treasury holdings | 2026-09 | 3,674.700 | +0.000 |
+| Foreign official Treasury bills | 2026-09 | 288.500 | +0.000 |
+| Foreign official T-bonds & notes | 2026-09 | 3,386.100 | +0.000 |
+| Dealer net Treasury position, ex-TIPS | 2026-11-11 | 456.007 | +0.000 |
 
 TIC source: [https://ticdata.treasury.gov/resource-center/data-chart-center/tic/Documents/slt_table5.txt](https://ticdata.treasury.gov/resource-center/data-chart-center/tic/Documents/slt_table5.txt)
 NY Fed source: [https://markets.newyorkfed.org/api/pd/get/PDPOSGST-TOT.json](https://markets.newyorkfed.org/api/pd/get/PDPOSGST-TOT.json)
